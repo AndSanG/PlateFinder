@@ -15,55 +15,49 @@ class PlateFinderViewModel: ObservableObject{
     
     @Published var isTesting = true
     
-    func getCarInfo() async throws {
+    func getCarInfo() async {
         do {
             let scrapper = getScrapper(isTesting: isTesting)
             let html = try await scrapper.getHTMLResponse(with: plateNumber)
             let document = try SwiftSoup.parse(html)
-            
-            // Multiple variable declaration and unwrapping in a single guard let
-            guard
-                let table = try document.select("body > table").first(),
-                let rows = try? table.select("tr"), // Using try? for select("tr") as it returns Elements which is a collection
-                rows.count >= 4, // Ensure we have at least 4 rows
-                let firstRow = try? rows.get(0).select("td"),
-                let secondRow = try? rows.get(1).select("td"),
-                let thirdRow = try? rows.get(2).select("td"),
-                let fourthRow = try? rows.get(3).select("td")
-            else {
-                // Determine the specific error for a clearer message
-                if try document.select("body > table").first() == nil {
-                    throw CarInfoError.tableNotFound
-                } else if let retrievedRows = try? document.select("body > table").first()?.select("tr"),
-                          retrievedRows.count < 4 {
-                    throw CarInfoError.parsingError("Not enough rows found in the table. Expected at least 4, got \(retrievedRows.count).")
-                } else {
-                    throw CarInfoError.parsingError("Failed to select required table rows or cells.")
-                }
-            }
-            
-            // Now, all variables (table, rows, firstRow, secondRow, etc.) are non-optional
-            // and you can safely use them below.
-            car = Car(
-                plate: firstRow.safeText(at: 0),
-                manufacturer: firstRow.safeText(at: 2),
-                colorName: firstRow.safeText(at: 4),
-                registrationYear: firstRow.safeText(at: 6),
-                model: secondRow.safeText(at: 1),
-                segment: secondRow.safeText(at: 3),
-                registrationDate: secondRow.safeText(at: 5),
-                year: thirdRow.safeText(at: 1),
-                service: thirdRow.safeText(at: 3),
-                expirationDate: thirdRow.safeText(at: 5),
-                tint: fourthRow.safeText(at: 1),
-                tintExpirarionDate: fourthRow.safeText(at: 3)
-            )
-            
-            
+            self.car = try parseCarInfo(from: document)
+        } catch let error as CarInfoError {
+            // Handle specific, known errors
+            print("A specific error occurred: \(error.localizedDescription)")
         } catch {
-            let errorMessage = "Failed to get car info: \(error.localizedDescription)"
-            print(errorMessage)
-            throw error
+            // Handle unexpected errors
+            print("An unexpected error occurred: \(error.localizedDescription)")
         }
+    }
+
+    private func parseCarInfo(from document: Document) throws -> Car {
+        guard let table = try document.select("body > table").first() else {
+            throw CarInfoError.tableNotFound
+        }
+
+        let rows = try table.select("tr")
+        guard rows.count >= 4 else {
+            throw CarInfoError.parsingError("Expected at least 4 rows, but found \(rows.count).")
+        }
+
+        let firstRow = try rows.get(0).select("td")
+        let secondRow = try rows.get(1).select("td")
+        let thirdRow = try rows.get(2).select("td")
+        let fourthRow = try rows.get(3).select("td")
+
+        return Car(
+            plate: firstRow.safeText(at: 0),
+            manufacturer: firstRow.safeText(at: 2),
+            colorName: firstRow.safeText(at: 4),
+            registrationYear: firstRow.safeText(at: 6),
+            model: secondRow.safeText(at: 1),
+            segment: secondRow.safeText(at: 3),
+            registrationDate: secondRow.safeText(at: 5),
+            year: thirdRow.safeText(at: 1),
+            service: thirdRow.safeText(at: 3),
+            expirationDate: thirdRow.safeText(at: 5),
+            tint: fourthRow.safeText(at: 1),
+            tintExpirarionDate: fourthRow.safeText(at: 3)
+        )
     }
 }

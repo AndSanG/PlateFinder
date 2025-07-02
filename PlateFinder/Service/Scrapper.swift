@@ -12,20 +12,6 @@ protocol Scrapping {
     func getHTMLResponse(with plateNumber: String) async throws -> String
 }
 
-enum CarInfoError: Error, LocalizedError {
-    case tableNotFound
-    case parsingError(String) 
-
-    var errorDescription: String? {
-        switch self {
-        case .tableNotFound:
-            return "Could not find the car information table on the page."
-        case .parsingError(let details):
-            return "Failed to parse car information: \(details)"
-        }
-    }
-}
-
 func getScrapper(isTesting: Bool)->Scrapping{
     var scrapper: Scrapping
     
