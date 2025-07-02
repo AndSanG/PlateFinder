@@ -93,7 +93,7 @@ struct PlateSearchView: View {
             .disabled(!isValid)
             
             if let car = viewModel.car {
-                Text(car.model)
+                Text(car.plate + "\n" + car.model + "\n" + car.year + "\n" + car.tint)
             }
             
             Spacer()

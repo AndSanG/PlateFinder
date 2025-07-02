@@ -10,40 +10,60 @@ import SwiftSoup
 
 @MainActor
 class PlateFinderViewModel: ObservableObject{
-    @Published var plateNumber: String = ""
+    @Published var plateNumber: String = "ABC1234"
     @Published var car: Car?
     
     @Published var isTesting = true
     
     func getCarInfo() async throws {
-        do{
+        do {
             let scrapper = getScrapper(isTesting: isTesting)
             let html = try await scrapper.getHTMLResponse(with: plateNumber)
             let document = try SwiftSoup.parse(html)
-            let table = try document.select("body > table").first()!
-            let rows = try table.select("tr")
-            let firstRow = try rows[0].select("td")
-            let secondRow = try rows[1].select("td")
-            let thirdRow = try rows[2].select("td")
-            let fourthRow = try rows[3].select("td")
             
+            // Multiple variable declaration and unwrapping in a single guard let
+            guard
+                let table = try document.select("body > table").first(),
+                let rows = try? table.select("tr"), // Using try? for select("tr") as it returns Elements which is a collection
+                rows.count >= 4, // Ensure we have at least 4 rows
+                let firstRow = try? rows.get(0).select("td"),
+                let secondRow = try? rows.get(1).select("td"),
+                let thirdRow = try? rows.get(2).select("td"),
+                let fourthRow = try? rows.get(3).select("td")
+            else {
+                // Determine the specific error for a clearer message
+                if try document.select("body > table").first() == nil {
+                    throw CarInfoError.tableNotFound
+                } else if let retrievedRows = try? document.select("body > table").first()?.select("tr"),
+                          retrievedRows.count < 4 {
+                    throw CarInfoError.parsingError("Not enough rows found in the table. Expected at least 4, got \(retrievedRows.count).")
+                } else {
+                    throw CarInfoError.parsingError("Failed to select required table rows or cells.")
+                }
+            }
             
+            // Now, all variables (table, rows, firstRow, secondRow, etc.) are non-optional
+            // and you can safely use them below.
             car = Car(
-                plate: try firstRow[0].text(),
-                manufacturer: try firstRow[2].text(),
-                colorName: try firstRow[4].text(),
-                registrationYear: try firstRow[6].text(),
-                model: try secondRow[1].text(),
-                segment: try secondRow[3].text(),
-                registrationDate: try secondRow[5].text(),
-                year: try thirdRow[1].text(),
-                service: try thirdRow[3].text(),
-                expirationDate: try thirdRow[5].text(),
-                tint: try fourthRow[1].text(),
-                tintExpirarionDate: try fourthRow[3].text()
+                plate: firstRow.safeText(at: 0),
+                manufacturer: firstRow.safeText(at: 2),
+                colorName: firstRow.safeText(at: 4),
+                registrationYear: firstRow.safeText(at: 6),
+                model: secondRow.safeText(at: 1),
+                segment: secondRow.safeText(at: 3),
+                registrationDate: secondRow.safeText(at: 5),
+                year: thirdRow.safeText(at: 1),
+                service: thirdRow.safeText(at: 3),
+                expirationDate: thirdRow.safeText(at: 5),
+                tint: fourthRow.safeText(at: 1),
+                tintExpirarionDate: fourthRow.safeText(at: 3)
             )
-        }catch{
-            print(error.localizedDescription)
+            
+            
+        } catch {
+            let errorMessage = "Failed to get car info: \(error.localizedDescription)"
+            print(errorMessage)
+            throw error
         }
     }
 }

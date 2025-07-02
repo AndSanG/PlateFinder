@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftSoup
 
 protocol Scrapping {
     func getHTMLResponse(with plateNumber: String) async throws -> String
@@ -52,5 +53,19 @@ struct AntScrapper: Scrapping {
 struct StubScrapper: Scrapping {
     func getHTMLResponse(with plateNumber: String) async throws -> String {
         htmlMock
+    }
+}
+
+// Helper extension for SwiftSoup.Elements to safely get text
+extension Elements {
+    /// Safely retrieves the text from an element at a given index.
+    /// Returns "" if the index is out of bounds or if the element has no text.
+    func safeText(at index: Int) -> String {
+        guard index < self.count else { return "" }
+        do {
+            return try self.get(index).text()
+        } catch {
+            return ""
+        }
     }
 }
