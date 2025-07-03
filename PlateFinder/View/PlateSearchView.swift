@@ -23,7 +23,7 @@ struct PlateSearchView: View {
     
     var body: some View {
         
-        VStack(spacing: 20) {
+        Group{
             Text("Ingrese la placa")
                 .font(.largeTitle)
                 .fontWeight(.bold)
@@ -31,6 +31,36 @@ struct PlateSearchView: View {
                 .onTapGesture {
                     viewModel.isTesting = !viewModel.isTesting
                 }
+            
+            switch viewModel.state {
+            case .idle:
+                plateInput()
+                Spacer()
+            case .loading:
+                ProgressView()
+            case .loaded(let car):
+                Text(car.plate + "\n" + car.model + "\n" + car.year + "\n" + car.tint)
+                Spacer()
+                returnButton()
+            case .error(let error):
+                Text("Error \(error.localizedDescription)")
+                Spacer()
+                returnButton()
+            }
+        }
+    }
+    
+    func returnButton() -> some View{
+        Button {
+            viewModel.state = .idle
+        } label: {
+            Text("Regresar")
+        }
+    }
+    
+    func plateInput() -> some View{
+        VStack(spacing: 20) {
+            
             TextField("ABC1234", text: $viewModel.plateNumber)
                 .padding()
                 .background(Color(.systemGray6))
@@ -90,20 +120,12 @@ struct PlateSearchView: View {
             
         }
         .padding(.vertical)
+    }
+}
+
+struct PlateSearchInput:View {
+    var body: some View {
         
-        Group{
-            switch viewModel.state {
-            case .idle:
-                Text("Ingrese la placa que desea buscar")
-            case .loading:
-                ProgressView()
-            case .loaded(let car):
-                Text(car.plate + "\n" + car.model + "\n" + car.year + "\n" + car.tint)
-            case .error(let error):
-                Text("Error \(error.localizedDescription)")
-            }
-        }
-        Spacer()
     }
 }
 
