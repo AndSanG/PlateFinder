@@ -17,7 +17,7 @@ enum State {
 
 @MainActor
 class PlateFinderViewModel: ObservableObject{
-    @Published var plateNumber: String = "ABC1234"
+    @Published var plateNumber: String = ""
     @Published var isTesting = true
     @Published var state: State = .idle
     

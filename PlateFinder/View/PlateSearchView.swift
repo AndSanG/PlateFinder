@@ -9,17 +9,14 @@ import SwiftUI
 
 struct PlateSearchView: View {
     @StateObject var viewModel = PlateFinderViewModel()
-    
-    private let validationRegex = "^[A-Z]{3}\\d{4}$"
+    private let fullValidationRegex = "^[A-Z]{3}\\d{4}$"
+    private let partialValidationRegex = "^[A-Z]{0,3}\\d{0,4}$"
     private var isValid: Bool {
-        let regex = "^[a-zA-Z]{3}[0-9]{4}$"
-        return viewModel.plateNumber.range(of: regex, options: .regularExpression) != nil
+        return viewModel.plateNumber.range(of: fullValidationRegex, options: .regularExpression) != nil
     }
     private var isPartiallyValid: Bool {
-        let regex = "^[a-zA-Z]{0,3}[0-9]{0,4}$"
-        return viewModel.plateNumber.range(of: regex, options: .regularExpression) != nil
+        return viewModel.plateNumber.range(of: partialValidationRegex, options: .regularExpression) != nil
     }
-    
     
     var body: some View {
         
@@ -72,29 +69,9 @@ struct PlateSearchView: View {
                 .keyboardType(.asciiCapable)
                 .autocapitalization(.allCharacters)
                 .disableAutocorrection(true)
-                .onChange(of: viewModel.plateNumber) { newValue in
-                    var validatedText = ""
-                    var lettersCount = 0
-                    var numbersCount = 0
-                    
-                    for char in newValue {
-                        if lettersCount < 3 && char.isLetter {
-                            validatedText.append(char.uppercased())
-                            lettersCount += 1
-                        } else if lettersCount == 3 && numbersCount < 4 && char.isNumber {
-                            validatedText.append(char)
-                            numbersCount += 1
-                        } else {
-                            break
-                        }
-                    }
-                    
-                    if newValue.count > 7 {
-                        viewModel.plateNumber = String(newValue.prefix(7))
-                    }
-                    
-                    if validatedText != self.viewModel.plateNumber {
-                        viewModel.plateNumber = validatedText
+                .onChange(of: viewModel.plateNumber) { oldValue, newValue in
+                    if(!isPartiallyValid){
+                        viewModel.plateNumber = oldValue
                     }
                 }
                 .padding(.horizontal)
