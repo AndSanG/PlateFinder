@@ -22,6 +22,7 @@ struct PlateSearchView: View {
     
     
     var body: some View {
+        
         VStack(spacing: 20) {
             Text("Ingrese la placa")
                 .font(.largeTitle)
@@ -72,12 +73,7 @@ struct PlateSearchView: View {
                 print("Submit button tapped!")
                 print("Plate Number: \(viewModel.plateNumber)")
                 Task{
-                    do{
-                        try await viewModel.getCarInfo()
-                    }
-                    catch{
-                        print(error.localizedDescription)
-                    }
+                    await viewModel.getCarInfo()
                 }
 
             }) {
@@ -92,24 +88,22 @@ struct PlateSearchView: View {
             .padding(.horizontal)
             .disabled(!isValid)
             
-            if let car = viewModel.car {
-                Text(car.plate + "\n" + car.model + "\n" + car.year + "\n" + car.tint)
-            }
-            
-            Spacer()
         }
         .padding(.vertical)
-    }
-    
-    /// Provides a user-friendly message based on the validation status.
-    private var validationMessage: String {
-        if viewModel.plateNumber.isEmpty {
-            return "Please enter a 3-letter, 4-number code."
-        } else if isValid {
-            return "Input is valid!"
-        } else {
-            return "Invalid format. E.g., ABC1234"
+        
+        Group{
+            switch viewModel.state {
+            case .idle:
+                Text("Ingrese la placa que desea buscar")
+            case .loading:
+                ProgressView()
+            case .loaded(let car):
+                Text(car.plate + "\n" + car.model + "\n" + car.year + "\n" + car.tint)
+            case .error(let error):
+                Text("Error \(error.localizedDescription)")
+            }
         }
+        Spacer()
     }
 }
 

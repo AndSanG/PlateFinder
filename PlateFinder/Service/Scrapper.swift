@@ -24,13 +24,10 @@ func getScrapper(isTesting: Bool)->Scrapping{
     return scrapper
 }
 
-func getURL(with plateNumber: String)->URL{
-    URL(string: "https://consultaweb.ant.gob.ec/PortalWEB/paginas/clientes/clp_grid_citaciones.jsp?ps_tipo_identificacion=PLA&ps_identificacion=" + plateNumber + "&ps_placa=")!
-}
-
 struct AntScrapper: Scrapping {
     func getHTMLResponse(with plateNumber: String) async throws -> String {
-        let (data, _) = try await URLSession.shared.data(from: getURL(with: plateNumber))
+        let endPoint = URL(string: "https://consultaweb.ant.gob.ec/PortalWEB/paginas/clientes/clp_grid_citaciones.jsp?ps_tipo_identificacion=PLA&ps_identificacion=" + plateNumber + "&ps_placa=")!
+        let (data, _) = try await URLSession.shared.data(from: endPoint)
         let response = String(data: data, encoding: .isoLatin1)!
         return response
     }
