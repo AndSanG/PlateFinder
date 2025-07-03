@@ -32,11 +32,10 @@ struct PlateSearchView: View {
             switch viewModel.state {
             case .idle:
                 plateInput()
-                Spacer()
             case .loading:
                 ProgressView()
             case .loaded(let car):
-                Text(car.plate + "\n" + car.model + "\n" + car.year + "\n" + car.tint)
+                CarDetailView(car: car)
                 Spacer()
                 returnButton()
             case .error(let error):
@@ -52,7 +51,17 @@ struct PlateSearchView: View {
             viewModel.state = .idle
         } label: {
             Text("Regresar")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(
+                  RoundedRectangle(cornerRadius: 15)
+                    .stroke(.white, lineWidth: 1)
+                )
         }
+        .padding(.horizontal)
+        
     }
     
     func plateInput() -> some View{
@@ -76,17 +85,20 @@ struct PlateSearchView: View {
                 }
                 .padding(.horizontal)
             
+            Spacer()
+            
+            
             Button(action: {
                 print("Submit button tapped!")
                 print("Plate Number: \(viewModel.plateNumber)")
                 Task{
                     await viewModel.getCarInfo()
                 }
-
+                
             }) {
-                Text("Submit")
+                Text("Consultar")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(isValid ? Color.blue : Color.gray)
