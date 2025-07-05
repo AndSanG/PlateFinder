@@ -66,7 +66,7 @@ struct AntScrapper: Scrapping {
 struct StubScrapper: Scrapping {
     func getHTMLResponse(with plateNumber: String) async throws -> String {
         try await Task.sleep(nanoseconds: NetworkConfig.simulatedDelay)
-        return htmlMock
+        return try MockDataService.loadMockHTML()
     }
 }
 
