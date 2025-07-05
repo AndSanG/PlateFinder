@@ -24,12 +24,12 @@ struct CarInfoService{
     
     func parseCarInfo(from document: Document) throws -> Car {
         guard let table = try document.select("body > table").first() else {
-            throw CarInfoError.tableNotFound
+            throw CarInfoError.noDataFound
         }
         
         let rows = try table.select("tr")
         guard rows.count >= 4 else {
-            throw CarInfoError.parsingError("Expected at least 4 rows, but found \(rows.count).")
+            throw CarInfoError.noDataFound
         }
         
         let firstRow = try rows.get(0).select("td")
@@ -49,7 +49,7 @@ struct CarInfoService{
             service: thirdRow.safeText(at: 3),
             expirationDate: thirdRow.safeText(at: 5),
             tint: fourthRow.safeText(at: 1),
-            tintExpirarionDate: fourthRow.safeText(at: 3)
+            tintExpirationDate: fourthRow.safeText(at: 3)
         )
     }
 }

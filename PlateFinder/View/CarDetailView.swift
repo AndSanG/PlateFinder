@@ -23,8 +23,8 @@ struct CarDetailView: View {
                 CarDetailItem(title: "Uso", subtitle: String(car.segment.capitalized + " de " + car.service.lowercased()), iconName: "car.2")
                 CarDetailItem(title: "Matrícula", subtitle: car.registrationYear, iconName: "document")
                 CarDetailItem(title: "Validez de la matrícula", subtitle: String(car.registrationDate + "  ->  " + car.expirationDate), iconName: "calendar.circle")
-                if (car.tintExpirarionDate != "" ){
-                    CarDetailItem(title: "Validez del polarizado", subtitle: car.tintExpirarionDate, iconName: "calendar")
+                if !car.tintExpirationDate.isEmpty {
+                    CarDetailItem(title: "Validez del polarizado", subtitle: car.tintExpirationDate, iconName: "calendar")
                 }
             }
             .padding()

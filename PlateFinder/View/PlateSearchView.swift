@@ -11,8 +11,8 @@ struct PlateSearchView: View {
     @StateObject var viewModel = PlateFinderViewModel()
     @State private var showInfoBanner: Bool = true
     
-    private let fullValidationRegex = "^[A-Z]{3}\\d{4}$"
-    private let partialValidationRegex = "^[A-Z]{0,3}\\d{0,4}$"
+    private let fullValidationRegex = AppConstants.fullPlateValidationRegex
+    private let partialValidationRegex = AppConstants.partialPlateValidationRegex
     private var isValid: Bool {
         return viewModel.plateNumber.range(of: fullValidationRegex, options: .regularExpression) != nil
     }
@@ -34,8 +34,24 @@ struct PlateSearchView: View {
                     returnButton()
                 }
             case .error(let error):
-                VStack{
-                    Text("Error \(error.localizedDescription)")
+                VStack(spacing: 20) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.system(size: 50))
+                        .foregroundColor(.orange)
+                    
+                    Text(error.localizedDescription)
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    
+                    if let suggestion = (error as? CarInfoError)?.recoverySuggestion {
+                        Text(suggestion)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    
                     Spacer()
                     returnButton()
                 }
@@ -76,7 +92,7 @@ struct PlateSearchView: View {
             Text("Ingrese la placa")
                 .font(.title)
             
-            TextField("ABC1234", text: $viewModel.plateNumber)
+            TextField(AppConstants.defaultPlateExample, text: $viewModel.plateNumber)
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
@@ -123,7 +139,7 @@ struct PlateSearchView: View {
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(isValid ? Color.blue : Color.gray)
-                    .cornerRadius(15)
+                    .cornerRadius(AppConstants.cornerRadius)
             }
             .padding(.horizontal)
             .disabled(!isValid)

@@ -1,26 +1,32 @@
 //
-//  File.swift
-//  SwiftScraper
+//  Car.swift
+//  PlateFinder
 //
 //  Created by Andres Sanchez on 24/06/2025.
 //
 
 import Foundation
 
-struct Car {
-    //var id = UUID()
-    var plate : String
-    var manufacturer : String
-    var colorName : String
-    var registrationYear: String
-    var model: String
-    var segment : String
-    var registrationDate: String
-    var year: String
-    var service: String
-    var expirationDate: String
-    var tint: String
-    var tintExpirarionDate: String
+struct Car: Codable, Identifiable {
+    let id = UUID()
+    let plate: String
+    let manufacturer: String
+    let colorName: String
+    let registrationYear: String
+    let model: String
+    let segment: String
+    let registrationDate: String
+    let year: String
+    let service: String
+    let expirationDate: String
+    let tint: String
+    let tintExpirationDate: String // Fixed typo
+    
+    private enum CodingKeys: String, CodingKey {
+        case plate, manufacturer, colorName, registrationYear
+        case model, segment, registrationDate, year, service
+        case expirationDate, tint, tintExpirationDate
+    }
 }
 
 extension Car {
@@ -37,7 +43,7 @@ extension Car {
             service: "USO PUBLICO",
             expirationDate: "31-05-2030",
             tint: "No existe registro de polarizado",
-            tintExpirarionDate: ""
+            tintExpirationDate: ""
         )
     }
 }

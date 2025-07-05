@@ -34,10 +34,10 @@ struct CarDetailItem: View {
 
 // MARK: - Preview Provider
 
-struct UserProfileView_Previews: PreviewProvider {
+struct CarDetailItem_Previews: PreviewProvider {
     static var previews: some View {
-        CarDetailItem(title: "Susan Sunshine", subtitle: "summer@example.com", iconName: "person.circle")
-            .previewLayout(.sizeThatFits) // Makes the preview fit the content
-            .padding() // Add padding around the preview itself
+        CarDetailItem(title: "Año", subtitle: "2009", iconName: "number")
+            .previewLayout(.sizeThatFits)
+            .padding()
     }
 }
