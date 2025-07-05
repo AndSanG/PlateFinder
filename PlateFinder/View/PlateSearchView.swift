@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PlateSearchView: View {
     @StateObject var viewModel = PlateFinderViewModel()
+    @State private var showInfoBanner: Bool = true
+    
     private let fullValidationRegex = "^[A-Z]{3}\\d{4}$"
     private let partialValidationRegex = "^[A-Z]{0,3}\\d{0,4}$"
     private var isValid: Bool {
@@ -91,6 +93,18 @@ struct PlateSearchView: View {
                     }
                 }
                 .padding(.horizontal)
+                .multilineTextAlignment(.center)
+            Spacer()
+            
+            if showInfoBanner {
+                InfoBannerView(
+                    title: "Importante",
+                    message: "Ingrese la placa sin usar guion",
+                    isShowing: $showInfoBanner
+                )
+                .frame(height: 100)
+            }
+            
             
             Spacer()
             
