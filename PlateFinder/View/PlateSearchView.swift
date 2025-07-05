@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct PlateSearchView: View {
-    @StateObject var viewModel = PlateFinderViewModel()
+    @ObservedObject var viewModel: PlateFinderViewModel
+    @Binding var selectedTab: ContentView.AppTab
     @State private var showInfoBanner: Bool = true
     
     private let fullValidationRegex = AppConstants.fullPlateValidationRegex
@@ -29,7 +30,7 @@ struct PlateSearchView: View {
                 ProgressView()
             case .loaded(let car):
                 VStack{
-                    CarDetailView(car: car)
+                    CarDetailView(car: car, viewModel: viewModel)
                     Spacer()
                     returnButton()
                 }
@@ -72,6 +73,7 @@ struct PlateSearchView: View {
     func returnButton() -> some View{
         Button {
             viewModel.stage = .idle
+            viewModel.plateNumber = ""
         } label: {
             Text("Regresar")
                 .font(.headline)
@@ -92,24 +94,38 @@ struct PlateSearchView: View {
             Text("Ingrese la placa")
                 .font(.title)
             
-            TextField(AppConstants.defaultPlateExample, text: $viewModel.plateNumber)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(isValid ? Color.blue : (isPartiallyValid ? Color.gray : Color.red), lineWidth: 2)
-                )
-                .keyboardType(.asciiCapable)
-                .autocapitalization(.allCharacters)
-                .disableAutocorrection(true)
-                .onChange(of: viewModel.plateNumber) { oldValue, newValue in
-                    if(!isPartiallyValid){
-                        viewModel.plateNumber = oldValue
+            HStack {
+                TextField(AppConstants.defaultPlateExample, text: $viewModel.plateNumber)
+                    .padding(.leading)
+                    .keyboardType(.asciiCapable)
+                    .autocapitalization(.allCharacters)
+                    .disableAutocorrection(true)
+                    .onChange(of: viewModel.plateNumber) { oldValue, newValue in
+                        if(!isPartiallyValid){
+                            viewModel.plateNumber = oldValue
+                        }
                     }
+                    .multilineTextAlignment(.center)
+                
+                if !viewModel.plateNumber.isEmpty {
+                    Button(action: {
+                        viewModel.plateNumber = ""
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                            .font(.title3)
+                    }
+                    .padding(.trailing)
                 }
-                .padding(.horizontal)
-                .multilineTextAlignment(.center)
+            }
+            .padding(.vertical)
+            .background(Color(.systemGray6))
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(isValid ? Color.blue : (isPartiallyValid ? Color.gray : Color.red), lineWidth: 2)
+            )
+            .padding(.horizontal)
             Spacer()
             
             if showInfoBanner {
@@ -164,5 +180,8 @@ struct PlateSearchInput:View {
 }
 
 #Preview {
-    PlateSearchView()
+    PlateSearchView(
+        viewModel: PlateFinderViewModel(userDataService: MockUserDataService()),
+        selectedTab: .constant(.search)
+    )
 }

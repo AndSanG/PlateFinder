@@ -9,13 +9,30 @@ import SwiftUI
 
 struct CarDetailView: View {
     let car: Car
+    @ObservedObject var viewModel: PlateFinderViewModel
+    
     var body: some View {
         ScrollView {
-            Text(car.manufacturer + " " + car.model)
-                .font(.title).bold()
-            Text(car.plate)
-                .font(.title2)
-                .padding(.vertical)
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(car.manufacturer + " " + car.model)
+                        .font(.title).bold()
+                    Text(car.plate)
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    viewModel.toggleFavorite(car.plate)
+                }) {
+                    Image(systemName: viewModel.isFavorite(car.plate) ? "star.fill" : "star")
+                        .font(.title2)
+                        .foregroundColor(viewModel.isFavorite(car.plate) ? .yellow : .gray)
+                }
+            }
+            .padding(.bottom)
             
             VStack(alignment: .leading){
                 CarDetailItem(title: "Año", subtitle: car.year, iconName: "number")
@@ -38,5 +55,5 @@ struct CarDetailView: View {
 }
 
 #Preview {
-    CarDetailView(car: .mock)
+    CarDetailView(car: .mock, viewModel: PlateFinderViewModel(userDataService: MockUserDataService()))
 }
