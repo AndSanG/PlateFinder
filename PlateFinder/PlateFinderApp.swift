@@ -13,6 +13,7 @@ struct PlateFinderApp: App {
         WindowGroup {
             NavigationStack{
                 PlateSearchView()
+                    .environmentObject(IntentHandler.shared)
             }
         }
     }

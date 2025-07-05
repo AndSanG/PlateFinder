@@ -146,6 +146,14 @@ struct PlateSearchView: View {
             
         }
         .padding(.vertical)
+        .onReceive(IntentHandler.shared.$plateToSearch) { plate in
+            if let plate = plate {
+                viewModel.plateNumber = plate
+                Task{
+                    await viewModel.getCarInfo()
+                }
+            }
+        }
     }
 }
 
