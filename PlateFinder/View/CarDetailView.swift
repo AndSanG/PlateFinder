@@ -10,11 +10,12 @@ import SwiftUI
 struct CarDetailView: View {
     let car: Car
     var body: some View {
-        VStack {
+        ScrollView {
             Text(car.manufacturer + " " + car.model)
                 .font(.title).bold()
             Text(car.plate)
-                .font(.title3)
+                .font(.title2)
+                .padding(.vertical)
             
             VStack(alignment: .leading){
                 CarDetailItem(title: "Año", subtitle: car.year, iconName: "number")
@@ -29,7 +30,7 @@ struct CarDetailView: View {
             .padding()
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.white, lineWidth: 2)
+                    .stroke(Color.blue, lineWidth: 2)
             )
         }
         .padding()

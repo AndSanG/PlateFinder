@@ -19,36 +19,41 @@ struct PlateSearchView: View {
     }
     
     var body: some View {
-        
         Group{
-            Text("Ingrese la placa")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(viewModel.isTesting ? Color.orange : Color.blue)
-                .onTapGesture {
-                    viewModel.isTesting = !viewModel.isTesting
-                }
-            
-            switch viewModel.state {
+            switch viewModel.stage {
             case .idle:
                 plateInput()
             case .loading:
                 ProgressView()
             case .loaded(let car):
-                CarDetailView(car: car)
-                Spacer()
-                returnButton()
+                VStack{
+                    CarDetailView(car: car)
+                    Spacer()
+                    returnButton()
+                }
             case .error(let error):
-                Text("Error \(error.localizedDescription)")
-                Spacer()
-                returnButton()
+                VStack{
+                    Text("Error \(error.localizedDescription)")
+                    Spacer()
+                    returnButton()
+                }
+            }
+        }
+        .navigationTitle("Busqueda")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar{
+            Button {
+                viewModel.isTesting = !viewModel.isTesting
+            } label: {
+                Image(systemName: viewModel.isTesting ? "wifi.slash" : "wifi")
+                    .foregroundColor(.white)
             }
         }
     }
     
     func returnButton() -> some View{
         Button {
-            viewModel.state = .idle
+            viewModel.stage = .idle
         } label: {
             Text("Regresar")
                 .font(.headline)
@@ -56,8 +61,8 @@ struct PlateSearchView: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(
-                  RoundedRectangle(cornerRadius: 15)
-                    .stroke(.white, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(.blue, lineWidth: 1)
                 )
         }
         .padding(.horizontal)
@@ -66,6 +71,8 @@ struct PlateSearchView: View {
     
     func plateInput() -> some View{
         VStack(spacing: 20) {
+            Text("Ingrese la placa")
+                .font(.title)
             
             TextField("ABC1234", text: $viewModel.plateNumber)
                 .padding()
@@ -73,7 +80,7 @@ struct PlateSearchView: View {
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(isValid ? Color.green : (isPartiallyValid ? Color.gray : Color.red), lineWidth: 2)
+                        .stroke(isValid ? Color.blue : (isPartiallyValid ? Color.gray : Color.red), lineWidth: 2)
                 )
                 .keyboardType(.asciiCapable)
                 .autocapitalization(.allCharacters)

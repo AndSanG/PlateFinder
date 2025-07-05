@@ -11,7 +11,9 @@ import SwiftUI
 struct PlateFinderApp: App {
     var body: some Scene {
         WindowGroup {
-            PlateSearchView()
+            NavigationStack{
+                PlateSearchView()
+            }
         }
     }
 }

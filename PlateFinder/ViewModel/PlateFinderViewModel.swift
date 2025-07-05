@@ -8,7 +8,7 @@
 import Foundation
 import SwiftSoup
 
-enum State {
+enum Stage {
     case idle
     case loading
     case loaded(car: Car)
@@ -19,23 +19,23 @@ enum State {
 class PlateFinderViewModel: ObservableObject{
     @Published var plateNumber: String = ""
     @Published var isTesting = true
-    @Published var state: State = .idle
+    @Published var stage: Stage = .idle
     
     let service = CarInfoService()
     
     
     func getCarInfo() async {
         
-        self.state = .loading
+        self.stage = .loading
         
         do {
             let car = try await service.getCarInfo( with: plateNumber, isTesting: isTesting)
-            self.state = .loaded(car: car)
+            self.stage = .loaded(car: car)
         } catch let error as CarInfoError {
             print("A specific error occurred: \(error.localizedDescription)")
-            self.state = .error(error)
+            self.stage = .error(error)
         } catch {
-            self.state = .error(error)
+            self.stage = .error(error)
             print("An unexpected error occurred: \(error.localizedDescription)")
         }
     }
