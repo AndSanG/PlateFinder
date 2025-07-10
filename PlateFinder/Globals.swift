@@ -21,6 +21,10 @@ enum AppConstants {
     static let animationDuration: Double = 0.3
     static let cornerRadius: CGFloat = 15
     static let borderWidth: CGFloat = 2
+    
+    // MARK: - Localization
+    static let supportedLanguages = ["en", "es"]
+    static let defaultLanguage = "es"
 }
 
 // MARK: - Network Configuration
