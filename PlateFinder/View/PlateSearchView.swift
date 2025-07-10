@@ -27,7 +27,7 @@ struct PlateSearchView: View {
             case .idle:
                 plateInput()
             case .loading:
-                ProgressView()
+                LoadingView()
             case .loaded(let car):
                 VStack{
                     CarDetailView(car: car, viewModel: viewModel)
