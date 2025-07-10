@@ -58,7 +58,7 @@ struct PlateSearchView: View {
                 }
             }
         }
-        .navigationTitle("Busqueda")
+        .navigationTitle("search_title".localized)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar{
             Button {
@@ -75,7 +75,7 @@ struct PlateSearchView: View {
             viewModel.stage = .idle
             viewModel.plateNumber = ""
         } label: {
-            Text("Regresar")
+            Text("return".localized)
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding()
@@ -91,7 +91,7 @@ struct PlateSearchView: View {
     
     func plateInput() -> some View{
         VStack(spacing: 20) {
-            Text("Ingrese la placa")
+            Text("enter_plate".localized)
                 .font(.title)
             
             HStack {
@@ -130,8 +130,8 @@ struct PlateSearchView: View {
             
             if showInfoBanner {
                 InfoBannerView(
-                    title: "Importante",
-                    message: "Ingrese la placa sin usar guion",
+                    title: "important".localized,
+                    message: "enter_plate_without_dash".localized,
                     isShowing: $showInfoBanner
                 )
                 .frame(height: 100)
@@ -149,7 +149,7 @@ struct PlateSearchView: View {
                 }
                 
             }) {
-                Text("Consultar")
+                Text("consult".localized)
                     .font(.headline)
                     .foregroundColor(.black)
                     .padding()

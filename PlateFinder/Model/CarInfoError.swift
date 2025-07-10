@@ -11,28 +11,28 @@ enum CarInfoError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .networkError:
-            return "No se pudo conectar al servidor. Verifique su conexión a internet."
+            return "network_error".localized
         case .noDataFound:
-            return "No se encontró información para esta placa. Verifique que el número sea correcto."
+            return "no_data_found".localized
         case .invalidPlateFormat:
-            return "El formato de la placa no es válido. Use el formato ABC1234."
+            return "invalid_plate_format".localized
         case .parsingError:
-            return "Error al procesar la información. Intente nuevamente."
+            return "parsing_error".localized
         case .serverError:
-            return "El servidor no está disponible en este momento. Intente más tarde."
+            return "server_error".localized
         }
     }
     
     var recoverySuggestion: String? {
         switch self {
         case .networkError:
-            return "Verifique su conexión a internet e intente nuevamente."
+            return "check_internet_connection".localized
         case .noDataFound:
-            return "Asegúrese de que la placa esté registrada y tenga el formato correcto."
+            return "ensure_plate_registered".localized
         case .invalidPlateFormat:
-            return "Use el formato: 3 letras seguidas de 4 números (ej: ABC1234)."
+            return "use_correct_format".localized
         case .parsingError, .serverError:
-            return "Intente nuevamente en unos minutos."
+            return "try_again_later".localized
         }
     }
 }

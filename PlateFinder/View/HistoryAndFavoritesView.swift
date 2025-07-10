@@ -13,8 +13,12 @@ struct HistoryAndFavoritesView: View {
     @State private var selectedHistoryTab: HistoryTab = .history
     
     enum HistoryTab: String, CaseIterable {
-        case history = "Historial"
-        case favorites = "Favoritos"
+        case history = "history"
+        case favorites = "favorites"
+        
+        var localizedTitle: String {
+            return self.rawValue.localized
+        }
         
         var icon: String {
             switch self {
@@ -32,7 +36,7 @@ struct HistoryAndFavoritesView: View {
                 // Custom tab picker
                 Picker("Tabs", selection: $selectedHistoryTab) {
                     ForEach(HistoryTab.allCases, id: \.self) { tab in
-                        Label(tab.rawValue, systemImage: tab.icon)
+                        Label(tab.localizedTitle, systemImage: tab.icon)
                             .tag(tab)
                     }
                 }
@@ -48,12 +52,12 @@ struct HistoryAndFavoritesView: View {
                     favoritesView
                 }
             }
-            .navigationTitle("Historial y Favoritos")
+            .navigationTitle("history_and_favorites".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 if selectedHistoryTab == .history && !viewModel.searchHistory.isEmpty {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Limpiar") {
+                        Button("clear".localized) {
                             showClearHistoryAlert()
                         }
                         .foregroundColor(.red)
@@ -73,7 +77,7 @@ struct HistoryAndFavoritesView: View {
                     SearchHistoryItemView(
                         item: item,
                         onTap: {
-                            viewModel.searchFromHistory(item)
+                            viewModel.plateNumber = item.plateNumber
                             selectedTab = .search
                         },
                         onDelete: {
@@ -85,7 +89,6 @@ struct HistoryAndFavoritesView: View {
                 }
             }
             .listStyle(.plain)
-            .padding(.horizontal)
         }
     }
     
@@ -99,7 +102,7 @@ struct HistoryAndFavoritesView: View {
                     FavoriteItemView(
                         plateNumber: plateNumber,
                         onTap: {
-                            viewModel.searchFromFavorite(plateNumber)
+                            viewModel.plateNumber = plateNumber
                             selectedTab = .search
                         },
                         onDelete: {
@@ -111,7 +114,6 @@ struct HistoryAndFavoritesView: View {
                 }
             }
             .listStyle(.plain)
-            .padding(.horizontal)
         }
     }
     
@@ -124,11 +126,11 @@ struct HistoryAndFavoritesView: View {
                 .font(.system(size: 60))
                 .foregroundColor(.gray)
             
-            Text("Sin historial de búsquedas")
+            Text("no_search_history".localized)
                 .font(.title2)
                 .fontWeight(.medium)
             
-            Text("Tus búsquedas recientes aparecerán aquí")
+            Text("recent_searches_will_appear_here".localized)
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -147,11 +149,11 @@ struct HistoryAndFavoritesView: View {
                 .font(.system(size: 60))
                 .foregroundColor(.gray)
             
-            Text("Sin placas favoritas")
+            Text("no_favorite_plates".localized)
                 .font(.title2)
                 .fontWeight(.medium)
             
-            Text("Marca placas como favoritas para acceso rápido")
+            Text("mark_plates_as_favorites_for_quick_access".localized)
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -163,13 +165,13 @@ struct HistoryAndFavoritesView: View {
     
     private func showClearHistoryAlert() {
         let alert = UIAlertController(
-            title: "Limpiar Historial",
-            message: "¿Estás seguro de que quieres eliminar todo el historial de búsquedas?",
+            title: "clear_history".localized,
+            message: "clear_history_confirmation".localized,
             preferredStyle: .alert
         )
         
-        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Limpiar", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel))
+        alert.addAction(UIAlertAction(title: "clear".localized, style: .destructive) { _ in
             viewModel.clearHistory()
         })
         

@@ -35,25 +35,23 @@ struct CarDetailView: View {
             .padding(.bottom)
             
             VStack(alignment: .leading){
-                CarDetailItem(title: "Año", subtitle: car.year, iconName: "number")
-                CarDetailItem(title: "Color", subtitle: car.colorName, iconName: "paintbrush")
-                CarDetailItem(title: "Uso", subtitle: String(car.segment.capitalized + " de " + car.service.lowercased()), iconName: "car.2")
-                CarDetailItem(title: "Matrícula", subtitle: car.registrationYear, iconName: "document")
-                CarDetailItem(title: "Validez de la matrícula", subtitle: String(car.registrationDate + "  ->  " + car.expirationDate), iconName: "calendar.circle")
+                CarDetailItem(title: "year".localized, subtitle: car.year, iconName: "number")
+                CarDetailItem(title: "color".localized, subtitle: car.colorName, iconName: "paintbrush")
+                CarDetailItem(title: "usage".localized, subtitle: String(car.segment.capitalized + " de " + car.service.lowercased()), iconName: "car.2")
+                CarDetailItem(title: "registration".localized, subtitle: car.registrationYear, iconName: "document")
+                CarDetailItem(title: "registration_validity".localized, subtitle: String(car.registrationDate + "  ->  " + car.expirationDate), iconName: "calendar.circle")
                 if !car.tintExpirationDate.isEmpty {
-                    CarDetailItem(title: "Validez del polarizado", subtitle: car.tintExpirationDate, iconName: "calendar")
+                    CarDetailItem(title: "tint_validity".localized, subtitle: car.tintExpirationDate, iconName: "calendar")
                 }
             }
             .padding()
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.blue, lineWidth: 2)
-            )
         }
-        .padding()
     }
 }
 
 #Preview {
-    CarDetailView(car: .mock, viewModel: PlateFinderViewModel(userDataService: MockUserDataService()))
+    CarDetailView(
+        car: Car.mock,
+        viewModel: PlateFinderViewModel(userDataService: MockUserDataService())
+    )
 }

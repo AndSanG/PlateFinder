@@ -1,0 +1,95 @@
+/* 
+  Localizable.strings (Spanish)
+  PlateFinder
+  
+  Created by Andres Sanchez on 08/07/2025.
+*/
+
+// MARK: - Navigation & Tabs
+"search" = "Buscar";
+"history" = "Historial";
+"favorites" = "Favoritos";
+"settings" = "Configuración";
+"history_and_favorites" = "Historial y Favoritos";
+
+// MARK: - Plate Search
+"enter_plate" = "Ingrese la placa";
+"consult" = "Consultar";
+"return" = "Regresar";
+"search_title" = "Busqueda";
+
+// MARK: - Info Banner
+"important" = "Importante";
+"enter_plate_without_dash" = "Ingrese la placa sin usar guion";
+
+// MARK: - Loading
+"searching_information" = "Buscando información...";
+"consulting_ant_database" = "Consultando base de datos de la ANT";
+"loading" = "Cargando...";
+"processing_data" = "Procesando datos...";
+
+// MARK: - History & Favorites
+"no_search_history" = "Sin historial de búsquedas";
+"recent_searches_will_appear_here" = "Tus búsquedas recientes aparecerán aquí";
+"no_favorite_plates" = "Sin placas favoritas";
+"mark_plates_as_favorites_for_quick_access" = "Marca placas como favoritas para acceso rápido";
+"clear" = "Limpiar";
+"clear_history" = "Limpiar Historial";
+"clear_history_confirmation" = "¿Estás seguro de que quieres eliminar todo el historial de búsquedas?";
+"cancel" = "Cancelar";
+
+// MARK: - Car Details
+"year" = "Año";
+"color" = "Color";
+"usage" = "Uso";
+"registration" = "Matrícula";
+"registration_validity" = "Validez de la matrícula";
+"tint_validity" = "Validez del polarizado";
+"no_information" = "Sin información";
+
+// MARK: - Actions
+"delete" = "Eliminar";
+"remove" = "Eliminar";
+
+// MARK: - Errors
+"network_error" = "No se pudo conectar al servidor. Verifique su conexión a internet.";
+"no_data_found" = "No se encontró información para esta placa. Verifique que el número sea correcto.";
+"invalid_plate_format" = "El formato de la placa no es válido. Use el formato ABC1234.";
+"parsing_error" = "Error al procesar la información. Intente nuevamente.";
+"server_error" = "El servidor no está disponible en este momento. Intente más tarde.";
+
+// MARK: - Error Recovery Suggestions
+"check_internet_connection" = "Verifique su conexión a internet e intente nuevamente.";
+"ensure_plate_registered" = "Asegúrese de que la placa esté registrada y tenga el formato correcto.";
+"use_correct_format" = "Use el formato: 3 letras seguidas de 4 números (ej: ABC1234).";
+"try_again_later" = "Intente nuevamente en unos minutos.";
+
+// MARK: - Preview Content
+"sample_content" = "Contenido de Ejemplo";
+"toggle_loading" = "Alternar Carga";
+"toggle_banner" = "Alternar Banner";
+"loading_indicators" = "Indicadores de Carga";
+"spinner" = "Giratorio";
+"three_dots" = "Tres Puntos";
+"pulsing_dot" = "Punto Pulsante";
+"loading_button" = "Botón de Carga";
+"dots_loading" = "Carga de Puntos";
+
+// MARK: - Usage Types
+"public_use" = "Uso Público";
+"private_use" = "Uso Privado";
+"commercial_use" = "Uso Comercial";
+
+// MARK: - Vehicle Types
+"automobile" = "Automóvil";
+"motorcycle" = "Motocicleta";
+"truck" = "Camión";
+"bus" = "Autobús";
+
+// MARK: - Settings
+"language" = "Idioma";
+"preferences" = "Preferencias";
+"select_language" = "Seleccionar Idioma";
+"app_restart_notice" = "La aplicación se reiniciará para aplicar el cambio de idioma.";
+"done" = "Listo";
+

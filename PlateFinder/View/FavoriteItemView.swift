@@ -39,7 +39,7 @@ struct FavoriteItemView: View {
             onTap()
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button("Eliminar", role: .destructive) {
+            Button("delete".localized, role: .destructive) {
                 onDelete()
             }
         }

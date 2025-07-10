@@ -25,7 +25,7 @@ struct SearchHistoryItemView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 } else {
-                    Text("Sin información")
+                    Text("no_information".localized)
                         .font(.subheadline)
                         .foregroundColor(.red)
                         .italic()
@@ -57,7 +57,7 @@ struct SearchHistoryItemView: View {
             onTap()
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button("Eliminar", role: .destructive) {
+            Button("delete".localized, role: .destructive) {
                 onDelete()
             }
         }
@@ -65,11 +65,11 @@ struct SearchHistoryItemView: View {
 }
 
 #Preview {
-    VStack(spacing: 10) {
+    VStack(spacing: 20) {
         SearchHistoryItemView(
             item: SearchHistoryItem(
                 plateNumber: "ABC1234",
-                searchDate: Date().addingTimeInterval(-3600),
+                searchDate: Date(),
                 car: Car.mock
             ),
             onTap: {},
@@ -79,7 +79,7 @@ struct SearchHistoryItemView: View {
         SearchHistoryItemView(
             item: SearchHistoryItem(
                 plateNumber: "XYZ5678",
-                searchDate: Date().addingTimeInterval(-7200)
+                searchDate: Date()
             ),
             onTap: {},
             onDelete: {}

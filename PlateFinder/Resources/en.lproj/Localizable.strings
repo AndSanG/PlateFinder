@@ -1,0 +1,94 @@
+/* 
+  Localizable.strings (English)
+  PlateFinder
+  
+  Created by Andres Sanchez on 08/07/2025.
+*/
+
+// MARK: - Navigation & Tabs
+"search" = "Search";
+"history" = "History";
+"favorites" = "Favorites";
+"settings" = "Settings";
+"history_and_favorites" = "History & Favorites";
+
+// MARK: - Plate Search
+"enter_plate" = "Enter Plate Number";
+"consult" = "Submit";
+"return" = "Return";
+"search_title" = "Search";
+
+// MARK: - Info Banner
+"important" = "Important";
+"enter_plate_without_dash" = "Enter the plate without using a dash";
+
+// MARK: - Loading
+"searching_information" = "Searching information...";
+"consulting_ant_database" = "Consulting ANT database";
+"loading" = "Loading...";
+"processing_data" = "Processing data...";
+
+// MARK: - History & Favorites
+"no_search_history" = "No search history";
+"recent_searches_will_appear_here" = "Your recent searches will appear here";
+"no_favorite_plates" = "No favorite plates";
+"mark_plates_as_favorites_for_quick_access" = "Mark plates as favorites for quick access";
+"clear" = "Clear";
+"clear_history" = "Clear History";
+"clear_history_confirmation" = "Are you sure you want to delete all search history?";
+"cancel" = "Cancel";
+
+// MARK: - Car Details
+"year" = "Year";
+"color" = "Color";
+"usage" = "Usage";
+"registration" = "Registration";
+"registration_validity" = "Registration Validity";
+"tint_validity" = "Tint Validity";
+"no_information" = "No information";
+
+// MARK: - Actions
+"delete" = "Delete";
+"remove" = "Remove";
+
+// MARK: - Errors
+"network_error" = "Could not connect to server. Check your internet connection.";
+"no_data_found" = "No information found for this plate. Verify the number is correct.";
+"invalid_plate_format" = "The plate format is not valid. Use format ABC1234.";
+"parsing_error" = "Error processing information. Try again.";
+"server_error" = "Server is not available at this time. Try again later.";
+
+// MARK: - Error Recovery Suggestions
+"check_internet_connection" = "Check your internet connection and try again.";
+"ensure_plate_registered" = "Make sure the plate is registered and has the correct format.";
+"use_correct_format" = "Use format: 3 letters followed by 4 numbers (e.g., ABC1234).";
+"try_again_later" = "Try again in a few minutes.";
+
+// MARK: - Preview Content
+"sample_content" = "Sample Content";
+"toggle_loading" = "Toggle Loading";
+"toggle_banner" = "Toggle Banner";
+"loading_indicators" = "Loading Indicators";
+"spinner" = "Spinner";
+"three_dots" = "Three Dots";
+"pulsing_dot" = "Pulsing Dot";
+"loading_button" = "Loading Button";
+"dots_loading" = "Dots Loading";
+
+// MARK: - Usage Types
+"public_use" = "Public Use";
+"private_use" = "Private Use";
+"commercial_use" = "Commercial Use";
+
+// MARK: - Vehicle Types
+"automobile" = "Automobile";
+"motorcycle" = "Motorcycle";
+"truck" = "Truck";
+"bus" = "Bus";
+
+// MARK: - Settings
+"language" = "Language";
+"preferences" = "Preferences";
+"select_language" = "Select Language";
+"app_restart_notice" = "The app will restart to apply the language change.";
+"done" = "Done"; 

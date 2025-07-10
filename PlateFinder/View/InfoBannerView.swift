@@ -74,12 +74,12 @@ struct InfoBannerView_Previews: PreviewProvider {
         VStack {
             Spacer()
             InfoBannerView(
-                title: "Info",
-                message: "New settings available on your account.",
+                title: "important".localized,
+                message: "enter_plate_without_dash".localized,
                 isShowing: $showBanner
             )
             Spacer()
-            Button("Toggle Banner") {
+            Button("toggle_banner".localized) {
                 showBanner.toggle()
             }
             .buttonStyle(.bordered)
