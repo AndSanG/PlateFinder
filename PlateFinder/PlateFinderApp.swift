@@ -13,12 +13,14 @@ struct PlateFinderApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(IntentHandler.shared)
+                .environmentObject(LanguageManager.shared)
         }
     }
 }
 
 struct ContentView: View {
     @StateObject private var viewModel = PlateFinderViewModel()
+    @EnvironmentObject var languageManager: LanguageManager // when this changes it rerender the app
     @State private var selectedTab: AppTab = .search
     @State private var showLanguageSettings = false
     
@@ -55,5 +57,6 @@ struct ContentView: View {
         .sheet(isPresented: $showLanguageSettings) {
             LanguageSettingsView()
         }
+        .id(languageManager.currentLanguage) // Force view recreation when language changes
     }
 }

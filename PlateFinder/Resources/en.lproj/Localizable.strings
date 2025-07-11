@@ -90,5 +90,5 @@
 "language" = "Language";
 "preferences" = "Preferences";
 "select_language" = "Select Language";
-"app_restart_notice" = "The app will restart to apply the language change.";
+"language_changed" = "Language Changed";
 "done" = "Done"; 

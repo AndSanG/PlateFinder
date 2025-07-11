@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct LanguageSettingsView: View {
-    @StateObject private var languageManager = LanguageManager.shared
+    @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.dismiss) private var dismiss
+    @State private var showingLanguageChanged = false
     
     var body: some View {
         NavigationStack {
@@ -18,9 +19,9 @@ struct LanguageSettingsView: View {
                     ForEach(AppConstants.supportedLanguages, id: \.self) { language in
                         HStack {
                             VStack(alignment: .leading) {
-                                Text(languageDisplayName(for: language))
+                                Text(AppConstants.languageDisplayName(for: language))
                                     .font(.headline)
-                                Text(languageNativeName(for: language))
+                                Text(AppConstants.languageNativeName(for: language))
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -35,17 +36,19 @@ struct LanguageSettingsView: View {
                         .contentShape(Rectangle())
                         .onTapGesture {
                             languageManager.setLanguage(language)
-                            dismiss()
+                            showingLanguageChanged = true
+                            
+                            // Auto-dismiss after a short delay using modern async/await
+                            Task {
+                                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                                dismiss()
+                            }
                         }
                     }
                 } header: {
                     Text("select_language".localized)
                         .font(.headline)
                         .foregroundColor(.primary)
-                } footer: {
-                    Text("app_restart_notice".localized)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
                 }
             }
             .navigationTitle("language".localized)
@@ -57,32 +60,31 @@ struct LanguageSettingsView: View {
                     }
                 }
             }
+            .overlay {
+                if showingLanguageChanged {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("language_changed".localized)
+                                .font(.headline)
+                        }
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(10)
+                        .padding()
+                    }
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .animation(.easeInOut(duration: 0.3), value: showingLanguageChanged)
+                }
+            }
         }
     }
     
-    private func languageDisplayName(for language: String) -> String {
-        switch language {
-        case "en":
-            return "English"
-        case "es":
-            return "Spanish"
-        default:
-            return language.uppercased()
-        }
-    }
-    
-    private func languageNativeName(for language: String) -> String {
-        switch language {
-        case "en":
-            return "English"
-        case "es":
-            return "Español"
-        default:
-            return language.uppercased()
-        }
-    }
 }
 
 #Preview {
     LanguageSettingsView()
+        .environmentObject(LanguageManager.shared)
 } 

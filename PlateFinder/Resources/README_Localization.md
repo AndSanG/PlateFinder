@@ -20,19 +20,54 @@ PlateFinder/Resources/
 
 ## How Localization Works
 
-### 1. String Extension
-The app uses a custom `String` extension in `Globals.swift`:
+### 1. Dynamic Language Manager
+The app uses a custom `LanguageManager` class that supports dynamic language changes without app restart:
+
+```swift
+class LanguageManager: ObservableObject {
+    static let shared = LanguageManager()
+    
+    @Published var currentLanguage: String {
+        didSet {
+            // Update bundle when language changes
+            updateBundle()
+        }
+    }
+    
+    func localizedString(for key: String, value: String? = nil, table: String? = nil) -> String {
+        return bundle.localizedString(forKey: key, value: value ?? key, table: table)
+    }
+}
+```
+
+### 2. Environment Object Injection
+The LanguageManager is injected as an environment object in the main app:
+
+```swift
+ContentView()
+    .environmentObject(LanguageManager.shared)
+```
+
+### 3. String Extension
+The app uses a custom `String` extension that works with the dynamic language manager:
 
 ```swift
 extension String {
     var localized: String {
-        return NSLocalizedString(self, comment: "")
+        LanguageManager.shared.localizedString(for: self, value: self, table: nil)
     }
     
     func localized(with arguments: CVarArg...) -> String {
         return String(format: self.localized, arguments: arguments)
     }
 }
+```
+
+### 4. Accessing Language Manager in Views
+Views can access the language manager using `@EnvironmentObject`:
+
+```swift
+@EnvironmentObject var languageManager: LanguageManager
 ```
 
 ### 2. Usage in Code
@@ -187,24 +222,43 @@ private func languageNativeName(for language: String) -> String {
 
 ## Testing Localization
 
-### Simulator Testing
+### Dynamic Language Change (Recommended)
+1. Open the app
+2. Go to the Settings tab
+3. Tap on Language
+4. Select your desired language
+5. The language change is applied immediately without restarting the app
+6. All views update automatically with the new language
+
+### Simulator Testing (Legacy)
 1. Open the app in the iOS Simulator
 2. Go to Settings > General > Language & Region
 3. Add your language and set it as primary
 4. Restart the app
 
-### Device Testing
+### Device Testing (Legacy)
 1. Install the app on a device
 2. Go to Settings > General > Language & Region
 3. Add your language and set it as primary
 4. Restart the app
 
-### In-App Language Switching
-1. Open the app
-2. Go to the Settings tab
-3. Tap on Language
-4. Select your desired language
-5. The app will restart with the new language
+## Dynamic Language Change Features
+
+### Immediate Language Switching
+- Language changes are applied instantly without app restart
+- All views update automatically with new language
+- Date and time formatting updates to match the selected language
+- User preferences are saved and restored on app launch
+
+### Environment Object System
+- Uses SwiftUI's `@EnvironmentObject` for reactive updates
+- All views automatically update when language changes
+- Clean, SwiftUI-native approach without manual notifications
+
+### Bundle Management
+- Custom bundle system for each language
+- Fallback to main bundle if language bundle not found
+- Efficient resource loading for selected language
 
 ## Best Practices
 
@@ -214,6 +268,8 @@ private func languageNativeName(for language: String) -> String {
 4. **Test thoroughly** - Verify all strings appear correctly
 5. **Consider context** - Some strings may need different translations based on context
 6. **Keep translations up to date** - Update all language files when adding new features
+7. **Use @EnvironmentObject** - Access LanguageManager in views that need language information
+8. **Test dynamic switching** - Verify language changes work in all views
 
 ## Troubleshooting
 

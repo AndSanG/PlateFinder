@@ -33,13 +33,13 @@ extension SearchHistoryItem {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-        formatter.locale = Locale(identifier: "es_ES")
+        formatter.locale = LanguageManager.shared.currentLocale
         return formatter.string(from: searchDate)
     }
     
     var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
-        formatter.locale = Locale(identifier: "es_ES")
+        formatter.locale = LanguageManager.shared.currentLocale
         formatter.unitsStyle = .abbreviated
         return formatter.localizedString(for: searchDate, relativeTo: Date())
     }

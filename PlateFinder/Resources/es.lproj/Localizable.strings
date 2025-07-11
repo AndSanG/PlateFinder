@@ -90,6 +90,6 @@
 "language" = "Idioma";
 "preferences" = "Preferencias";
 "select_language" = "Seleccionar Idioma";
-"app_restart_notice" = "La aplicación se reiniciará para aplicar el cambio de idioma.";
+"language_changed" = "Idioma Cambiado";
 "done" = "Listo";
 
