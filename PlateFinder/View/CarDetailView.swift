@@ -32,7 +32,7 @@ struct CarDetailView: View {
                         .foregroundColor(viewModel.isFavorite(car.plate) ? .yellow : .gray)
                 }
             }
-            .padding(.bottom)
+            .padding(16) 
             
             VStack(alignment: .leading){
                 CarDetailItem(title: "year".localized, subtitle: car.year, iconName: "number")
@@ -45,6 +45,11 @@ struct CarDetailView: View {
                 }
             }
             .padding()
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.blue, lineWidth: 2)
+            )
+
         }
     }
 }
