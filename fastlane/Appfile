@@ -1,4 +1,4 @@
-app_identifier("com.peter.PlateFinder") # The bundle identifier of your app
+app_identifier("com.dapeter.notruper") # The bundle identifier of your app
 apple_id("and_sg@outlook.com") # Your Apple Developer Portal username
 team_id "YLLF7E9854"                      # Your Apple Developer team ID
 itc_team_id "128312804"                  # Your App Store Connect team ID
