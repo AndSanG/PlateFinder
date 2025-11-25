@@ -78,6 +78,16 @@
 		};
 /* End PBXNativeTarget section */
 
+/* Begin PBXResourcesBuildPhase section */
+		23C15EC22E14A8FD00F01B82 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXProject section */
 		23C15EBC2E14A8FD00F01B82 /* Project object */ = {
 			isa = PBXProject;
@@ -88,6 +98,10 @@
 				TargetAttributes = {
 					23C15EC32E14A8FD00F01B82 = {
 						CreatedOnToolsVersion = 16.4;
+					};
+					23C15F202E14D10000F01B82 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 23C15EC32E14A8FD00F01B82;
 					};
 				};
 			};
@@ -114,16 +128,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		23C15EC22E14A8FD00F01B82 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		23C15EC02E14A8FD00F01B82 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -133,6 +137,8 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+
 
 /* Begin XCBuildConfiguration section */
 		23C15ECD2E14A90100F01B82 /* Debug */ = {

@@ -37,7 +37,15 @@ Fetch and increment build number
 [bundle exec] fastlane ios code_signing
 ```
 
+Manage certificates and profiles
 
+### ios ci
+
+```sh
+[bundle exec] fastlane ios ci
+```
+
+CI entry point for pull requests
 
 ### ios beta
 
@@ -45,7 +53,7 @@ Fetch and increment build number
 [bundle exec] fastlane ios beta
 ```
 
-
+Build and upload a new beta to TestFlight
 
 ### ios release
 
@@ -53,7 +61,7 @@ Fetch and increment build number
 [bundle exec] fastlane ios release
 ```
 
-
+Release a build to the App Store
 
 ----
 
