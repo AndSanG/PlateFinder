@@ -39,6 +39,22 @@ Fetch and increment build number
 
 Manage certificates and profiles
 
+### ios build
+
+```sh
+[bundle exec] fastlane ios build
+```
+
+
+
+### ios install_ipa
+
+```sh
+[bundle exec] fastlane ios install_ipa
+```
+
+
+
 ### ios ci
 
 ```sh

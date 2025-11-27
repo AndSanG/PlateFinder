@@ -10,10 +10,10 @@ on:
       lane:
         description: Fastlane lane to run
         required: true
-        default: ci
+        default: beta
         type: choice
         options:
-          - ci
+          - build
           - beta
           - release
 
@@ -42,8 +42,8 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
-      - name: Run fastlane ci
-        run: bundle exec fastlane ci
+      - name: Run fastlane build
+        run: bundle exec fastlane development_build
 
   beta:
     name: TestFlight Deploy

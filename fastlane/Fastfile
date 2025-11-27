@@ -65,17 +65,16 @@ platform :ios do
     )
   end
 
-  desc "CI entry point for pull requests"
-  lane :ci do
-    # Just build for simulator to verify it compiles (no code signing needed for simulator)
-    xcodebuild(
-      project: APP_PROJECT,
-      scheme: APP_SCHEME,
-      sdk: "iphonesimulator",
-      destination: "generic/platform=iOS Simulator",
-      configuration: "Debug",
-      clean: true
-    )
+  desc "Build the App"
+  lane :development_build do
+    code_signing(type: "development")
+    build_app(configuration: "Debug", export_method: "development")
+  end
+
+  desc "Build and install last .ipa"
+  lane :build_install_ipa do
+    development_build
+    install_on_device(ipa: "PlateFinder.ipa")
   end
 
   desc "Build and upload a new beta to TestFlight"
