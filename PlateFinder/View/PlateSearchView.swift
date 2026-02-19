@@ -12,13 +12,24 @@ struct PlateSearchView: View {
     @Binding var selectedTab: ContentView.AppTab
     @State private var showInfoBanner: Bool = true
     
-    private let fullValidationRegex = AppConstants.fullPlateValidationRegex
     private let partialValidationRegex = AppConstants.partialPlateValidationRegex
+    
     private var isValid: Bool {
-        return viewModel.plateNumber.range(of: fullValidationRegex, options: .regularExpression) != nil
+        return AppConstants.isValidPlate(viewModel.plateNumber)
     }
+    
     private var isPartiallyValid: Bool {
         return viewModel.plateNumber.range(of: partialValidationRegex, options: .regularExpression) != nil
+    }
+    
+    // Detect vehicle type based on plate format
+    private var detectedVehicleIcon: String {
+        if viewModel.plateNumber.range(of: AppConstants.motorcyclePlateRegex, options: .regularExpression) != nil {
+            return "motorcycle.fill"
+        } else if viewModel.plateNumber.range(of: AppConstants.carPlateRegex, options: .regularExpression) != nil {
+            return "car.fill"
+        }
+        return ""
     }
     
     var body: some View {
@@ -95,8 +106,17 @@ struct PlateSearchView: View {
                 .font(.title)
             
             HStack {
+                // Show vehicle type icon when valid (on the left)
+                if isValid && !detectedVehicleIcon.isEmpty {
+                    Image(systemName: detectedVehicleIcon)
+                        .foregroundColor(.blue)
+                        .font(.title3)
+                        .padding(.leading)
+                        .transition(.scale.combined(with: .opacity))
+                }
+                
                 TextField(AppConstants.defaultPlateExample, text: $viewModel.plateNumber)
-                    .padding(.leading)
+                    .padding(.leading, isValid && !detectedVehicleIcon.isEmpty ? 0 : nil)
                     .keyboardType(.asciiCapable)
                     .autocapitalization(.allCharacters)
                     .disableAutocorrection(true)

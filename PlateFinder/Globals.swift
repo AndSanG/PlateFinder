@@ -14,9 +14,18 @@ enum AppConstants {
     static let defaultPlateExample = "ABC1234"
     
     // MARK: - Validation Patterns
-    // Supports both standard (AAA1234) and special formats (CD1234)
-    static let fullPlateValidationRegex = "^[A-Z]{2,3}\\d{4}$"
-    static let partialPlateValidationRegex = "^[A-Z]{0,3}\\d{0,4}$"
+    // Partial validation for real-time input
+    static let partialPlateValidationRegex = "^[A-Z]{0,3}\\d{0,4}[A-Z]?$"
+    
+    // Vehicle type detection patterns
+    static let motorcyclePlateRegex = "^[A-Z]{2}\\d{3}[A-Z]$"
+    static let carPlateRegex = "^[A-Z]{2,3}\\d{4}$"
+    
+    // Helper to check if plate is fully valid
+    static func isValidPlate(_ plate: String) -> Bool {
+        return plate.range(of: motorcyclePlateRegex, options: .regularExpression) != nil ||
+               plate.range(of: carPlateRegex, options: .regularExpression) != nil
+    }
     
     // MARK: - UI Constants
     static let animationDuration: Double = 0.3
