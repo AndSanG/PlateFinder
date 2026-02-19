@@ -20,7 +20,7 @@
 
 // MARK: - Info Banner
 "important" = "Important";
-"enter_plate_without_dash" = "Enter the plate without using a dash";
+"plate_format_info" = "Format: ABC1234 or CD1234";
 
 // MARK: - Loading
 "searching_information" = "Searching information...";

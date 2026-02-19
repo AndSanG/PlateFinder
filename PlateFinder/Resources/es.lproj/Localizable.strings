@@ -20,7 +20,7 @@
 
 // MARK: - Info Banner
 "important" = "Importante";
-"enter_plate_without_dash" = "Ingrese la placa sin usar guion";
+"plate_format_info" = "Formato: ABC1234 o CD1234";
 
 // MARK: - Loading
 "searching_information" = "Buscando información...";

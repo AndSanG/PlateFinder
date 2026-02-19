@@ -131,7 +131,7 @@ struct PlateSearchView: View {
             if showInfoBanner {
                 InfoBannerView(
                     title: "important".localized,
-                    message: "enter_plate_without_dash".localized,
+                    message: "plate_format_info".localized,
                     isShowing: $showInfoBanner
                 )
                 .frame(height: 100)

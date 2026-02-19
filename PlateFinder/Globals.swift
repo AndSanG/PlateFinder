@@ -14,7 +14,8 @@ enum AppConstants {
     static let defaultPlateExample = "ABC1234"
     
     // MARK: - Validation Patterns
-    static let fullPlateValidationRegex = "^[A-Z]{3}\\d{4}$"
+    // Supports both standard (AAA1234) and special formats (CD1234)
+    static let fullPlateValidationRegex = "^[A-Z]{2,3}\\d{4}$"
     static let partialPlateValidationRegex = "^[A-Z]{0,3}\\d{0,4}$"
     
     // MARK: - UI Constants
