@@ -6,7 +6,6 @@ struct PlateFinderApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(IntentHandler.shared)
-                .environmentObject(LanguageManager.shared)
         }
     }
 }
@@ -21,7 +20,6 @@ struct ContentView: View {
         )
         return PlateFinderViewModel(loader: loader, store: store, favoritesStore: store)
     }()
-    @EnvironmentObject var languageManager: LanguageManager
     @State private var selectedTab: AppTab = .search
 
     enum AppTab { case search, history }
@@ -38,6 +36,5 @@ struct ContentView: View {
                 .tabItem { Label("history".localized, systemImage: "clock") }
                 .tag(AppTab.history)
         }
-        .id(languageManager.currentLanguage)
     }
 }

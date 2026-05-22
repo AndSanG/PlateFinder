@@ -18,31 +18,6 @@ enum AppConstants {
     static let cornerRadius: CGFloat = 15
     static let borderWidth: CGFloat = 2
     
-    // MARK: - Localization
-    static let supportedLanguages = ["en", "es"]
-    static let defaultLanguage = "es"
-
-    static func languageDisplayName(for language: String) -> String {
-        switch language {
-        case "en":
-            return "English"
-        case "es":
-            return "Spanish"
-        default:
-            return language.uppercased()
-        }
-    }
-    
-    static func languageNativeName(for language: String) -> String {
-        switch language {
-        case "en":
-            return "English"
-        case "es":
-            return "Español"
-        default:
-            return language.uppercased()
-        }
-    }
 }
 
 // MARK: - Network Configuration

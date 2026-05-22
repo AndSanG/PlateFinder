@@ -78,7 +78,7 @@ extension Car {
 extension SearchHistoryItem {
     var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
-        formatter.locale = LanguageManager.shared.currentLocale
+        formatter.locale = Locale.current
         formatter.unitsStyle = .abbreviated
         return formatter.localizedString(for: searchDate, relativeTo: Date())
     }
