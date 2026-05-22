@@ -41,3 +41,4 @@ buildServer.json
 *.p12
 *.mobileprovision
 AuthKey_*.p8
+fastlane/.env*
