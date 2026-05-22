@@ -36,12 +36,12 @@ For beta distribution via TestFlight, the project uses Fastlane. See the `fastla
 
 The project follows GitHub Flow. All changes go through a feature branch and a PR into `master`.
 
-| Trigger | What happens |
-|---|---|
-| PR → `master` | Build check |
+| Trigger          | What happens                         |
+| ---------------- | ------------------------------------ |
+| PR → `master`    | Build check                          |
 | Merge → `master` | Fresh build + upload to TestFlight ⚠️ |
-| Push tag `v*` | Build + submit to App Store |
-| Manual dispatch | Choose `beta` or `release` lane |
+| Push tag `v*`    | Build + submit to App Store          |
+| Manual dispatch  | Choose `beta` or `release` lane      |
 
 > ⚠️ The merge to `master` triggers a fresh build instead of reusing the one from the PR check — a GitHub Actions limitation. A future improvement would upload the `.ipa` as an artifact on the PR run and download it on merge to skip re-archiving.
 
@@ -85,7 +85,7 @@ git commit -m "feat: my feature"
 git push origin feat/my-feature
 gh pr create --base master
 
-# 5. Merge PR → TestFlight upload triggers automatically
+# 5. Merge PR → TestFlight upload triggers automatically.
 
 # 6. When ready for App Store, tag master
 git checkout master
