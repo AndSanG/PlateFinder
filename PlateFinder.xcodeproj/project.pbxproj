@@ -8,15 +8,33 @@
 
 /* Begin PBXBuildFile section */
 		23C15EE82E14C00700F01B82 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 23C15EE72E14C00700F01B82 /* SwiftSoup */; };
+		6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
+		B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
+		EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D8A940BC585CE643B7535661 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 23C15EBC2E14A8FD00F01B82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE9ACE95C4FD24CC61BA688E;
+			remoteInfo = PlateFinder;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		23C15EC42E14A8FD00F01B82 /* PlateFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlateFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75BF773639142EC656FC5515 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		23C15EC62E14A8FD00F01B82 /* PlateFinder */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = PlateFinder;
 			sourceTree = "<group>";
 		};
@@ -31,14 +49,48 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		34FB395BE0DF455819D52CD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */,
+				B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CDB01769A73BFD4C4493A5E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A1456DE2E3CB8CFEC629712 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1E346C614AD5CC82B0F1A8FB /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1E346C614AD5CC82B0F1A8FB /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				75BF773639142EC656FC5515 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
 		23C15EBB2E14A8FD00F01B82 = {
 			isa = PBXGroup;
 			children = (
 				23C15EC62E14A8FD00F01B82 /* PlateFinder */,
 				23C15EC52E14A8FD00F01B82 /* Products */,
+				1A1456DE2E3CB8CFEC629712 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -46,11 +98,23 @@
 			isa = PBXGroup;
 			children = (
 				23C15EC42E14A8FD00F01B82 /* PlateFinder.app */,
+				CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */,
+				600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		65D079B3CEEF4A54BCB562EA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		23C15EC32E14A8FD00F01B82 /* PlateFinder */ = {
@@ -75,6 +139,42 @@
 			productName = PlateFinder;
 			productReference = 23C15EC42E14A8FD00F01B82 /* PlateFinder.app */;
 			productType = "com.apple.product-type.application";
+		};
+		7211BC037143861D1C0A07FE /* PlateFinderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 69629BFB8BCCA1A82D97849E /* Build configuration list for PBXNativeTarget "PlateFinderTests" */;
+			buildPhases = (
+				59984F40F175661D4D46E0AC /* Sources */,
+				34FB395BE0DF455819D52CD4 /* Frameworks */,
+				A365C517B6CA588B32A9F9F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E550B8CCDA52F0CFDA4F00FF /* PBXTargetDependency */,
+			);
+			name = PlateFinderTests;
+			productName = PlateFinderTests;
+			productReference = 600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EE9ACE95C4FD24CC61BA688E /* PlateFinder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 99FB5A88046E9999C482F282 /* Build configuration list for PBXNativeTarget "PlateFinder" */;
+			buildPhases = (
+				65D079B3CEEF4A54BCB562EA /* Headers */,
+				A7D5EA9E2D240A3511531E97 /* Sources */,
+				CDB01769A73BFD4C4493A5E8 /* Frameworks */,
+				77317C700F651DF5D424AB66 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PlateFinder;
+			productName = PlateFinder;
+			productReference = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -110,12 +210,28 @@
 			projectRoot = "";
 			targets = (
 				23C15EC32E14A8FD00F01B82 /* PlateFinder */,
+				EE9ACE95C4FD24CC61BA688E /* PlateFinder */,
+				7211BC037143861D1C0A07FE /* PlateFinderTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		23C15EC22E14A8FD00F01B82 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77317C700F651DF5D424AB66 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A365C517B6CA588B32A9F9F3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -132,9 +248,72 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		59984F40F175661D4D46E0AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A7D5EA9E2D240A3511531E97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		E550B8CCDA52F0CFDA4F00FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PlateFinder;
+			target = EE9ACE95C4FD24CC61BA688E /* PlateFinder */;
+			targetProxy = D8A940BC585CE643B7535661 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		18D77E82877206D187A5BB79 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.tests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "";
+			};
+			name = Release;
+		};
+		21E250E39785E412ADCC22EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.domain;
+				PRODUCT_NAME = PlateFinder;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		23C15ECD2E14A90100F01B82 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -332,6 +511,46 @@
 			};
 			name = Release;
 		};
+		2C4F3C58B2E00518BFDA73A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.tests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "";
+			};
+			name = Debug;
+		};
+		87D6AD97FD212A12EE70857A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.domain;
+				PRODUCT_NAME = PlateFinder;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -349,6 +568,24 @@
 			buildConfigurations = (
 				23C15ED02E14A90100F01B82 /* Debug */,
 				23C15ED12E14A90100F01B82 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		69629BFB8BCCA1A82D97849E /* Build configuration list for PBXNativeTarget "PlateFinderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18D77E82877206D187A5BB79 /* Release */,
+				2C4F3C58B2E00518BFDA73A5 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		99FB5A88046E9999C482F282 /* Build configuration list for PBXNativeTarget "PlateFinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				87D6AD97FD212A12EE70857A /* Release */,
+				21E250E39785E412ADCC22EB /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
