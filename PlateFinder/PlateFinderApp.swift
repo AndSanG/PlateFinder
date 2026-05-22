@@ -23,6 +23,7 @@ struct ContentView: View {
     }()
     @EnvironmentObject var languageManager: LanguageManager
     @State private var selectedTab: AppTab = .search
+    @State private var showLanguageSettings = false
 
     enum AppTab { case search, history, settings }
 
@@ -39,10 +40,13 @@ struct ContentView: View {
                 .tag(AppTab.history)
 
             NavigationStack {
-                SettingsView(showLanguageSettings: .constant(false))
+                SettingsView(showLanguageSettings: $showLanguageSettings)
             }
             .tabItem { Label("settings".localized, systemImage: "gear") }
             .tag(AppTab.settings)
+        }
+        .sheet(isPresented: $showLanguageSettings) {
+            LanguageSettingsView()
         }
         .id(languageManager.currentLanguage)
     }
