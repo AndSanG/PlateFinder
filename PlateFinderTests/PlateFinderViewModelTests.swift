@@ -5,6 +5,26 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test func deleteHistoryItem_removesItemFromHistory() async {
+        let item = SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: nil)
+        let (sut, _, store, _) = makeSUT()
+        store.stubbedItems = [item]
+        await sut.loadHistory()
+        await sut.delete(item)
+        #expect(store.deleteCallCount == 1)
+        #expect(sut.history.isEmpty)
+    }
+
+    @Test func deleteAllHistory_emptiesHistory() async {
+        let item = SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: nil)
+        let (sut, _, store, _) = makeSUT()
+        store.stubbedItems = [item]
+        await sut.loadHistory()
+        await sut.deleteAllHistory()
+        #expect(store.deleteAllCallCount == 1)
+        #expect(sut.history.isEmpty)
+    }
+
     @Test func selectHistoryItem_showsCachedCarWithoutCallingLoader() async {
         let car = makeCar()
         let item = SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: car)

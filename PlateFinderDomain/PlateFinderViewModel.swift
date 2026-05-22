@@ -24,6 +24,16 @@ public final class PlateFinderViewModel {
         self.favoritesStore = favoritesStore
     }
 
+    public func delete(_ item: SearchHistoryItem) async {
+        try? await store.delete(item)
+        history = (try? await store.retrieve()) ?? history
+    }
+
+    public func deleteAllHistory() async {
+        try? await store.deleteAll()
+        history = []
+    }
+
     public func select(_ item: SearchHistoryItem) async {
         if let car = item.car {
             result = car
