@@ -13,10 +13,6 @@ enum AppConstants {
     static let baseURL = "https://consultaweb.ant.gob.ec/PortalWEB/paginas/clientes/clp_grid_citaciones.jsp"
     static let defaultPlateExample = "ABC1234"
     
-    // MARK: - Validation Patterns
-    static let fullPlateValidationRegex = "^[A-Z]{3}\\d{4}$"
-    static let partialPlateValidationRegex = "^[A-Z]{0,3}\\d{0,4}$"
-    
     // MARK: - UI Constants
     static let animationDuration: Double = 0.3
     static let cornerRadius: CGFloat = 15
