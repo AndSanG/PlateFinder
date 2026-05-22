@@ -43,6 +43,8 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
+      # TODO: avoid rebuilding on merge by uploading the .ipa as an artifact
+      # from the PR run and downloading it here instead of re-archiving.
       - name: Build
         run: bundle exec fastlane development_build
 
