@@ -26,6 +26,14 @@ public final class PlateFinderViewModel {
 
     public func search() async {
         guard plateFormat == .car || plateFormat == .bike || plateFormat == .special else { return }
-        _ = try? await loader.loadCarInfo(for: plateText)
+        error = nil
+        result = nil
+        do {
+            result = try await loader.loadCarInfo(for: plateText)
+        } catch let e as CarInfoError {
+            error = e
+        } catch {
+            self.error = .parsingError(error.localizedDescription)
+        }
     }
 }

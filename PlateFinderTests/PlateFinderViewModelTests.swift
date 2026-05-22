@@ -5,6 +5,25 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test func search_setsResultOnSuccessfulLoad() async throws {
+        let expectedCar = makeCar()
+        let (sut, loader, _, _) = makeSUT()
+        loader.stubbedResult = .success(expectedCar)
+        sut.plateText = "ABC1234"
+        await sut.search()
+        #expect(sut.result == expectedCar)
+        #expect(sut.error == nil)
+    }
+
+    @Test func search_setsErrorOnFailure() async {
+        let (sut, loader, _, _) = makeSUT()
+        loader.stubbedResult = .failure(CarInfoError.serverError)
+        sut.plateText = "ABC1234"
+        await sut.search()
+        #expect(sut.error == .serverError)
+        #expect(sut.result == nil)
+    }
+
     @Test func search_callsLoaderWithCurrentPlateText() async {
         let (sut, loader, _, _) = makeSUT()
         sut.plateText = "ABC1234"
