@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		23C15EE82E14C00700F01B82 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 23C15EE72E14C00700F01B82 /* SwiftSoup */; };
+		241EEE15B0FC4994D581E9B2 /* RemoteCarInfoLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */; };
+		251A151B357BDDC9F6C421B0 /* RemoteCarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */; };
 		29CA7BF8F10F6CE718713ACF /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		2DC399746838B93CEC4A59D7 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
 		6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
@@ -32,7 +34,9 @@
 		600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		69E691EF2F90D9CF7107517C /* Car.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		75BF773639142EC656FC5515 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoaderTests.swift; sourceTree = "<group>"; };
 		CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoader.swift; sourceTree = "<group>"; };
 		F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,6 +102,7 @@
 				23C15EC52E14A8FD00F01B82 /* Products */,
 				1A1456DE2E3CB8CFEC629712 /* Frameworks */,
 				289894240C0F16DC86DB31F9 /* PlateFinderDomain */,
+				C240684EEB6C266CACC670A1 /* PlateFinderTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -117,9 +122,19 @@
 				69E691EF2F90D9CF7107517C /* Car.swift */,
 				53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */,
 				F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */,
+				D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */,
 			);
 			name = PlateFinderDomain;
 			path = PlateFinderDomain;
+			sourceTree = "<group>";
+		};
+		C240684EEB6C266CACC670A1 /* PlateFinderTests */ = {
+			isa = PBXGroup;
+			children = (
+				C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */,
+			);
+			name = PlateFinderTests;
+			path = PlateFinderTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				241EEE15B0FC4994D581E9B2 /* RemoteCarInfoLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +296,7 @@
 				F946CEA906D0625192B50CBB /* Car.swift in Sources */,
 				2DC399746838B93CEC4A59D7 /* CarInfoError.swift in Sources */,
 				29CA7BF8F10F6CE718713ACF /* CarInfoLoader.swift in Sources */,
+				251A151B357BDDC9F6C421B0 /* RemoteCarInfoLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +319,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.tests;
+				PRODUCT_MODULE_NAME = PlateFinderTests;
+				PRODUCT_NAME = PlateFinderTests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "";
@@ -539,6 +558,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.tests;
+				PRODUCT_MODULE_NAME = PlateFinderTests;
+				PRODUCT_NAME = PlateFinderTests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "";
