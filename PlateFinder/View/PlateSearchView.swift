@@ -12,13 +12,16 @@ struct PlateSearchView: View {
     @Binding var selectedTab: ContentView.AppTab
     @State private var showInfoBanner: Bool = true
     
-    private let fullValidationRegex = AppConstants.fullPlateValidationRegex
-    private let partialValidationRegex = AppConstants.partialPlateValidationRegex
     private var isValid: Bool {
-        return viewModel.plateNumber.range(of: fullValidationRegex, options: .regularExpression) != nil
+        PlateValidator.isComplete(viewModel.plateNumber)
     }
+
     private var isPartiallyValid: Bool {
-        return viewModel.plateNumber.range(of: partialValidationRegex, options: .regularExpression) != nil
+        PlateValidator.isPartiallyValid(viewModel.plateNumber)
+    }
+
+    private var detectedVehicleIcon: String? {
+        PlateValidator.vehicleIcon(for: viewModel.plateNumber)
     }
     
     var body: some View {
@@ -95,8 +98,17 @@ struct PlateSearchView: View {
                 .font(.title)
             
             HStack {
+                // Show vehicle type icon when valid (on the left)
+                if let icon = detectedVehicleIcon {
+                    Image(systemName: icon)
+                        .foregroundColor(.blue)
+                        .font(.title3)
+                        .padding(.leading)
+                        .transition(.scale.combined(with: .opacity))
+                }
+                
                 TextField(AppConstants.defaultPlateExample, text: $viewModel.plateNumber)
-                    .padding(.leading)
+                    .padding(.leading, detectedVehicleIcon != nil ? 0 : nil)
                     .keyboardType(.asciiCapable)
                     .autocapitalization(.allCharacters)
                     .disableAutocorrection(true)
@@ -131,7 +143,7 @@ struct PlateSearchView: View {
             if showInfoBanner {
                 InfoBannerView(
                     title: "important".localized,
-                    message: "enter_plate_without_dash".localized,
+                    message: "plate_format_info".localized,
                     isShowing: $showInfoBanner
                 )
                 .frame(height: 100)

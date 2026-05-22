@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import SwiftSoup
 
 enum Stage {
@@ -18,7 +19,7 @@ enum Stage {
 @MainActor
 class PlateFinderViewModel: ObservableObject{
     @Published var plateNumber: String = ""
-    @Published var isTesting = true
+    @Published var isTesting = false
     @Published var stage: Stage = .idle
     @Published var searchHistory: [SearchHistoryItem] = []
     @Published var favorites: [String] = []
