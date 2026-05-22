@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05D0BA06CAD3BF2989E12199 /* PlateFinderViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1047008BBC5C2717002AEBD /* PlateFinderViewModelTests.swift */; };
 		1381AFE7BC72FD04281E73B4 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04208635B62D02A9F52DD6E9 /* URLSessionHTTPClientTests.swift */; };
 		23C15EE82E14C00700F01B82 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 23C15EE72E14C00700F01B82 /* SwiftSoup */; };
 		241EEE15B0FC4994D581E9B2 /* RemoteCarInfoLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */; };
@@ -22,9 +23,13 @@
 		610D495C06EAEBE4611EAD59 /* PlateFinderAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */; };
 		6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 		7DFA45B089EA19DCBCD7E34F /* PlateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */; };
+		A622466BAC5F0D63AD55D7DD /* SearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */; };
 		B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
+		D75103A5740F503F599FA995 /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37BBE69FA07658B10A4E493 /* CarStore.swift */; };
+		D938506EFE065ABF7F6506A3 /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552DDD235EFA696983CED76C /* FavoritesStore.swift */; };
 		EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 		F946CEA906D0625192B50CBB /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E691EF2F90D9CF7107517C /* Car.swift */; };
+		FF4290EF12985188CBAE3048 /* PlateFinderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2F63C598C699FD14F5C548 /* PlateFinderViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +54,7 @@
 		1E58F043EBF5A2C9B69B4C57 /* PlateValidator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateValidator.swift; sourceTree = "<group>"; };
 		23C15EC42E14A8FD00F01B82 /* PlateFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlateFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoError.swift; sourceTree = "<group>"; };
+		552DDD235EFA696983CED76C /* FavoritesStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
 		600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		69E691EF2F90D9CF7107517C /* Car.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		75BF773639142EC656FC5515 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -56,10 +62,14 @@
 		8F7D0680CCD26BA6559FE615 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFormat.swift; sourceTree = "<group>"; };
 		B0EF256A00E5E125789091E5 /* PlateFinderAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B37BBE69FA07658B10A4E493 /* CarStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarStore.swift; sourceTree = "<group>"; };
+		C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchHistoryItem.swift; sourceTree = "<group>"; };
 		C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoaderTests.swift; sourceTree = "<group>"; };
 		CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoader.swift; sourceTree = "<group>"; };
+		D1047008BBC5C2717002AEBD /* PlateFinderViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFinderViewModelTests.swift; sourceTree = "<group>"; };
 		D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFinderAPIEndToEndTests.swift; sourceTree = "<group>"; };
+		ED2F63C598C699FD14F5C548 /* PlateFinderViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFinderViewModel.swift; sourceTree = "<group>"; };
 		F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,6 +171,10 @@
 				8F7D0680CCD26BA6559FE615 /* URLSessionHTTPClient.swift */,
 				9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */,
 				1E58F043EBF5A2C9B69B4C57 /* PlateValidator.swift */,
+				C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */,
+				B37BBE69FA07658B10A4E493 /* CarStore.swift */,
+				552DDD235EFA696983CED76C /* FavoritesStore.swift */,
+				ED2F63C598C699FD14F5C548 /* PlateFinderViewModel.swift */,
 			);
 			name = PlateFinderDomain;
 			path = PlateFinderDomain;
@@ -181,6 +195,7 @@
 				C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */,
 				04208635B62D02A9F52DD6E9 /* URLSessionHTTPClientTests.swift */,
 				82E00424C07752F5978E0312 /* PlateValidatorTests.swift */,
+				D1047008BBC5C2717002AEBD /* PlateFinderViewModelTests.swift */,
 			);
 			name = PlateFinderTests;
 			path = PlateFinderTests;
@@ -374,6 +389,7 @@
 				241EEE15B0FC4994D581E9B2 /* RemoteCarInfoLoaderTests.swift in Sources */,
 				1381AFE7BC72FD04281E73B4 /* URLSessionHTTPClientTests.swift in Sources */,
 				5E5B40B886A1A947F45C2F4B /* PlateValidatorTests.swift in Sources */,
+				05D0BA06CAD3BF2989E12199 /* PlateFinderViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +404,10 @@
 				4B7D9FB0F79D5BA3C087A65D /* URLSessionHTTPClient.swift in Sources */,
 				7DFA45B089EA19DCBCD7E34F /* PlateFormat.swift in Sources */,
 				46E4E3CDDF67555471AA21E3 /* PlateValidator.swift in Sources */,
+				A622466BAC5F0D63AD55D7DD /* SearchHistoryItem.swift in Sources */,
+				D75103A5740F503F599FA995 /* CarStore.swift in Sources */,
+				D938506EFE065ABF7F6506A3 /* FavoritesStore.swift in Sources */,
+				FF4290EF12985188CBAE3048 /* PlateFinderViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
