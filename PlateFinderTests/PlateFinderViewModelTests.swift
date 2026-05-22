@@ -5,6 +5,17 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test func loadHistory_populatesHistoryFromStore() async {
+        let items = [
+            SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: makeCar()),
+            SearchHistoryItem(plateNumber: "ZZZ9999", searchDate: Date(), car: nil)
+        ]
+        let (sut, _, store, _) = makeSUT()
+        store.stubbedItems = items
+        await sut.loadHistory()
+        #expect(sut.history == items)
+    }
+
     @Test func search_savesSuccessfulResultToStore() async {
         let car = makeCar()
         let (sut, loader, store, _) = makeSUT()

@@ -24,6 +24,10 @@ public final class PlateFinderViewModel {
         self.favoritesStore = favoritesStore
     }
 
+    public func loadHistory() async {
+        history = (try? await store.retrieve()) ?? []
+    }
+
     public func search() async {
         guard plateFormat == .car || plateFormat == .bike || plateFormat == .special else { return }
         error = nil
