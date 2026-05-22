@@ -28,12 +28,21 @@ public final class PlateFinderViewModel {
         guard plateFormat == .car || plateFormat == .bike || plateFormat == .special else { return }
         error = nil
         result = nil
+        let plate = plateText
+        let car: Car?
         do {
-            result = try await loader.loadCarInfo(for: plateText)
+            let loaded = try await loader.loadCarInfo(for: plate)
+            result = loaded
+            car = loaded
         } catch let e as CarInfoError {
             error = e
+            car = nil
         } catch {
             self.error = .parsingError(error.localizedDescription)
+            car = nil
         }
+        let item = SearchHistoryItem(plateNumber: plate, searchDate: Date(), car: car)
+        try? await store.insert(item)
+        history = (try? await store.retrieve()) ?? history
     }
 }
