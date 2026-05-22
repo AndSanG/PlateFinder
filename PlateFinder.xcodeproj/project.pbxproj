@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		23C15EE82E14C00700F01B82 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 23C15EE72E14C00700F01B82 /* SwiftSoup */; };
+		29CA7BF8F10F6CE718713ACF /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
+		2DC399746838B93CEC4A59D7 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
 		6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 		B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
 		EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
+		F946CEA906D0625192B50CBB /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E691EF2F90D9CF7107517C /* Car.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,9 +28,12 @@
 
 /* Begin PBXFileReference section */
 		23C15EC42E14A8FD00F01B82 /* PlateFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlateFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoError.swift; sourceTree = "<group>"; };
 		600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		69E691EF2F90D9CF7107517C /* Car.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		75BF773639142EC656FC5515 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -91,6 +97,7 @@
 				23C15EC62E14A8FD00F01B82 /* PlateFinder */,
 				23C15EC52E14A8FD00F01B82 /* Products */,
 				1A1456DE2E3CB8CFEC629712 /* Frameworks */,
+				289894240C0F16DC86DB31F9 /* PlateFinderDomain */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,6 +109,17 @@
 				600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		289894240C0F16DC86DB31F9 /* PlateFinderDomain */ = {
+			isa = PBXGroup;
+			children = (
+				69E691EF2F90D9CF7107517C /* Car.swift */,
+				53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */,
+				F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */,
+			);
+			name = PlateFinderDomain;
+			path = PlateFinderDomain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,6 +277,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F946CEA906D0625192B50CBB /* Car.swift in Sources */,
+				2DC399746838B93CEC4A59D7 /* CarInfoError.swift in Sources */,
+				29CA7BF8F10F6CE718713ACF /* CarInfoLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
