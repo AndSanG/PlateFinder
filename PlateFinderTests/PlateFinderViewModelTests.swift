@@ -5,6 +5,22 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test func toggleFavorite_addsFavoriteWhenNotPresent() async {
+        let (sut, _, _, favStore) = makeSUT()
+        await sut.toggleFavorite("ABC1234")
+        #expect(favStore.insertCallCount == 1)
+        #expect(sut.favorites.contains("ABC1234"))
+    }
+
+    @Test func toggleFavorite_removesFavoriteWhenAlreadyPresent() async {
+        let (sut, _, _, favStore) = makeSUT()
+        favStore.stubbedFavorites = ["ABC1234"]
+        await sut.loadFavorites()
+        await sut.toggleFavorite("ABC1234")
+        #expect(favStore.deleteCallCount == 1)
+        #expect(!sut.favorites.contains("ABC1234"))
+    }
+
     @Test func deleteHistoryItem_removesItemFromHistory() async {
         let item = SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: nil)
         let (sut, _, store, _) = makeSUT()

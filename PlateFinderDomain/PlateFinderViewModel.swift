@@ -24,6 +24,20 @@ public final class PlateFinderViewModel {
         self.favoritesStore = favoritesStore
     }
 
+    public func loadFavorites() async {
+        favorites = (try? await favoritesStore.retrieveFavorites()) ?? []
+    }
+
+    public func toggleFavorite(_ plateNumber: String) async {
+        if favorites.contains(plateNumber) {
+            try? await favoritesStore.deleteFavorite(plateNumber)
+            favorites.removeAll { $0 == plateNumber }
+        } else {
+            try? await favoritesStore.insertFavorite(plateNumber)
+            favorites.append(plateNumber)
+        }
+    }
+
     public func delete(_ item: SearchHistoryItem) async {
         try? await store.delete(item)
         history = (try? await store.retrieve()) ?? history
