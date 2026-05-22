@@ -2,9 +2,9 @@ name: iOS CI/CD
 
 on:
   pull_request:
-    branches: [main]
+    branches: [master]
   push:
-    branches: [main]
+    branches: [master]
     tags: ['v*']
   workflow_dispatch:
     inputs:
@@ -47,7 +47,7 @@ jobs:
     runs-on: macos-15
     needs: build
     if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/master') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.lane == 'beta')
     env:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
