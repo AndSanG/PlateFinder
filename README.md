@@ -39,7 +39,7 @@ The project follows GitHub Flow. All changes go through a feature branch and a P
 | Trigger | What happens |
 |---|---|
 | PR → `master` | Build check |
-| Merge → `master` | Build + upload to TestFlight |
+| Merge → `master` | Fresh build + upload to TestFlight |
 | Push tag `v*` | Build + submit to App Store |
 | Manual dispatch | Choose `beta` or `release` lane |
 
