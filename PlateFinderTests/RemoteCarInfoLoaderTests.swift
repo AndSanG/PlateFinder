@@ -79,6 +79,17 @@ import Foundation
         #expect(car == expectedCar)
     }
 
+    @Test func load_doesNotLeakAfterAsyncOperationCompletes() async {
+        let client = HTTPClientSpy()
+        var sut: RemoteCarInfoLoader? = RemoteCarInfoLoader(url: anyURL(), client: client, parser: HTMLParsingSpy())
+        weak var weakSUT = sut
+
+        _ = try? await sut!.loadCarInfo(for: "ABC1234")
+        sut = nil
+
+        #expect(weakSUT == nil, "Potential memory leak — RemoteCarInfoLoader retained after async op")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
