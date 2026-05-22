@@ -92,8 +92,7 @@ struct PlateSearchView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(
-                        PlateValidator.isComplete(viewModel.plateText) ? Color.blue :
-                        (PlateValidator.isPartiallyValid(viewModel.plateText) ? Color.gray : Color.red),
+                        PlateValidator.isComplete(viewModel.plateText) ? Color.blue : Color.gray,
                         lineWidth: 2
                     )
             )

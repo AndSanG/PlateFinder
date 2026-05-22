@@ -23,9 +23,8 @@ struct ContentView: View {
     }()
     @EnvironmentObject var languageManager: LanguageManager
     @State private var selectedTab: AppTab = .search
-    @State private var showLanguageSettings = false
 
-    enum AppTab { case search, history, settings }
+    enum AppTab { case search, history }
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -38,15 +37,6 @@ struct ContentView: View {
             HistoryAndFavoritesView(viewModel: viewModel, selectedTab: $selectedTab)
                 .tabItem { Label("history".localized, systemImage: "clock") }
                 .tag(AppTab.history)
-
-            NavigationStack {
-                SettingsView(showLanguageSettings: $showLanguageSettings)
-            }
-            .tabItem { Label("settings".localized, systemImage: "gear") }
-            .tag(AppTab.settings)
-        }
-        .sheet(isPresented: $showLanguageSettings) {
-            LanguageSettingsView()
         }
         .id(languageManager.currentLanguage)
     }
