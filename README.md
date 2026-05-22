@@ -24,7 +24,7 @@ While typing, the app accepts any input that could still lead to a valid plate â
 ## Requirements
 
 - iOS 17+
-- Xcode 16+
+- Xcode 26+
 
 ## Building
 
