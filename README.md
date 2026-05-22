@@ -52,6 +52,19 @@ git push origin v1.0.0
 
 Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`, and `MATCH_GIT_BASIC_AUTHORIZATION` (release only).
 
+### Branch flow
+
+```
+master  ──●────────────────●────────────────●──────────●─── ...
+           \              /                  \         /│
+feat/A      ●──●──●──────●        feat/B     ●──●──●──● │
+                                                        │
+                                                      tag v1.0.0
+                                                    (→ App Store)
+```
+
+Every merge to `master` uploads to TestFlight. Tags trigger the App Store submission.
+
 ### Example: shipping a feature
 
 ```bash
