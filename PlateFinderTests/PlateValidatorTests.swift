@@ -11,4 +11,9 @@ import Testing
     func validate_returnsInvalidForUnrecognizedInput(plate: String) {
         #expect(PlateValidator.validate(plate) == .invalid)
     }
+
+    @Test(arguments: ["A", "AB", "ABC", "ABC1", "ABC12", "ABC123", "AB1", "AB12", "AB123"])
+    func validate_returnsPartiallyValidForIncompleteInput(plate: String) {
+        #expect(PlateValidator.validate(plate) == .partiallyValid)
+    }
 }
