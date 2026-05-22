@@ -1,5 +1,7 @@
 # PlateFinder
 
+![Unit Tests](https://github.com/AndSanG/PlateFinder/actions/workflows/ci.yml/badge.svg)
+
 An iOS app to look up plate information.
 
 ## Features
@@ -36,12 +38,12 @@ For beta distribution via TestFlight, the project uses Fastlane. See the `fastla
 
 The project follows GitHub Flow. All changes go through a feature branch and a PR into `master`.
 
-| Trigger          | What happens                         |
-| ---------------- | ------------------------------------ |
-| PR → `master`    | Build check                          |
-| Merge → `master` | Fresh build + upload to TestFlight ⚠️ |
-| Push tag `v*`    | Build + submit to App Store          |
-| Manual dispatch  | Choose `beta` or `release` lane      |
+| Trigger          | What happens                              |
+| ---------------- | ----------------------------------------- |
+| PR → `master`    | Unit tests + build check                  |
+| Merge → `master` | Unit tests + fresh build + TestFlight ⚠️  |
+| Push tag `v*`    | Unit tests + build + App Store submission |
+| Manual dispatch  | Choose `beta` or `release` lane           |
 
 > ⚠️ The merge to `master` triggers a fresh build instead of reusing the one from the PR check — a GitHub Actions limitation. A future improvement would upload the `.ipa` as an artifact on the PR run and download it on merge to skip re-archiving.
 

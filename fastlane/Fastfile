@@ -65,6 +65,16 @@ platform :ios do
     )
   end
 
+  desc "Run domain unit tests on macOS (no simulator required)"
+  lane :unit_tests do
+    run_tests(
+      project: APP_PROJECT,
+      scheme: "PlateFinderTests",
+      destination: "platform=macOS,arch=arm64",
+      xcargs: "-skipPackagePluginValidation"
+    )
+  end
+
   desc "Build the App"
   lane :development_build do
     code_signing(type: "development")
@@ -90,7 +100,10 @@ platform :ios do
       output_directory: "fastlane/build"
     )
 
-    upload_to_testflight
+    upload_to_testflight(
+      api_key: lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
+      build_number: lane_context[SharedValues::BUILD_NUMBER].to_s
+    )
   end
 
   desc "Release a build to the App Store"

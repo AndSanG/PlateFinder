@@ -22,9 +22,28 @@ env:
   LC_ALL: en_US.UTF-8
 
 jobs:
-  ci:
+  test:
+    name: Unit Tests
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26.0.1"
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Run unit tests
+        run: bundle exec fastlane unit_tests
+
+  build:
     name: Build & Deploy
     runs-on: macos-15
+    needs: test
     env:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
