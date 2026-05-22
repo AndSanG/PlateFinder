@@ -28,6 +28,6 @@ public final class RemoteCarInfoLoader: CarInfoLoader {
             throw CarInfoError.invalidData
         }
 
-        fatalError("mapping not implemented")
+        throw CarInfoError.invalidData
     }
 }

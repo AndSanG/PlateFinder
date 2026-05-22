@@ -54,6 +54,20 @@ import Foundation
         }
     }
 
+    @Test func load_deliversInvalidDataErrorOn200WithInvalidHTML() async {
+        let (sut, client) = makeSUT()
+        client.stubbedResult = .success(makeHTTPResponse(statusCode: 200, data: Data("invalid html".utf8)))
+
+        do {
+            _ = try await sut.loadCarInfo(for: "ABC1234")
+            Issue.record("Expected invalidData error, got no error")
+        } catch let error as CarInfoError {
+            #expect(error == .invalidData)
+        } catch {
+            Issue.record("Expected CarInfoError.invalidData, got \(error)")
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(url: URL = anyURL()) -> (sut: RemoteCarInfoLoader, client: HTTPClientSpy) {
@@ -69,9 +83,9 @@ private func anyURL() -> URL {
     URL(string: "https://a-url.com")!
 }
 
-private func makeHTTPResponse(statusCode: Int, url: URL = URL(string: "https://a-url.com")!) -> (Data, HTTPURLResponse) {
+private func makeHTTPResponse(statusCode: Int, data: Data = Data(), url: URL = URL(string: "https://a-url.com")!) -> (Data, HTTPURLResponse) {
     let response = HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-    return (Data(), response)
+    return (data, response)
 }
 
 // MARK: - Test Doubles
