@@ -24,6 +24,15 @@ public final class PlateFinderViewModel {
         self.favoritesStore = favoritesStore
     }
 
+    public func select(_ item: SearchHistoryItem) async {
+        if let car = item.car {
+            result = car
+            return
+        }
+        plateText = item.plateNumber
+        await search()
+    }
+
     public func loadHistory() async {
         history = (try? await store.retrieve()) ?? []
     }

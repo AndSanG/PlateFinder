@@ -5,6 +5,22 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test func selectHistoryItem_showsCachedCarWithoutCallingLoader() async {
+        let car = makeCar()
+        let item = SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: car)
+        let (sut, loader, _, _) = makeSUT()
+        await sut.select(item)
+        #expect(sut.result == car)
+        #expect(loader.loadCallCount == 0)
+    }
+
+    @Test func selectHistoryItem_triggersLoadWhenNoCachedCar() async {
+        let item = SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: nil)
+        let (sut, loader, _, _) = makeSUT()
+        await sut.select(item)
+        #expect(loader.loadedPlates == ["ABC1234"])
+    }
+
     @Test func loadHistory_populatesHistoryFromStore() async {
         let items = [
             SearchHistoryItem(plateNumber: "ABC1234", searchDate: Date(), car: makeCar()),
