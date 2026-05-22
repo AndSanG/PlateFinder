@@ -26,5 +26,6 @@ public final class PlateFinderViewModel {
 
     public func search() async {
         guard plateFormat == .car || plateFormat == .bike || plateFormat == .special else { return }
+        _ = try? await loader.loadCarInfo(for: plateText)
     }
 }
