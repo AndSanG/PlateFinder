@@ -31,3 +31,23 @@ While typing, the app accepts any input that could still lead to a valid plate �
 Open `PlateFinder.xcodeproj` in Xcode and run on a simulator or device.
 
 For beta distribution via TestFlight, the project uses Fastlane. See the `fastlane/` directory for available lanes.
+
+## CI/CD
+
+The project follows GitHub Flow. All changes go through a feature branch and a PR into `main`.
+
+| Trigger | What happens |
+|---|---|
+| PR → `main` | Build check |
+| Merge → `main` | Build + upload to TestFlight |
+| Push tag `v*` | Build + submit to App Store |
+| Manual dispatch | Choose `beta` or `release` lane |
+
+To ship a release, tag the commit on `main`:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`, and `MATCH_GIT_BASIC_AUTHORIZATION` (release only).
