@@ -26,4 +26,9 @@ import Testing
     func validate_returnsBikeForCompleteBikePlate(plate: String) {
         #expect(PlateValidator.validate(plate) == .bike)
     }
+
+    @Test(arguments: ["CD1234", "AB9999"])
+    func validate_returnsSpecialForCompleteSpecialPlate(plate: String) {
+        #expect(PlateValidator.validate(plate) == .special)
+    }
 }
