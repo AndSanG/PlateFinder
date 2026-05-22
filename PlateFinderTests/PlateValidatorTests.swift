@@ -16,4 +16,9 @@ import Testing
     func validate_returnsPartiallyValidForIncompleteInput(plate: String) {
         #expect(PlateValidator.validate(plate) == .partiallyValid)
     }
+
+    @Test(arguments: ["ABC1234", "ZZZ9999", "PBX0001"])
+    func validate_returnsCarForCompleteCarPlate(plate: String) {
+        #expect(PlateValidator.validate(plate) == .car)
+    }
 }
