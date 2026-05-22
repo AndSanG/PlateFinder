@@ -25,6 +25,20 @@ import Foundation
         #expect(client.requestedURLs == [expectedURL])
     }
 
+    @Test func load_deliversConnectivityErrorOnClientError() async {
+        let (sut, client) = makeSUT()
+        client.stubbedResult = .failure(NSError(domain: "any", code: 0))
+
+        do {
+            _ = try await sut.loadCarInfo(for: "ABC1234")
+            Issue.record("Expected connectivity error, got no error")
+        } catch let error as CarInfoError {
+            #expect(error == .connectivity)
+        } catch {
+            Issue.record("Expected CarInfoError.connectivity, got \(error)")
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(url: URL = anyURL()) -> (sut: RemoteCarInfoLoader, client: HTTPClientSpy) {

@@ -16,7 +16,11 @@ public final class RemoteCarInfoLoader: CarInfoLoader {
             URLQueryItem(name: "ps_identificacion", value: plateNumber),
             URLQueryItem(name: "ps_placa", value: "")
         ]
-        _ = try await client.get(from: components.url!)
+        do {
+            _ = try await client.get(from: components.url!)
+        } catch {
+            throw CarInfoError.connectivity
+        }
         fatalError("mapping not implemented")
     }
 }
