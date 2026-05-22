@@ -51,3 +51,30 @@ git push origin v1.0.0
 ```
 
 Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`, and `MATCH_GIT_BASIC_AUTHORIZATION` (release only).
+
+### Example: shipping a feature
+
+```bash
+# 1. Start from master
+git checkout master
+git pull origin master
+
+# 2. Create a feature branch
+git checkout -b feat/my-feature
+
+# 3. Work, commit, repeat
+git add ...
+git commit -m "feat: my feature"
+
+# 4. Open a PR → build check runs automatically
+git push origin feat/my-feature
+gh pr create --base master
+
+# 5. Merge PR → TestFlight upload triggers automatically
+
+# 6. When ready for App Store, tag master
+git checkout master
+git pull origin master
+git tag v1.2.0
+git push origin v1.2.0
+```
