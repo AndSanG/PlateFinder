@@ -21,4 +21,9 @@ import Testing
     func validate_returnsCarForCompleteCarPlate(plate: String) {
         #expect(PlateValidator.validate(plate) == .car)
     }
+
+    @Test(arguments: ["AB123A", "ZZ999Z"])
+    func validate_returnsBikeForCompleteBikePlate(plate: String) {
+        #expect(PlateValidator.validate(plate) == .bike)
+    }
 }
