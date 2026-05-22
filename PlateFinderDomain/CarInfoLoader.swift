@@ -7,3 +7,8 @@ public protocol HTTPClient {
 public protocol CarInfoLoader {
     func loadCarInfo(for plateNumber: String) async throws -> Car
 }
+
+// Injected by the app target; implementation uses SwiftSoup (infrastructure).
+public protocol HTMLParsing {
+    func parse(_ html: String) throws -> Car
+}

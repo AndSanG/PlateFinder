@@ -6,7 +6,7 @@ import Foundation
 
     @Test func init_doesNotRequestData() {
         let client = HTTPClientSpy()
-        var sut: RemoteCarInfoLoader? = RemoteCarInfoLoader(url: anyURL(), client: client)
+        var sut: RemoteCarInfoLoader? = RemoteCarInfoLoader(url: anyURL(), client: client, parser: HTMLParsingSpy())
         weak var weakSUT = sut
 
         #expect(client.requestedURLs.isEmpty)
@@ -68,12 +68,35 @@ import Foundation
         }
     }
 
+    @Test func load_deliversCarOn200WithValidHTML() async throws {
+        let expectedCar = makeCar()
+        let parser = HTMLParsingSpy(result: .success(expectedCar))
+        let (sut, client) = makeSUT(parser: parser)
+        client.stubbedResult = .success(makeHTTPResponse(statusCode: 200, data: Data("any html".utf8)))
+
+        let car = try await sut.loadCarInfo(for: "ABC1234")
+
+        #expect(car == expectedCar)
+    }
+
     // MARK: - Helpers
 
-    private func makeSUT(url: URL = anyURL()) -> (sut: RemoteCarInfoLoader, client: HTTPClientSpy) {
+    private func makeSUT(
+        url: URL = anyURL(),
+        parser: HTMLParsing = HTMLParsingSpy()
+    ) -> (sut: RemoteCarInfoLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
-        let sut = RemoteCarInfoLoader(url: url, client: client)
+        let sut = RemoteCarInfoLoader(url: url, client: client, parser: parser)
         return (sut, client)
+    }
+
+    private func makeCar() -> Car {
+        Car(
+            plate: "ABC1234", manufacturer: "TOYOTA", colorName: "WHITE",
+            registrationYear: "2020", model: "COROLLA", segment: "SEDAN",
+            registrationDate: "01-01-2020", year: "2019", service: "PRIVATE",
+            expirationDate: "01-01-2025", tint: "NONE", tintExpirationDate: ""
+        )
     }
 }
 
@@ -98,5 +121,17 @@ private final class HTTPClientSpy: HTTPClient {
     func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
         requestedURLs.append(url)
         return try stubbedResult.get()
+    }
+}
+
+private final class HTMLParsingSpy: HTMLParsing {
+    var result: Result<Car, Error>
+
+    init(result: Result<Car, Error> = .failure(NSError(domain: "HTMLParsingSpy", code: 0))) {
+        self.result = result
+    }
+
+    func parse(_ html: String) throws -> Car {
+        try result.get()
     }
 }

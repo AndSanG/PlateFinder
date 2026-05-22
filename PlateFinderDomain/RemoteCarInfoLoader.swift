@@ -3,10 +3,12 @@ import Foundation
 public final class RemoteCarInfoLoader: CarInfoLoader {
     private let url: URL
     private let client: HTTPClient
+    private let parser: HTMLParsing
 
-    public init(url: URL, client: HTTPClient) {
+    public init(url: URL, client: HTTPClient, parser: HTMLParsing) {
         self.url = url
         self.client = client
+        self.parser = parser
     }
 
     public func loadCarInfo(for plateNumber: String) async throws -> Car {
@@ -28,6 +30,14 @@ public final class RemoteCarInfoLoader: CarInfoLoader {
             throw CarInfoError.invalidData
         }
 
-        throw CarInfoError.invalidData
+        guard let html = String(data: data, encoding: .isoLatin1) else {
+            throw CarInfoError.invalidData
+        }
+
+        do {
+            return try parser.parse(html)
+        } catch {
+            throw CarInfoError.invalidData
+        }
     }
 }
