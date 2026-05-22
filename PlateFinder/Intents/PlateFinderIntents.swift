@@ -32,15 +32,9 @@ struct PlateEntityQuery: EntityQuery {
     }
     
     func entities(matching string: String) async throws -> [PlateEntity] {
-        // Clean and validate the input string
         let cleanedString = string.uppercased().replacingOccurrences(of: " ", with: "")
-        
-        // Basic validation - if it looks like a plate, return it
-        if cleanedString.count >= 3 && cleanedString.count <= 8 {
-            return [PlateEntity(id: cleanedString, plateNumber: cleanedString)]
-        }
-        
-        return []
+        guard PlateValidator.isPartiallyValid(cleanedString) else { return [] }
+        return [PlateEntity(id: cleanedString, plateNumber: cleanedString)]
     }
 }
 

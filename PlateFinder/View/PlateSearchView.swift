@@ -99,7 +99,7 @@ struct PlateSearchView: View {
             
             HStack {
                 // Show vehicle type icon when valid (on the left)
-                if isValid, let icon = detectedVehicleIcon {
+                if let icon = detectedVehicleIcon {
                     Image(systemName: icon)
                         .foregroundColor(.blue)
                         .font(.title3)
@@ -108,7 +108,7 @@ struct PlateSearchView: View {
                 }
                 
                 TextField(AppConstants.defaultPlateExample, text: $viewModel.plateNumber)
-                    .padding(.leading, isValid && detectedVehicleIcon != nil ? 0 : nil)
+                    .padding(.leading, detectedVehicleIcon != nil ? 0 : nil)
                     .keyboardType(.asciiCapable)
                     .autocapitalization(.allCharacters)
                     .disableAutocorrection(true)

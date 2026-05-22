@@ -16,7 +16,7 @@ struct PlateValidator {
     private static let bikeRegex = "^[A-Z]{2}\\d{3}[A-Z]$"
     private static let carRegex = "^[A-Z]{3}\\d{4}$"
     private static let specialRegex = "^[A-Z]{2}\\d{4}$"
-    private static let partialRegex = "^[A-Z]{0,3}\\d{0,4}[A-Z]?$"
+    private static let partialRegex = "^[A-Z]{1,3}(\\d{1,4}[A-Z]?)?$"
 
     // MARK: - Public API
 
