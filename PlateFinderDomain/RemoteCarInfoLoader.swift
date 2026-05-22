@@ -23,21 +23,21 @@ public final class RemoteCarInfoLoader: CarInfoLoader {
         do {
             (data, response) = try await client.get(from: components.url!)
         } catch {
-            throw CarInfoError.connectivity
+            throw CarInfoError.networkError(error)
         }
 
         guard response.statusCode == 200 else {
-            throw CarInfoError.invalidData
+            throw CarInfoError.serverError
         }
 
         guard let html = String(data: data, encoding: .isoLatin1) else {
-            throw CarInfoError.invalidData
+            throw CarInfoError.parsingError("Failed to decode response as ISO Latin 1")
         }
 
         do {
             return try parser.parse(html)
         } catch {
-            throw CarInfoError.invalidData
+            throw CarInfoError.parsingError(error.localizedDescription)
         }
     }
 }

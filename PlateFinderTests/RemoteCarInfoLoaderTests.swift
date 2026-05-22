@@ -25,46 +25,46 @@ import Foundation
         #expect(client.requestedURLs == [expectedURL])
     }
 
-    @Test func load_deliversConnectivityErrorOnClientError() async {
+    @Test func load_deliversNetworkErrorOnClientError() async {
         let (sut, client) = makeSUT()
         client.stubbedResult = .failure(NSError(domain: "any", code: 0))
 
         do {
             _ = try await sut.loadCarInfo(for: "ABC1234")
-            Issue.record("Expected connectivity error, got no error")
+            Issue.record("Expected networkError, got no error")
         } catch let error as CarInfoError {
-            #expect(error == .connectivity)
+            #expect(error == .networkError(NSError(domain: "any", code: 0)))
         } catch {
-            Issue.record("Expected CarInfoError.connectivity, got \(error)")
+            Issue.record("Expected CarInfoError.networkError, got \(error)")
         }
     }
 
     @Test(arguments: [199, 201, 300, 400, 500])
-    func load_deliversInvalidDataErrorOnNon200Response(statusCode: Int) async {
+    func load_deliversServerErrorOnNon200Response(statusCode: Int) async {
         let (sut, client) = makeSUT()
         client.stubbedResult = .success(makeHTTPResponse(statusCode: statusCode))
 
         do {
             _ = try await sut.loadCarInfo(for: "ABC1234")
-            Issue.record("Expected invalidData error, got no error")
+            Issue.record("Expected serverError, got no error")
         } catch let error as CarInfoError {
-            #expect(error == .invalidData)
+            #expect(error == .serverError)
         } catch {
-            Issue.record("Expected CarInfoError.invalidData, got \(error)")
+            Issue.record("Expected CarInfoError.serverError, got \(error)")
         }
     }
 
-    @Test func load_deliversInvalidDataErrorOn200WithInvalidHTML() async {
+    @Test func load_deliversParsingErrorOn200WhenParserFails() async {
         let (sut, client) = makeSUT()
-        client.stubbedResult = .success(makeHTTPResponse(statusCode: 200, data: Data("invalid html".utf8)))
+        client.stubbedResult = .success(makeHTTPResponse(statusCode: 200, data: Data("any html".utf8)))
 
         do {
             _ = try await sut.loadCarInfo(for: "ABC1234")
-            Issue.record("Expected invalidData error, got no error")
+            Issue.record("Expected parsingError, got no error")
         } catch let error as CarInfoError {
-            #expect(error == .invalidData)
+            #expect(error == .parsingError(""))
         } catch {
-            Issue.record("Expected CarInfoError.invalidData, got \(error)")
+            Issue.record("Expected CarInfoError.parsingError, got \(error)")
         }
     }
 

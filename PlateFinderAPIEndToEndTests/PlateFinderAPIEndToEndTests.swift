@@ -34,9 +34,9 @@ struct PlateFinderAPIEndToEndTests {
             _ = try await sut.loadCarInfo(for: "ABC1234")
             Issue.record("Expected connectivity error")
         } catch let error as CarInfoError {
-            #expect(error == .connectivity)
+            #expect(error == .networkError(NSError(domain: "any", code: 0)))
         } catch {
-            Issue.record("Expected CarInfoError.connectivity, got \(error)")
+            Issue.record("Expected CarInfoError.networkError, got \(error)")
         }
     }
 }
