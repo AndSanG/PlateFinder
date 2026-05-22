@@ -5,6 +5,20 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test func doesNotLeakAfterSearchCompletes() async {
+        let loader = CarInfoLoaderSpy()
+        let store = CarStoreSpy()
+        let favStore = FavoritesStoreSpy()
+        var sut: PlateFinderViewModel? = PlateFinderViewModel(loader: loader, store: store, favoritesStore: favStore)
+        weak var weakSUT = sut
+
+        sut!.plateText = "ABC1234"
+        await sut!.search()
+        sut = nil
+
+        #expect(weakSUT == nil, "Potential memory leak — PlateFinderViewModel retained after search")
+    }
+
     @Test func toggleFavorite_addsFavoriteWhenNotPresent() async {
         let (sut, _, _, favStore) = makeSUT()
         await sut.toggleFavorite("ABC1234")
