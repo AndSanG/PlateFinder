@@ -9,9 +9,12 @@
 /* Begin PBXBuildFile section */
 		05D0BA06CAD3BF2989E12199 /* PlateFinderViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1047008BBC5C2717002AEBD /* PlateFinderViewModelTests.swift */; };
 		1381AFE7BC72FD04281E73B4 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04208635B62D02A9F52DD6E9 /* URLSessionHTTPClientTests.swift */; };
+		2151BA56DDFAFF88ED07E9F0 /* RemoteCarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */; };
+		218A788860414E4A6505D998 /* SearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */; };
 		23C15EE82E14C00700F01B82 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 23C15EE72E14C00700F01B82 /* SwiftSoup */; };
 		241EEE15B0FC4994D581E9B2 /* RemoteCarInfoLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */; };
 		251A151B357BDDC9F6C421B0 /* RemoteCarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */; };
+		28C3DD478D5CEDB67E533DA2 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7D0680CCD26BA6559FE615 /* URLSessionHTTPClient.swift */; };
 		29CA7BF8F10F6CE718713ACF /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		2DC399746838B93CEC4A59D7 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
 		3B0806C0FA2D0B846EFB7FD5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
@@ -19,12 +22,20 @@
 		46F90654F7FD4FCFAE8D752A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
 		4B7D9FB0F79D5BA3C087A65D /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7D0680CCD26BA6559FE615 /* URLSessionHTTPClient.swift */; };
 		4DB5F6A903D19A74DA2C09DC /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 48261460370CAD1D0ADC68A8 /* SwiftSoup */; };
+		4FECA91C16D0EA39167AEC78 /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37BBE69FA07658B10A4E493 /* CarStore.swift */; };
 		5E5B40B886A1A947F45C2F4B /* PlateValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E00424C07752F5978E0312 /* PlateValidatorTests.swift */; };
 		610D495C06EAEBE4611EAD59 /* PlateFinderAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */; };
 		6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 		7DFA45B089EA19DCBCD7E34F /* PlateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */; };
+		95963F501390299A31946340 /* PlateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E58F043EBF5A2C9B69B4C57 /* PlateValidator.swift */; };
+		97D52AC50AA08E0B1BC35DFE /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E691EF2F90D9CF7107517C /* Car.swift */; };
 		A622466BAC5F0D63AD55D7DD /* SearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */; };
+		B378E8ED83BA17F72620C660 /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
+		C93CF9C7F5D2D40CD916C218 /* PlateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */; };
+		C9A3CB41A6A7D95B9848FC31 /* PlateFinderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2F63C598C699FD14F5C548 /* PlateFinderViewModel.swift */; };
+		CC6246FB00B19A57A768508B /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552DDD235EFA696983CED76C /* FavoritesStore.swift */; };
+		CF85500E0B90BB5A6910FDF0 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
 		D75103A5740F503F599FA995 /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37BBE69FA07658B10A4E493 /* CarStore.swift */; };
 		D938506EFE065ABF7F6506A3 /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552DDD235EFA696983CED76C /* FavoritesStore.swift */; };
 		EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
@@ -379,6 +390,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97D52AC50AA08E0B1BC35DFE /* Car.swift in Sources */,
+				CF85500E0B90BB5A6910FDF0 /* CarInfoError.swift in Sources */,
+				B378E8ED83BA17F72620C660 /* CarInfoLoader.swift in Sources */,
+				2151BA56DDFAFF88ED07E9F0 /* RemoteCarInfoLoader.swift in Sources */,
+				28C3DD478D5CEDB67E533DA2 /* URLSessionHTTPClient.swift in Sources */,
+				C93CF9C7F5D2D40CD916C218 /* PlateFormat.swift in Sources */,
+				95963F501390299A31946340 /* PlateValidator.swift in Sources */,
+				218A788860414E4A6505D998 /* SearchHistoryItem.swift in Sources */,
+				4FECA91C16D0EA39167AEC78 /* CarStore.swift in Sources */,
+				CC6246FB00B19A57A768508B /* FavoritesStore.swift in Sources */,
+				C9A3CB41A6A7D95B9848FC31 /* PlateFinderViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,6 +650,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -665,6 +688,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
