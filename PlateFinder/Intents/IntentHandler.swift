@@ -1,5 +1,4 @@
-
-import Foundation
+import SwiftUI
 
 @MainActor
 class IntentHandler: ObservableObject {

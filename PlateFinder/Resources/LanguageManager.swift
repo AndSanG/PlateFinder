@@ -5,7 +5,7 @@
 //  Created by Andres Sanchez on 09/07/2025.
 //
 
-import Foundation
+import SwiftUI
 
 class LanguageManager: ObservableObject {
     static let shared = LanguageManager()
