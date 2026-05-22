@@ -15,6 +15,16 @@ import Foundation
         #expect(weakSUT == nil, "Potential memory leak — RemoteCarInfoLoader")
     }
 
+    @Test func load_requestsDataFromURL() async {
+        let baseURL = URL(string: "https://a-base-url.com")!
+        let (sut, client) = makeSUT(url: baseURL)
+
+        _ = try? await sut.loadCarInfo(for: "ABC1234")
+
+        let expectedURL = URL(string: "https://a-base-url.com?ps_tipo_identificacion=PLA&ps_identificacion=ABC1234&ps_placa=")!
+        #expect(client.requestedURLs == [expectedURL])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(url: URL = anyURL()) -> (sut: RemoteCarInfoLoader, client: HTTPClientSpy) {
