@@ -13,7 +13,11 @@
 		251A151B357BDDC9F6C421B0 /* RemoteCarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */; };
 		29CA7BF8F10F6CE718713ACF /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		2DC399746838B93CEC4A59D7 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
+		3B0806C0FA2D0B846EFB7FD5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
+		46F90654F7FD4FCFAE8D752A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
 		4B7D9FB0F79D5BA3C087A65D /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7D0680CCD26BA6559FE615 /* URLSessionHTTPClient.swift */; };
+		4DB5F6A903D19A74DA2C09DC /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 48261460370CAD1D0ADC68A8 /* SwiftSoup */; };
+		610D495C06EAEBE4611EAD59 /* PlateFinderAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */; };
 		6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 		B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
 		EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
@@ -21,6 +25,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0D9B96FD314D6CB2783F17C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 23C15EBC2E14A8FD00F01B82 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE9ACE95C4FD24CC61BA688E;
+			remoteInfo = PlateFinder;
+		};
 		D8A940BC585CE643B7535661 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 23C15EBC2E14A8FD00F01B82 /* Project object */;
@@ -38,9 +49,11 @@
 		69E691EF2F90D9CF7107517C /* Car.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		75BF773639142EC656FC5515 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		8F7D0680CCD26BA6559FE615 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
+		B0EF256A00E5E125789091E5 /* PlateFinderAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoaderTests.swift; sourceTree = "<group>"; };
 		CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoader.swift; sourceTree = "<group>"; };
+		D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFinderAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,6 +82,16 @@
 			files = (
 				6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */,
 				B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A134FD44C61AB874D9708BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3B0806C0FA2D0B846EFB7FD5 /* Cocoa.framework in Frameworks */,
+				46F90654F7FD4FCFAE8D752A /* PlateFinder.framework in Frameworks */,
+				4DB5F6A903D19A74DA2C09DC /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +130,7 @@
 				1A1456DE2E3CB8CFEC629712 /* Frameworks */,
 				289894240C0F16DC86DB31F9 /* PlateFinderDomain */,
 				C240684EEB6C266CACC670A1 /* PlateFinderTests */,
+				476B437775C7F922C183C211 /* PlateFinderAPIEndToEndTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -116,6 +140,7 @@
 				23C15EC42E14A8FD00F01B82 /* PlateFinder.app */,
 				CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */,
 				600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */,
+				B0EF256A00E5E125789091E5 /* PlateFinderAPIEndToEndTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,6 +156,15 @@
 			);
 			name = PlateFinderDomain;
 			path = PlateFinderDomain;
+			sourceTree = "<group>";
+		};
+		476B437775C7F922C183C211 /* PlateFinderAPIEndToEndTests */ = {
+			isa = PBXGroup;
+			children = (
+				D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */,
+			);
+			name = PlateFinderAPIEndToEndTests;
+			path = PlateFinderAPIEndToEndTests;
 			sourceTree = "<group>";
 		};
 		C240684EEB6C266CACC670A1 /* PlateFinderTests */ = {
@@ -156,6 +190,27 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		07BEF5092AFE2372B64C3540 /* PlateFinderAPIEndToEndTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 819744C1A644BBD180E3F496 /* Build configuration list for PBXNativeTarget "PlateFinderAPIEndToEndTests" */;
+			buildPhases = (
+				01B7F1563A52D2582B906B41 /* Sources */,
+				9A134FD44C61AB874D9708BB /* Frameworks */,
+				A5FBD4192D41D72A44B3C698 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0B5D12F6C6D33AF71F28D4EC /* PBXTargetDependency */,
+			);
+			name = PlateFinderAPIEndToEndTests;
+			packageProductDependencies = (
+				48261460370CAD1D0ADC68A8 /* SwiftSoup */,
+			);
+			productName = PlateFinderAPIEndToEndTests;
+			productReference = B0EF256A00E5E125789091E5 /* PlateFinderAPIEndToEndTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		23C15EC32E14A8FD00F01B82 /* PlateFinder */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 23C15ECF2E14A90100F01B82 /* Build configuration list for PBXNativeTarget "PlateFinder" */;
@@ -251,6 +306,7 @@
 				23C15EC32E14A8FD00F01B82 /* PlateFinder */,
 				EE9ACE95C4FD24CC61BA688E /* PlateFinder */,
 				7211BC037143861D1C0A07FE /* PlateFinderTests */,
+				07BEF5092AFE2372B64C3540 /* PlateFinderAPIEndToEndTests */,
 			);
 		};
 /* End PBXProject section */
@@ -277,9 +333,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A5FBD4192D41D72A44B3C698 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		01B7F1563A52D2582B906B41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				610D495C06EAEBE4611EAD59 /* PlateFinderAPIEndToEndTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		23C15EC02E14A8FD00F01B82 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -311,6 +382,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0B5D12F6C6D33AF71F28D4EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PlateFinder;
+			target = EE9ACE95C4FD24CC61BA688E /* PlateFinder */;
+			targetProxy = 0D9B96FD314D6CB2783F17C8 /* PBXContainerItemProxy */;
+		};
 		E550B8CCDA52F0CFDA4F00FF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = PlateFinder;
@@ -574,6 +651,36 @@
 			};
 			name = Debug;
 		};
+		2F00CF8494FA1B05476B175C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.e2etests;
+				PRODUCT_MODULE_NAME = PlateFinderAPIEndToEndTests;
+				PRODUCT_NAME = PlateFinderAPIEndToEndTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "";
+			};
+			name = Debug;
+		};
+		3912B688E86F890150F70DDD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.e2etests;
+				PRODUCT_MODULE_NAME = PlateFinderAPIEndToEndTests;
+				PRODUCT_NAME = PlateFinderAPIEndToEndTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "";
+			};
+			name = Release;
+		};
 		87D6AD97FD212A12EE70857A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -631,6 +738,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		819744C1A644BBD180E3F496 /* Build configuration list for PBXNativeTarget "PlateFinderAPIEndToEndTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3912B688E86F890150F70DDD /* Release */,
+				2F00CF8494FA1B05476B175C /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		99FB5A88046E9999C482F282 /* Build configuration list for PBXNativeTarget "PlateFinder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -655,6 +771,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		23C15EE72E14C00700F01B82 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 23C15EE62E14C00600F01B82 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+		48261460370CAD1D0ADC68A8 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 23C15EE62E14C00600F01B82 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
