@@ -39,6 +39,21 @@ import Foundation
         }
     }
 
+    @Test(arguments: [199, 201, 300, 400, 500])
+    func load_deliversInvalidDataErrorOnNon200Response(statusCode: Int) async {
+        let (sut, client) = makeSUT()
+        client.stubbedResult = .success(makeHTTPResponse(statusCode: statusCode))
+
+        do {
+            _ = try await sut.loadCarInfo(for: "ABC1234")
+            Issue.record("Expected invalidData error, got no error")
+        } catch let error as CarInfoError {
+            #expect(error == .invalidData)
+        } catch {
+            Issue.record("Expected CarInfoError.invalidData, got \(error)")
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(url: URL = anyURL()) -> (sut: RemoteCarInfoLoader, client: HTTPClientSpy) {
@@ -52,6 +67,11 @@ import Foundation
 
 private func anyURL() -> URL {
     URL(string: "https://a-url.com")!
+}
+
+private func makeHTTPResponse(statusCode: Int, url: URL = URL(string: "https://a-url.com")!) -> (Data, HTTPURLResponse) {
+    let response = HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+    return (Data(), response)
 }
 
 // MARK: - Test Doubles
