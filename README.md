@@ -31,3 +31,63 @@ While typing, the app accepts any input that could still lead to a valid plate �
 Open `PlateFinder.xcodeproj` in Xcode and run on a simulator or device.
 
 For beta distribution via TestFlight, the project uses Fastlane. See the `fastlane/` directory for available lanes.
+
+## CI/CD
+
+The project follows GitHub Flow. All changes go through a feature branch and a PR into `master`.
+
+| Trigger | What happens |
+|---|---|
+| PR → `master` | Build check |
+| Merge → `master` | Build + upload to TestFlight |
+| Push tag `v*` | Build + submit to App Store |
+| Manual dispatch | Choose `beta` or `release` lane |
+
+To ship a release, tag the commit on `master`:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`, and `MATCH_GIT_BASIC_AUTHORIZATION` (release only).
+
+### Branch flow
+
+```
+master  ──●────────────────●────────────────●──────────●─── ...
+           \              /                  \         /│
+feat/A      ●──●──●──────●        feat/B     ●──●──●──● │
+                                                        │
+                                                      tag v1.0.0
+                                                    (→ App Store)
+```
+
+Every merge to `master` uploads to TestFlight. Tags trigger the App Store submission.
+
+### Example: shipping a feature
+
+```bash
+# 1. Start from master
+git checkout master
+git pull origin master
+
+# 2. Create a feature branch
+git checkout -b feat/my-feature
+
+# 3. Work, commit, repeat
+git add ...
+git commit -m "feat: my feature"
+
+# 4. Open a PR → build check runs automatically
+git push origin feat/my-feature
+gh pr create --base master
+
+# 5. Merge PR → TestFlight upload triggers automatically
+
+# 6. When ready for App Store, tag master
+git checkout master
+git pull origin master
+git tag v1.2.0
+git push origin v1.2.0
+```
