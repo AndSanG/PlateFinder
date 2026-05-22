@@ -28,6 +28,10 @@ fastlane/test_output/
 # Claude Code
 .claude/
 
+# SourceKit-LSP / xcode-build-server
+buildServer.json
+.compile
+
 # macOS
 .DS_Store
 .AppleDouble
