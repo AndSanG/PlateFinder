@@ -23,4 +23,8 @@ public final class PlateFinderViewModel {
         self.store = store
         self.favoritesStore = favoritesStore
     }
+
+    public func search() async {
+        guard plateFormat == .car || plateFormat == .bike || plateFormat == .special else { return }
+    }
 }

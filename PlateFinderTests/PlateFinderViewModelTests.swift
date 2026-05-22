@@ -5,6 +5,14 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test(arguments: ["", "ABC", "1INVALID"])
+    func search_doesNotCallLoaderForNonCompletePlate(plate: String) async {
+        let (sut, loader, _, _) = makeSUT()
+        sut.plateText = plate
+        await sut.search()
+        #expect(loader.loadCallCount == 0)
+    }
+
     @Test func plateFormat_tracksPlateText() {
         let (sut, _, _, _) = makeSUT()
         #expect(sut.plateFormat == .empty)
