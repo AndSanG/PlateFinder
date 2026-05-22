@@ -12,24 +12,16 @@ struct PlateSearchView: View {
     @Binding var selectedTab: ContentView.AppTab
     @State private var showInfoBanner: Bool = true
     
-    private let partialValidationRegex = AppConstants.partialPlateValidationRegex
-    
     private var isValid: Bool {
-        return AppConstants.isValidPlate(viewModel.plateNumber)
+        PlateValidator.isComplete(viewModel.plateNumber)
     }
-    
+
     private var isPartiallyValid: Bool {
-        return viewModel.plateNumber.range(of: partialValidationRegex, options: .regularExpression) != nil
+        PlateValidator.isPartiallyValid(viewModel.plateNumber)
     }
-    
-    // Detect vehicle type based on plate format
-    private var detectedVehicleIcon: String {
-        if viewModel.plateNumber.range(of: AppConstants.motorcyclePlateRegex, options: .regularExpression) != nil {
-            return "motorcycle.fill"
-        } else if viewModel.plateNumber.range(of: AppConstants.carPlateRegex, options: .regularExpression) != nil {
-            return "car.fill"
-        }
-        return ""
+
+    private var detectedVehicleIcon: String? {
+        PlateValidator.vehicleIcon(for: viewModel.plateNumber)
     }
     
     var body: some View {
@@ -107,8 +99,8 @@ struct PlateSearchView: View {
             
             HStack {
                 // Show vehicle type icon when valid (on the left)
-                if isValid && !detectedVehicleIcon.isEmpty {
-                    Image(systemName: detectedVehicleIcon)
+                if isValid, let icon = detectedVehicleIcon {
+                    Image(systemName: icon)
                         .foregroundColor(.blue)
                         .font(.title3)
                         .padding(.leading)
@@ -116,7 +108,7 @@ struct PlateSearchView: View {
                 }
                 
                 TextField(AppConstants.defaultPlateExample, text: $viewModel.plateNumber)
-                    .padding(.leading, isValid && !detectedVehicleIcon.isEmpty ? 0 : nil)
+                    .padding(.leading, isValid && detectedVehicleIcon != nil ? 0 : nil)
                     .keyboardType(.asciiCapable)
                     .autocapitalization(.allCharacters)
                     .disableAutocorrection(true)

@@ -54,12 +54,9 @@ struct FindPlateIntent: AppIntent {
     var plateNumber: PlateEntity
     
     func perform() async throws -> some IntentResult {
-        // Validate plate number format using existing regex
         let plateText = plateNumber.plateNumber.uppercased()
-        let regex = try NSRegularExpression(pattern: AppConstants.fullPlateValidationRegex)
-        let range = NSRange(location: 0, length: plateText.utf16.count)
-        
-        guard regex.firstMatch(in: plateText, options: [], range: range) != nil else {
+
+        guard PlateValidator.isComplete(plateText) else {
             throw $plateNumber.needsValueError("Please provide a valid license plate number in format ABC1234")
         }
         
