@@ -5,6 +5,17 @@ import Foundation
 @MainActor
 @Suite struct PlateFinderViewModelTests {
 
+    @Test func plateFormat_tracksPlateText() {
+        let (sut, _, _, _) = makeSUT()
+        #expect(sut.plateFormat == .empty)
+        sut.plateText = "ABC"
+        #expect(sut.plateFormat == .partiallyValid)
+        sut.plateText = "ABC1234"
+        #expect(sut.plateFormat == .car)
+        sut.plateText = "1INVALID"
+        #expect(sut.plateFormat == .invalid)
+    }
+
     @Test func init_doesNotCallLoaderOrStore() async {
         let loader = CarInfoLoaderSpy()
         let store = CarStoreSpy()
