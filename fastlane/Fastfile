@@ -67,12 +67,7 @@ platform :ios do
 
   desc "Run domain unit tests on macOS (no simulator required)"
   lane :unit_tests do
-    run_tests(
-      project: APP_PROJECT,
-      scheme: "PlateFinderTests",
-      destination: "platform=macOS,arch=arm64",
-      xcargs: "-skipPackagePluginValidation"
-    )
+    sh "set -o pipefail && env NSUnbufferedIO=YES xcodebuild test -scheme PlateFinderTests -project #{APP_PROJECT} -destination 'platform=macOS,arch=arm64' -skipPackagePluginValidation | xcpretty"
   end
 
   desc "Build the App"
