@@ -20,11 +20,31 @@ on:
 env:
   LANG: en_US.UTF-8
   LC_ALL: en_US.UTF-8
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  ci:
+  test:
+    name: Unit Tests
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26.3"
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Run unit tests
+        run: bundle exec fastlane unit_tests
+
+  build:
     name: Build & Deploy
     runs-on: macos-15
+    needs: test
     env:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
@@ -45,6 +65,9 @@ jobs:
       # TODO: avoid rebuilding on merge by uploading the .ipa as an artifact
       # from the PR run and downloading it here instead of re-archiving.
       - name: Build
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+          github.event_name == 'workflow_dispatch'
         run: bundle exec fastlane development_build
 
       - name: Deploy to TestFlight
@@ -57,6 +80,4 @@ jobs:
         if: |
           (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.lane == 'release')
-        env:
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         run: bundle exec fastlane release

@@ -79,7 +79,8 @@ struct SearchHistoryItemView: View {
         SearchHistoryItemView(
             item: SearchHistoryItem(
                 plateNumber: "XYZ5678",
-                searchDate: Date()
+                searchDate: Date(),
+                car: nil
             ),
             onTap: {},
             onDelete: {}

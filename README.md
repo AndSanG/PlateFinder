@@ -1,11 +1,14 @@
 # PlateFinder
 
+![Unit Tests](https://github.com/AndSanG/PlateFinder/actions/workflows/ci.yml/badge.svg)
+
 An iOS app to look up plate information.
 
 ## Features
 
-- Search car info by license plate number
-- Supports all standard Ecuadorian plate formats
+- Search vehicle info by license plate number
+- Supports all standard Ecuadorian plate formats (car, motorcycle, special)
+- Search history and favorites
 - Siri Shortcuts integration for hands-free searches
 - Real-time plate format feedback as you type
 
@@ -36,14 +39,12 @@ For beta distribution via TestFlight, the project uses Fastlane. See the `fastla
 
 The project follows GitHub Flow. All changes go through a feature branch and a PR into `master`.
 
-| Trigger          | What happens                         |
-| ---------------- | ------------------------------------ |
-| PR → `master`    | Build check                          |
-| Merge → `master` | Fresh build + upload to TestFlight ⚠️ |
-| Push tag `v*`    | Build + submit to App Store          |
-| Manual dispatch  | Choose `beta` or `release` lane      |
-
-> ⚠️ The merge to `master` triggers a fresh build instead of reusing the one from the PR check — a GitHub Actions limitation. A future improvement would upload the `.ipa` as an artifact on the PR run and download it on merge to skip re-archiving.
+| Trigger          | What happens                              |
+| ---------------- | ----------------------------------------- |
+| PR → `master`    | Unit tests only                           |
+| Merge → `master` | Unit tests + build + TestFlight           |
+| Push tag `v*`    | Unit tests + build + App Store submission |
+| Manual dispatch  | Choose `beta` or `release` lane           |
 
 To ship a release, tag the commit on `master`:
 
@@ -52,7 +53,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`, and `MATCH_GIT_BASIC_AUTHORIZATION` (release only).
+Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`.
 
 ### Branch flow
 
@@ -81,7 +82,7 @@ git checkout -b feat/my-feature
 git add ...
 git commit -m "feat: my feature"
 
-# 4. Open a PR → build check runs automatically
+# 4. Open a PR → unit tests run automatically
 git push origin feat/my-feature
 gh pr create --base master
 

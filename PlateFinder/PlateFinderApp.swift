@@ -1,10 +1,3 @@
-//
-//  PlateFinderApp.swift
-//  PlateFinder
-//
-//  Created by Andres Sanchez on 01/07/2025.
-//
-
 import SwiftUI
 
 @main
@@ -13,50 +6,35 @@ struct PlateFinderApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(IntentHandler.shared)
-                .environmentObject(LanguageManager.shared)
         }
     }
 }
 
 struct ContentView: View {
-    @StateObject private var viewModel = PlateFinderViewModel()
-    @EnvironmentObject var languageManager: LanguageManager // when this changes it rerender the app
+    @State private var viewModel: PlateFinderViewModel = {
+        let store = UserDefaultsCarStore()
+        let loader = RemoteCarInfoLoader(
+            url: URL(string: AppConstants.baseURL)!,
+            client: URLSessionHTTPClient(),
+            parser: ANTHTMLParser()
+        )
+        return PlateFinderViewModel(loader: loader, store: store, favoritesStore: store)
+    }()
     @State private var selectedTab: AppTab = .search
-    @State private var showLanguageSettings = false
-    
-    enum AppTab {
-        case search
-        case history
-        case settings
-    }
-    
+
+    enum AppTab { case search, history }
+
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
                 PlateSearchView(viewModel: viewModel, selectedTab: $selectedTab)
             }
-            .tabItem {
-                Label("search".localized, systemImage: "magnifyingglass")
-            }
+            .tabItem { Label("search".localized, systemImage: "magnifyingglass") }
             .tag(AppTab.search)
-            
+
             HistoryAndFavoritesView(viewModel: viewModel, selectedTab: $selectedTab)
-                .tabItem {
-                    Label("history".localized, systemImage: "clock")
-                }
+                .tabItem { Label("history".localized, systemImage: "clock") }
                 .tag(AppTab.history)
-            
-            NavigationStack {
-                SettingsView(showLanguageSettings: $showLanguageSettings)
-            }
-            .tabItem {
-                Label("settings".localized, systemImage: "gear")
-            }
-            .tag(AppTab.settings)
         }
-        .sheet(isPresented: $showLanguageSettings) {
-            LanguageSettingsView()
-        }
-        .id(languageManager.currentLanguage) // Force view recreation when language changes
     }
 }
