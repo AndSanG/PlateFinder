@@ -461,6 +461,7 @@
 				PRODUCT_MODULE_NAME = PlateFinderTests;
 				PRODUCT_NAME = PlateFinderTests;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "";
 			};
@@ -486,6 +487,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.domain;
 				PRODUCT_NAME = PlateFinderDomain;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -702,6 +704,7 @@
 				PRODUCT_MODULE_NAME = PlateFinderTests;
 				PRODUCT_NAME = PlateFinderTests;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "";
 			};
@@ -717,6 +720,7 @@
 				PRODUCT_MODULE_NAME = PlateFinderAPIEndToEndTests;
 				PRODUCT_NAME = PlateFinderAPIEndToEndTests;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "";
 			};
@@ -732,6 +736,7 @@
 				PRODUCT_MODULE_NAME = PlateFinderAPIEndToEndTests;
 				PRODUCT_NAME = PlateFinderAPIEndToEndTests;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "";
 			};
@@ -757,6 +762,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.domain;
 				PRODUCT_NAME = PlateFinderDomain;
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
