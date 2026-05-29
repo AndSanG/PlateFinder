@@ -1,5 +1,5 @@
 import Testing
-@testable import PlateFinder
+@testable import PlateFinderDomain
 
 @Suite struct PlateValidatorTests {
 

@@ -19,7 +19,7 @@
 		2DC399746838B93CEC4A59D7 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
 		3B0806C0FA2D0B846EFB7FD5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 		46E4E3CDDF67555471AA21E3 /* PlateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E58F043EBF5A2C9B69B4C57 /* PlateValidator.swift */; };
-		46F90654F7FD4FCFAE8D752A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
+		46F90654F7FD4FCFAE8D752A /* PlateFinderDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */; };
 		4B7D9FB0F79D5BA3C087A65D /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7D0680CCD26BA6559FE615 /* URLSessionHTTPClient.swift */; };
 		4DB5F6A903D19A74DA2C09DC /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 48261460370CAD1D0ADC68A8 /* SwiftSoup */; };
 		4FECA91C16D0EA39167AEC78 /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37BBE69FA07658B10A4E493 /* CarStore.swift */; };
@@ -31,7 +31,7 @@
 		97D52AC50AA08E0B1BC35DFE /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E691EF2F90D9CF7107517C /* Car.swift */; };
 		A622466BAC5F0D63AD55D7DD /* SearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */; };
 		B378E8ED83BA17F72620C660 /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
-		B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */; };
+		B485F9228644EEAAB7FF4E4A /* PlateFinderDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */; };
 		C93CF9C7F5D2D40CD916C218 /* PlateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */; };
 		C9A3CB41A6A7D95B9848FC31 /* PlateFinderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2F63C598C699FD14F5C548 /* PlateFinderViewModel.swift */; };
 		CC6246FB00B19A57A768508B /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552DDD235EFA696983CED76C /* FavoritesStore.swift */; };
@@ -49,14 +49,14 @@
 			containerPortal = 23C15EBC2E14A8FD00F01B82 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = EE9ACE95C4FD24CC61BA688E;
-			remoteInfo = PlateFinder;
+			remoteInfo = PlateFinderDomain;
 		};
 		D8A940BC585CE643B7535661 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 23C15EBC2E14A8FD00F01B82 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = EE9ACE95C4FD24CC61BA688E;
-			remoteInfo = PlateFinder;
+			remoteInfo = PlateFinderDomain;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -76,7 +76,7 @@
 		B37BBE69FA07658B10A4E493 /* CarStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarStore.swift; sourceTree = "<group>"; };
 		C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchHistoryItem.swift; sourceTree = "<group>"; };
 		C12A6B124DE743101C939382 /* RemoteCarInfoLoaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoaderTests.swift; sourceTree = "<group>"; };
-		CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinderDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D03E2C93E354D1F0ED93B881 /* RemoteCarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemoteCarInfoLoader.swift; sourceTree = "<group>"; };
 		D1047008BBC5C2717002AEBD /* PlateFinderViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFinderViewModelTests.swift; sourceTree = "<group>"; };
 		D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFinderAPIEndToEndTests.swift; sourceTree = "<group>"; };
@@ -108,7 +108,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6331811970A9EB50E7313F4F /* Cocoa.framework in Frameworks */,
-				B485F9228644EEAAB7FF4E4A /* PlateFinder.framework in Frameworks */,
+				B485F9228644EEAAB7FF4E4A /* PlateFinderDomain.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B0806C0FA2D0B846EFB7FD5 /* Cocoa.framework in Frameworks */,
-				46F90654F7FD4FCFAE8D752A /* PlateFinder.framework in Frameworks */,
+				46F90654F7FD4FCFAE8D752A /* PlateFinderDomain.framework in Frameworks */,
 				4DB5F6A903D19A74DA2C09DC /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,7 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				23C15EC42E14A8FD00F01B82 /* PlateFinder.app */,
-				CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */,
+				CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */,
 				600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */,
 				B0EF256A00E5E125789091E5 /* PlateFinderAPIEndToEndTests.xctest */,
 			);
@@ -287,9 +287,9 @@
 			productReference = 600AF4B7C3E625810B0D3EE5 /* PlateFinderTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		EE9ACE95C4FD24CC61BA688E /* PlateFinder */ = {
+		EE9ACE95C4FD24CC61BA688E /* PlateFinderDomain */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 99FB5A88046E9999C482F282 /* Build configuration list for PBXNativeTarget "PlateFinder" */;
+			buildConfigurationList = 99FB5A88046E9999C482F282 /* Build configuration list for PBXNativeTarget "PlateFinderDomain" */;
 			buildPhases = (
 				65D079B3CEEF4A54BCB562EA /* Headers */,
 				A7D5EA9E2D240A3511531E97 /* Sources */,
@@ -300,9 +300,9 @@
 			);
 			dependencies = (
 			);
-			name = PlateFinder;
-			productName = PlateFinder;
-			productReference = CFEB7C29BE65AEC62A5EDA22 /* PlateFinder.framework */;
+			name = PlateFinderDomain;
+			productName = PlateFinderDomain;
+			productReference = CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -339,7 +339,7 @@
 			projectRoot = "";
 			targets = (
 				23C15EC32E14A8FD00F01B82 /* PlateFinder */,
-				EE9ACE95C4FD24CC61BA688E /* PlateFinder */,
+				EE9ACE95C4FD24CC61BA688E /* PlateFinderDomain */,
 				7211BC037143861D1C0A07FE /* PlateFinderTests */,
 				07BEF5092AFE2372B64C3540 /* PlateFinderAPIEndToEndTests */,
 			);
@@ -438,14 +438,14 @@
 /* Begin PBXTargetDependency section */
 		0B5D12F6C6D33AF71F28D4EC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = PlateFinder;
-			target = EE9ACE95C4FD24CC61BA688E /* PlateFinder */;
+			name = PlateFinderDomain;
+			target = EE9ACE95C4FD24CC61BA688E /* PlateFinderDomain */;
 			targetProxy = 0D9B96FD314D6CB2783F17C8 /* PBXContainerItemProxy */;
 		};
 		E550B8CCDA52F0CFDA4F00FF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = PlateFinder;
-			target = EE9ACE95C4FD24CC61BA688E /* PlateFinder */;
+			name = PlateFinderDomain;
+			target = EE9ACE95C4FD24CC61BA688E /* PlateFinderDomain */;
 			targetProxy = D8A940BC585CE643B7535661 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -484,7 +484,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.domain;
-				PRODUCT_NAME = PlateFinder;
+				PRODUCT_NAME = PlateFinderDomain;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -755,7 +755,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.dapeter.notruper.domain;
-				PRODUCT_NAME = PlateFinder;
+				PRODUCT_NAME = PlateFinderDomain;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -803,7 +803,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		99FB5A88046E9999C482F282 /* Build configuration list for PBXNativeTarget "PlateFinder" */ = {
+		99FB5A88046E9999C482F282 /* Build configuration list for PBXNativeTarget "PlateFinderDomain" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				87D6AD97FD212A12EE70857A /* Release */,

@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 import SwiftSoup
-@testable import PlateFinder
+@testable import PlateFinderDomain
 
 // Hits the live ANT endpoint. Requires network access.
 // Serialized to avoid concurrent requests to the external API.

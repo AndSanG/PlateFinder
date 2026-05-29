@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import PlateFinder
+@testable import PlateFinderDomain
 
 @MainActor
 @Suite struct PlateFinderViewModelTests {

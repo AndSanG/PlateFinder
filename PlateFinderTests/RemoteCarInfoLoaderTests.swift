@@ -1,6 +1,6 @@
 import Testing
 import Foundation
-@testable import PlateFinder
+@testable import PlateFinderDomain
 
 @Suite struct RemoteCarInfoLoaderTests {
 
