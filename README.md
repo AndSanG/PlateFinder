@@ -41,10 +41,8 @@ The project follows GitHub Flow. All changes go through a feature branch and a P
 
 | Trigger          | What happens                              |
 | ---------------- | ----------------------------------------- |
-| Trigger          | What happens                              |
-| ---------------- | ----------------------------------------- |
 | PR → `master`    | Unit tests only                           |
-| Merge → `master` | Unit tests + build + TestFlight ⚠️        |
+| Merge → `master` | Unit tests + build + TestFlight           |
 | Push tag `v*`    | Unit tests + build + App Store submission |
 | Manual dispatch  | Choose `beta` or `release` lane           |
 
@@ -84,7 +82,7 @@ git checkout -b feat/my-feature
 git add ...
 git commit -m "feat: my feature"
 
-# 4. Open a PR → build check runs automatically
+# 4. Open a PR → unit tests run automatically
 git push origin feat/my-feature
 gh pr create --base master
 
