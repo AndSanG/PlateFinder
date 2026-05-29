@@ -20,6 +20,7 @@ on:
 env:
   LANG: en_US.UTF-8
   LC_ALL: en_US.UTF-8
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   test:
