@@ -73,7 +73,7 @@ platform :ios do
   desc "Build the App"
   lane :development_build do
     code_signing(type: "development")
-    build_app(configuration: "Debug", export_method: "development")
+    build_app(project: APP_PROJECT, scheme: APP_SCHEME, configuration: "Debug", export_method: "development")
   end
 
   desc "Build and install last .ipa"
