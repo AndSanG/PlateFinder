@@ -51,9 +51,14 @@ platform :ios do
       app_identifier: app_identifier
     )
 
+    # Guard against Apple reserving a build number that TestFlight doesn't yet report.
+    # The project file tracks the last known-used number so we never go backwards.
+    project_build = get_build_number(xcodeproj: APP_PROJECT).to_i
+    new_build = [latest_build_number, project_build].max + 1
+
     increment_build_number(
       xcodeproj: APP_PROJECT,
-      build_number: latest_build_number + 1
+      build_number: new_build
     )
   end
 
