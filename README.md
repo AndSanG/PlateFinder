@@ -48,8 +48,6 @@ The project follows GitHub Flow. All changes go through a feature branch and a P
 | Push tag `v*`    | Unit tests + build + App Store submission |
 | Manual dispatch  | Choose `beta` or `release` lane           |
 
-> ⚠️ The merge to `master` triggers a fresh build instead of reusing the one from the PR check — a GitHub Actions limitation. A future improvement would upload the `.ipa` as an artifact on the PR run and download it on merge to skip re-archiving.
-
 To ship a release, tag the commit on `master`:
 
 ```bash
