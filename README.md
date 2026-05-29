@@ -6,8 +6,9 @@ An iOS app to look up plate information.
 
 ## Features
 
-- Search car info by license plate number
-- Supports all standard Ecuadorian plate formats
+- Search vehicle info by license plate number
+- Supports all standard Ecuadorian plate formats (car, motorcycle, special)
+- Search history and favorites
 - Siri Shortcuts integration for hands-free searches
 - Real-time plate format feedback as you type
 
@@ -40,8 +41,10 @@ The project follows GitHub Flow. All changes go through a feature branch and a P
 
 | Trigger          | What happens                              |
 | ---------------- | ----------------------------------------- |
-| PR → `master`    | Unit tests + build check                  |
-| Merge → `master` | Unit tests + fresh build + TestFlight ⚠️  |
+| Trigger          | What happens                              |
+| ---------------- | ----------------------------------------- |
+| PR → `master`    | Unit tests only                           |
+| Merge → `master` | Unit tests + build + TestFlight ⚠️        |
 | Push tag `v*`    | Unit tests + build + App Store submission |
 | Manual dispatch  | Choose `beta` or `release` lane           |
 
@@ -54,7 +57,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`, and `MATCH_GIT_BASIC_AUTHORIZATION` (release only).
+Secrets required in the repository: `MATCH_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY`.
 
 ### Branch flow
 
