@@ -1,4 +1,4 @@
-public enum PlateFormat: Equatable {
+public enum PlateFormat: Equatable, Sendable {
     case empty
     case partiallyValid
     case invalid

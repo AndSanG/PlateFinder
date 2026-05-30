@@ -1,4 +1,4 @@
-public enum CarInfoError: Error, Equatable {
+public enum CarInfoError: Error, Equatable, Sendable {
     case networkError(Error)
     case noDataFound
     case invalidPlateFormat
@@ -14,6 +14,16 @@ public enum CarInfoError: Error, Equatable {
              (.parsingError, .parsingError),
              (.serverError, .serverError): return true
         default: return false
+        }
+    }
+
+    public var userMessage: String {
+        switch self {
+        case .networkError:         return "Network connection failed. Please try again."
+        case .noDataFound:          return "No vehicle found for this plate number."
+        case .invalidPlateFormat:   return "Invalid plate format."
+        case .parsingError(let m):  return "Could not read server response: \(m)"
+        case .serverError:          return "Server error. Please try again later."
         }
     }
 }

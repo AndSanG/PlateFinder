@@ -1,4 +1,4 @@
-public struct Car: Equatable {
+public struct Car: Equatable, Sendable {
     public let plate: String
     public let manufacturer: String
     public let colorName: String
