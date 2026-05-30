@@ -1,36 +1,35 @@
 import Testing
 import Foundation
-@testable import PlateFinderDomain
 
-@Suite struct RemoteCarInfoLoaderTests {
+@Suite struct ANTCarInfoServiceTests {
 
     @Test func init_doesNotRequestData() {
         let client = HTTPClientSpy()
-        var sut: RemoteCarInfoLoader? = RemoteCarInfoLoader(url: anyURL(), client: client, parser: HTMLParsingSpy())
+        var sut: ANTCarInfoService? = ANTCarInfoService(url: anyURL(), client: client, mapper: CarHTMLMapperSpy())
         weak var weakSUT = sut
 
         #expect(client.requestedURLs.isEmpty)
 
         sut = nil
-        #expect(weakSUT == nil, "Potential memory leak — RemoteCarInfoLoader")
+        #expect(weakSUT == nil, "Potential memory leak — ANTCarInfoService")
     }
 
-    @Test func load_requestsDataFromURL() async {
+    @Test func execute_requestsDataFromURL() async {
         let baseURL = URL(string: "https://a-base-url.com")!
         let (sut, client) = makeSUT(url: baseURL)
 
-        _ = try? await sut.loadCarInfo(for: "ABC1234")
+        _ = try? await sut.execute(plate: "ABC1234")
 
         let expectedURL = URL(string: "https://a-base-url.com?ps_tipo_identificacion=PLA&ps_identificacion=ABC1234&ps_placa=")!
         #expect(client.requestedURLs == [expectedURL])
     }
 
-    @Test func load_deliversNetworkErrorOnClientError() async {
+    @Test func execute_deliversNetworkErrorOnClientError() async {
         let (sut, client) = makeSUT()
         client.stubbedResult = .failure(NSError(domain: "any", code: 0))
 
         do {
-            _ = try await sut.loadCarInfo(for: "ABC1234")
+            _ = try await sut.execute(plate: "ABC1234")
             Issue.record("Expected networkError, got no error")
         } catch let error as CarInfoError {
             #expect(error == .networkError(NSError(domain: "any", code: 0)))
@@ -40,12 +39,12 @@ import Foundation
     }
 
     @Test(arguments: [199, 201, 300, 400, 500])
-    func load_deliversServerErrorOnNon200Response(statusCode: Int) async {
+    func execute_deliversServerErrorOnNon200Response(statusCode: Int) async {
         let (sut, client) = makeSUT()
         client.stubbedResult = .success(makeHTTPResponse(statusCode: statusCode))
 
         do {
-            _ = try await sut.loadCarInfo(for: "ABC1234")
+            _ = try await sut.execute(plate: "ABC1234")
             Issue.record("Expected serverError, got no error")
         } catch let error as CarInfoError {
             #expect(error == .serverError)
@@ -54,12 +53,12 @@ import Foundation
         }
     }
 
-    @Test func load_deliversParsingErrorOn200WhenParserFails() async {
+    @Test func execute_deliversParsingErrorOn200WhenMapperFails() async {
         let (sut, client) = makeSUT()
         client.stubbedResult = .success(makeHTTPResponse(statusCode: 200, data: Data("any html".utf8)))
 
         do {
-            _ = try await sut.loadCarInfo(for: "ABC1234")
+            _ = try await sut.execute(plate: "ABC1234")
             Issue.record("Expected parsingError, got no error")
         } catch let error as CarInfoError {
             #expect(error == .parsingError(""))
@@ -68,36 +67,36 @@ import Foundation
         }
     }
 
-    @Test func load_deliversCarOn200WithValidHTML() async throws {
+    @Test func execute_deliversCarOn200WithValidHTML() async throws {
         let expectedCar = makeCar()
-        let parser = HTMLParsingSpy(result: .success(expectedCar))
-        let (sut, client) = makeSUT(parser: parser)
+        let mapper = CarHTMLMapperSpy(result: .success(expectedCar))
+        let (sut, client) = makeSUT(mapper: mapper)
         client.stubbedResult = .success(makeHTTPResponse(statusCode: 200, data: Data("any html".utf8)))
 
-        let car = try await sut.loadCarInfo(for: "ABC1234")
+        let car = try await sut.execute(plate: "ABC1234")
 
         #expect(car == expectedCar)
     }
 
-    @Test func load_doesNotLeakAfterAsyncOperationCompletes() async {
+    @Test func execute_doesNotLeakAfterAsyncOperationCompletes() async {
         let client = HTTPClientSpy()
-        var sut: RemoteCarInfoLoader? = RemoteCarInfoLoader(url: anyURL(), client: client, parser: HTMLParsingSpy())
+        var sut: ANTCarInfoService? = ANTCarInfoService(url: anyURL(), client: client, mapper: CarHTMLMapperSpy())
         weak var weakSUT = sut
 
-        _ = try? await sut!.loadCarInfo(for: "ABC1234")
+        _ = try? await sut!.execute(plate: "ABC1234")
         sut = nil
 
-        #expect(weakSUT == nil, "Potential memory leak — RemoteCarInfoLoader retained after async op")
+        #expect(weakSUT == nil, "Potential memory leak — ANTCarInfoService retained after async op")
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
         url: URL = anyURL(),
-        parser: HTMLParsing = HTMLParsingSpy()
-    ) -> (sut: RemoteCarInfoLoader, client: HTTPClientSpy) {
+        mapper: CarHTMLMapperSpy = CarHTMLMapperSpy()
+    ) -> (sut: ANTCarInfoService, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
-        let sut = RemoteCarInfoLoader(url: url, client: client, parser: parser)
+        let sut = ANTCarInfoService(url: url, client: client, mapper: mapper)
         return (sut, client)
     }
 
@@ -117,7 +116,11 @@ private func anyURL() -> URL {
     URL(string: "https://a-url.com")!
 }
 
-private func makeHTTPResponse(statusCode: Int, data: Data = Data(), url: URL = URL(string: "https://a-url.com")!) -> (Data, HTTPURLResponse) {
+private func makeHTTPResponse(
+    statusCode: Int,
+    data: Data = Data(),
+    url: URL = URL(string: "https://a-url.com")!
+) -> (Data, HTTPURLResponse) {
     let response = HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
     return (data, response)
 }
@@ -135,14 +138,14 @@ private final class HTTPClientSpy: HTTPClient {
     }
 }
 
-private final class HTMLParsingSpy: HTMLParsing {
+private final class CarHTMLMapperSpy: CarHTMLMapper {
     var result: Result<Car, Error>
 
-    init(result: Result<Car, Error> = .failure(NSError(domain: "HTMLParsingSpy", code: 0))) {
+    init(result: Result<Car, Error> = .failure(NSError(domain: "CarHTMLMapperSpy", code: 0))) {
         self.result = result
     }
 
-    func parse(_ html: String) throws -> Car {
+    func map(_ html: String) throws -> Car {
         try result.get()
     }
 }

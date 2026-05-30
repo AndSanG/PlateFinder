@@ -1,6 +1,5 @@
 import Testing
 import Foundation
-@testable import PlateFinderDomain
 
 // Tests run serially — URLProtocolStub uses static state.
 @Suite(.serialized)
