@@ -35,6 +35,12 @@ struct PlateSearchView: View {
         }
         .navigationTitle("search_title".localized)
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            guard let pending = intentRouter.pendingPlate else { return }
+            plate = pending
+            await viewModel.search(plate: pending)
+            intentRouter.consume()
+        }
         .onChange(of: intentRouter.pendingPlate) { _, pending in
             guard let pending else { return }
             plate = pending
