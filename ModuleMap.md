@@ -20,7 +20,7 @@ Contains:
 - **Repository protocols** — `HTTPClient`, `CarHTMLMapper`, `CarStore`, `FavoritesStore`
 - **Presentation state** — per-screen `ViewState` enums (`SearchViewState`, `HistoryViewState`)
 - **ViewModels** — `SearchViewModel`, `HistoryViewModel` (each `@Observable @MainActor final class`, single `private(set) var state`)
-- **Routers** — `IntentRouter` (`@Observable`), `AppRouter` (`@Observable`, owns `NavigationPath`)
+- **Routers** — `IntentRouter` (`@Observable`), `AppRouter` (`@Observable`, owns `Tab` selection)
 
 ### 2. `PlateFinder` — iOS App Target (Data Layer + Presentation Layer + Composition Root)
 
@@ -191,8 +191,9 @@ public final class IntentRouter {
 
 @Observable @MainActor
 public final class AppRouter {
-    public var path: NavigationPath
-    public init(path: NavigationPath = .init()) { self.path = path }
+    public enum Tab { case search, history }
+    public var selectedTab: Tab = .search
+    public init() {}
 }
 ```
 
@@ -343,21 +344,3 @@ enum CarInfoError: Error, Equatable, Sendable {
 
 `LocalizedError` conformance lives in the app target.
 
----
-
-## Known violations of this map (refactor backlog)
-
-| Violation in current code | Target state |
-|---|---|
-| `URLSessionHTTPClient.swift` in `PlateFinderDomain/` | Move to `PlateFinder/Infrastructure/` |
-| `RemoteCarInfoLoader.swift` in `PlateFinderDomain/` | Move + rename to `PlateFinder/Infrastructure/ANTCarInfoService.swift` |
-| `ANTHTMLParser` conforms to `HTMLParsing` | Rename protocol to `CarHTMLMapper`, type to `ANTCarHTMLMapper` |
-| `PlateFinderViewModel` takes `CarInfoLoader` + `CarStore` + `FavoritesStore` repos | Split into `SearchViewModel` + `HistoryViewModel`, each taking single-method Use Case protocols |
-| `PlateFinderViewModel` has 6 public mutable `var`s | Collapse into `private(set) var state: ViewState` per screen |
-| Views mutate `viewModel.result = nil`, `viewModel.error = nil`, `viewModel.plateText = ""` | Add intent methods (`viewModel.reset()`); views call them |
-| `IntentHandler.shared` singleton + `ObservableObject` | `@Observable IntentRouter`, injected via `.environment(...)` |
-| `PlateSearchView` reads `IntentHandler.shared.$plateToSearch` via `.onReceive` | View observes injected `IntentRouter.pendingPlate`; calls `consume()` after dispatching |
-| `PlateFinderApp` injects via `.environmentObject(IntentHandler.shared)` | Composition Root constructs `IntentRouter()` and passes it via `.environment(_:)` |
-| `HistoryAndFavoritesView` uses `UIAlertController` + `UIApplication.shared` | SwiftUI `.alert(...)` |
-| `PlateFinderInfraTests` bundle does not exist | Add it; move `URLSessionHTTPClientTests` + `RemoteCarInfoLoaderTests` there |
-| `HTMLParsing` protocol referenced by `RemoteCarInfoLoader` | Rename to `CarHTMLMapper` (see row above) and relocate to Domain |

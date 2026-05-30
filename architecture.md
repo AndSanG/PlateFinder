@@ -39,7 +39,7 @@ Implements domain Repository protocols and concrete Use Cases. Contains:
 MVVM with SwiftUI + `@Observable`. Contains:
 - **ViewModels** — `@Observable @MainActor final class`; expose a single `public private(set) var state: ViewState`; depend on **Use Case protocols only** — never repositories or concrete types
 - **Views** — pure SwiftUI (`struct: View`); passive; render via exhaustive `switch viewModel.state`; mutate only via ViewModel intent methods; confirmations use `.alert(...)`
-- **Routers** — `@Observable` navigation state driven by `NavigationStack` + `NavigationPath`, injected via SwiftUI `.environment(...)`
+- **Routers** — `@Observable @MainActor` types in the domain layer, injected via SwiftUI `.environment(...)`; `AppRouter` owns a `Tab` enum (no `NavigationPath` — domain forbids SwiftUI import); `IntentRouter` bridges AppIntents to the SwiftUI tree
 - **State wrappers** — `@State`, `@Bindable`, `@Environment(Type.self)`; never `ObservableObject` / `@Published` / `@StateObject` / `@EnvironmentObject`
 
 ## State-Driven MVVM
