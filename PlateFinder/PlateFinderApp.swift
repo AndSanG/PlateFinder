@@ -2,39 +2,62 @@ import SwiftUI
 
 @main
 struct PlateFinderApp: App {
+    @State private var searchViewModel: SearchViewModel
+    @State private var historyViewModel: HistoryViewModel
+    @State private var intentRouter: IntentRouter
+    @State private var appRouter: AppRouter
+
+    init() {
+        let store = UserDefaultsCarStore()
+        let carInfoService = ANTCarInfoService(
+            url: URL(string: AppConstants.baseURL)!,
+            client: URLSessionHTTPClient(),
+            mapper: ANTCarHTMLMapper()
+        )
+        let router = IntentRouter()
+        AppIntentIntentRouterBridge.shared.router = router
+
+        _searchViewModel = State(initialValue: SearchViewModel(
+            loadCarInfo: carInfoService,
+            addToHistory: HistoryAdder(store: store)
+        ))
+        _historyViewModel = State(initialValue: HistoryViewModel(
+            loadHistory: HistoryLoader(store: store),
+            loadFavorites: FavoritesLoader(store: store),
+            deleteFromHistory: HistoryDeleter(store: store),
+            clearHistory: HistoryClearer(store: store),
+            toggleFavorite: FavoritesToggler(store: store)
+        ))
+        _intentRouter = State(initialValue: router)
+        _appRouter = State(initialValue: AppRouter())
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(IntentHandler.shared)
+                .environment(searchViewModel)
+                .environment(historyViewModel)
+                .environment(intentRouter)
+                .environment(appRouter)
         }
     }
 }
 
 struct ContentView: View {
-    @State private var viewModel: PlateFinderViewModel = {
-        let store = UserDefaultsCarStore()
-        let loader = RemoteCarInfoLoader(
-            url: URL(string: AppConstants.baseURL)!,
-            client: URLSessionHTTPClient(),
-            parser: ANTHTMLParser()
-        )
-        return PlateFinderViewModel(loader: loader, store: store, favoritesStore: store)
-    }()
-    @State private var selectedTab: AppTab = .search
-
-    enum AppTab { case search, history }
+    @Environment(AppRouter.self) private var appRouter
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        @Bindable var router = appRouter
+        TabView(selection: $router.selectedTab) {
             NavigationStack {
-                PlateSearchView(viewModel: viewModel, selectedTab: $selectedTab)
+                PlateSearchView()
             }
             .tabItem { Label("search".localized, systemImage: "magnifyingglass") }
-            .tag(AppTab.search)
+            .tag(AppRouter.Tab.search)
 
-            HistoryAndFavoritesView(viewModel: viewModel, selectedTab: $selectedTab)
+            HistoryAndFavoritesView()
                 .tabItem { Label("history".localized, systemImage: "clock") }
-                .tag(AppTab.history)
+                .tag(AppRouter.Tab.history)
         }
     }
 }

@@ -1,45 +1,52 @@
 import SwiftUI
 
 struct PlateSearchView: View {
-    @Bindable var viewModel: PlateFinderViewModel
-    @Binding var selectedTab: ContentView.AppTab
-    @State private var showInfoBanner: Bool = true
+    @Environment(SearchViewModel.self) private var viewModel
+    @Environment(IntentRouter.self) private var intentRouter
+    @State private var plate = ""
+    @State private var showInfoBanner = true
 
     var body: some View {
         Group {
-            if viewModel.isLoading {
+            switch viewModel.state {
+            case .idle:
+                plateInput
+            case .loading:
                 LoadingView()
-            } else if let car = viewModel.result {
+            case .success(let car):
                 VStack {
-                    CarDetailView(car: car, viewModel: viewModel)
+                    CarDetailView(car: car)
                     Spacer()
-                    returnButton()
+                    returnButton
                 }
-            } else if let error = viewModel.error {
+            case .error(let message):
                 VStack(spacing: 20) {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 50))
                         .foregroundColor(.orange)
-                    Text(error.localizedDescription)
+                    Text(message)
                         .font(.headline)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                     Spacer()
-                    returnButton()
+                    returnButton
                 }
-            } else {
-                plateInput()
             }
         }
         .navigationTitle("search_title".localized)
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: intentRouter.pendingPlate) { _, pending in
+            guard let pending else { return }
+            plate = pending
+            Task { await viewModel.search(plate: pending) }
+            intentRouter.consume()
+        }
     }
 
-    private func returnButton() -> some View {
+    private var returnButton: some View {
         Button {
-            viewModel.result = nil
-            viewModel.error = nil
-            viewModel.plateText = ""
+            viewModel.reset()
+            plate = ""
         } label: {
             Text("return".localized)
                 .font(.headline)
@@ -51,13 +58,28 @@ struct PlateSearchView: View {
         .padding(.horizontal)
     }
 
-    private func plateInput() -> some View {
+    private var plateFormat: PlateFormat { PlateValidator.validate(plate) }
+
+    private var isComplete: Bool {
+        plateFormat == .car || plateFormat == .bike || plateFormat == .special
+    }
+
+    private var vehicleIcon: String? {
+        switch plateFormat {
+        case .car:     return "car.fill"
+        case .bike:    return "bicycle"
+        case .special: return "car.2.fill"
+        default:       return nil
+        }
+    }
+
+    private var plateInput: some View {
         VStack(spacing: 20) {
             Text("enter_plate".localized)
                 .font(.title)
 
             HStack {
-                if let icon = PlateValidator.vehicleIcon(for: viewModel.plateText) {
+                if let icon = vehicleIcon {
                     Image(systemName: icon)
                         .foregroundColor(.blue)
                         .font(.title3)
@@ -65,20 +87,20 @@ struct PlateSearchView: View {
                         .transition(.scale.combined(with: .opacity))
                 }
 
-                TextField(AppConstants.defaultPlateExample, text: $viewModel.plateText)
-                    .padding(.leading, PlateValidator.vehicleIcon(for: viewModel.plateText) != nil ? 0 : nil)
+                TextField(AppConstants.defaultPlateExample, text: $plate)
+                    .padding(.leading, vehicleIcon != nil ? 0 : nil)
                     .keyboardType(.asciiCapable)
                     .autocapitalization(.allCharacters)
                     .disableAutocorrection(true)
-                    .onChange(of: viewModel.plateText) { old, new in
-                        if !PlateValidator.isPartiallyValid(new) && !new.isEmpty {
-                            viewModel.plateText = old
+                    .onChange(of: plate) { old, new in
+                        if !new.isEmpty && PlateValidator.validate(new) == .invalid {
+                            plate = old
                         }
                     }
                     .multilineTextAlignment(.center)
 
-                if !viewModel.plateText.isEmpty {
-                    Button { viewModel.plateText = "" } label: {
+                if !plate.isEmpty {
+                    Button { plate = "" } label: {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.gray)
                             .font(.title3)
@@ -91,10 +113,7 @@ struct PlateSearchView: View {
             .cornerRadius(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(
-                        PlateValidator.isComplete(viewModel.plateText) ? Color.blue : Color.gray,
-                        lineWidth: 2
-                    )
+                    .stroke(isComplete ? Color.blue : Color.gray, lineWidth: 2)
             )
             .padding(.horizontal)
 
@@ -112,40 +131,19 @@ struct PlateSearchView: View {
             Spacer()
 
             Button {
-                Task { await viewModel.search() }
+                Task { await viewModel.search(plate: plate) }
             } label: {
                 Text("consult".localized)
                     .font(.headline)
                     .foregroundColor(.black)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(PlateValidator.isComplete(viewModel.plateText) ? Color.blue : Color.gray)
+                    .background(isComplete ? Color.blue : Color.gray)
                     .cornerRadius(AppConstants.cornerRadius)
             }
             .padding(.horizontal)
-            .disabled(!PlateValidator.isComplete(viewModel.plateText))
+            .disabled(!isComplete)
         }
         .padding(.vertical)
-        .onReceive(IntentHandler.shared.$plateToSearch) { plate in
-            if let plate = plate {
-                viewModel.plateText = plate
-                Task { await viewModel.search() }
-            }
-        }
-    }
-}
-
-#Preview {
-    let store = UserDefaultsCarStore(defaults: .init(suiteName: "preview")!)
-    let loader = RemoteCarInfoLoader(
-        url: URL(string: AppConstants.baseURL)!,
-        client: URLSessionHTTPClient(),
-        parser: ANTHTMLParser()
-    )
-    NavigationStack {
-        PlateSearchView(
-            viewModel: PlateFinderViewModel(loader: loader, store: store, favoritesStore: store),
-            selectedTab: .constant(.search)
-        )
     }
 }

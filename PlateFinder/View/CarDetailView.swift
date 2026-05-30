@@ -2,7 +2,14 @@ import SwiftUI
 
 struct CarDetailView: View {
     let car: Car
-    var viewModel: PlateFinderViewModel
+    @Environment(HistoryViewModel.self) private var historyViewModel
+
+    private var isFavorite: Bool {
+        if case .loaded(_, let favs) = historyViewModel.state {
+            return favs.contains(car.plate)
+        }
+        return false
+    }
 
     var body: some View {
         ScrollView {
@@ -16,11 +23,11 @@ struct CarDetailView: View {
                 }
                 Spacer()
                 Button {
-                    Task { await viewModel.toggleFavorite(car.plate) }
+                    Task { await historyViewModel.toggleFavorite(car.plate) }
                 } label: {
-                    Image(systemName: viewModel.favorites.contains(car.plate) ? "star.fill" : "star")
+                    Image(systemName: isFavorite ? "star.fill" : "star")
                         .font(.title2)
-                        .foregroundColor(viewModel.favorites.contains(car.plate) ? .yellow : .gray)
+                        .foregroundColor(isFavorite ? .yellow : .gray)
                 }
             }
             .padding(16)
@@ -39,17 +46,4 @@ struct CarDetailView: View {
             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 2))
         }
     }
-}
-
-#Preview {
-    let store = UserDefaultsCarStore(defaults: .init(suiteName: "preview")!)
-    let loader = RemoteCarInfoLoader(
-        url: URL(string: AppConstants.baseURL)!,
-        client: URLSessionHTTPClient(),
-        parser: ANTHTMLParser()
-    )
-    CarDetailView(
-        car: .mock,
-        viewModel: PlateFinderViewModel(loader: loader, store: store, favoritesStore: store)
-    )
 }
