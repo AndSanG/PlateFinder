@@ -46,6 +46,8 @@ struct PlateFinderApp: App {
 
 struct ContentView: View {
     @Environment(AppRouter.self) private var appRouter
+    @Environment(IntentRouter.self) private var intentRouter
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         @Bindable var router = appRouter
@@ -59,6 +61,13 @@ struct ContentView: View {
             HistoryAndFavoritesView()
                 .tabItem { Label("history".localized, systemImage: "clock") }
                 .tag(AppRouter.Tab.history)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active,
+                  let plate = UserDefaults.standard.string(forKey: "pendingIntentPlate")
+            else { return }
+            UserDefaults.standard.removeObject(forKey: "pendingIntentPlate")
+            intentRouter.requestSearch(plate: plate)
         }
     }
 }

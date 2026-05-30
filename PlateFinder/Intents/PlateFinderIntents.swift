@@ -51,6 +51,9 @@ struct FindPlateIntent: AppIntent {
         guard format == .car || format == .bike || format == .special else {
             throw $plateNumber.needsValueError("Please provide a valid license plate number in format ABC1234")
         }
+        // UserDefaults survives across process boundaries; the app reads it on activation.
+        // The in-process bridge is kept as a fast path for when the app is already running.
+        UserDefaults.standard.set(plateText, forKey: "pendingIntentPlate")
         AppIntentIntentRouterBridge.shared.requestSearch(plate: plateText)
         return .result(dialog: "Searching for license plate \(plateText) in PlateFinder")
     }
@@ -82,9 +85,21 @@ final class AppIntentIntentRouterBridge {
     static let shared = AppIntentIntentRouterBridge()
     private init() {}
 
-    weak var router: IntentRouter?
+    private var bufferedPlate: String?
+
+    weak var router: IntentRouter? {
+        didSet {
+            guard let plate = bufferedPlate else { return }
+            router?.requestSearch(plate: plate)
+            bufferedPlate = nil
+        }
+    }
 
     func requestSearch(plate: String) {
-        router?.requestSearch(plate: plate)
+        guard let router else {
+            bufferedPlate = plate
+            return
+        }
+        router.requestSearch(plate: plate)
     }
 }
