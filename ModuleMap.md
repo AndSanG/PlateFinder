@@ -1,143 +1,285 @@
 # PlateFinder — Module Map & Protocol Contracts
 
+For the hard rules (forbidden imports, DI, concurrency, testing, commit discipline) see [architecture.md](architecture.md). This document is the concrete map of what lives where and the protocol contracts between layers.
+
 ---
 
 ## Module Boundaries
 
-### 1. `PlateFinder` — macOS Framework (Domain + Infrastructure protocols)
+### 1. `PlateFinderDomain` — macOS Framework (Domain Layer)
 
-The domain framework. Targets **macOS only** so all tests run natively without a simulator.
+Targets **macOS 15+ only** so all domain, use-case, and ViewModel tests run natively without an iOS Simulator boot.
 
-**Allowed imports:** `Foundation`, `Observation`  
-**Forbidden imports:** `UIKit`, `SwiftUI`, `AppKit`, `AppIntents`, `SwiftSoup`, `Combine`
-
-Contains:
-- Domain models: `Car`, `PlateFormat`, `SearchHistoryItem`, `CarInfoError`
-- Domain logic: `PlateValidator`
-- Protocol contracts: `HTMLClient`, `CarInfoLoader`, `CarStore`, `FavoritesStore`
-- ViewModel: `PlateFinderViewModel` (`@Observable`)
-
-### 2. `PlateFinder` — iOS App Target (Infrastructure + Composition Root)
-
-The app target. Hosts all concrete infrastructure types and the Composition Root.
-
-**Allowed imports:** anything  
-**Rule:** No domain model or protocol implementation may import a concrete infrastructure type.
+**Allowed imports:** `Foundation`, `Observation`
+**Forbidden imports:** `UIKit`, `SwiftUI`, `AppKit`, `AppIntents`, `Combine`, `CoreData`, `SwiftData`, `Security`, `SwiftSoup`, any networking library
 
 Contains:
-- `URLSessionHTTPClient` (conforms to `HTMLClient`)
-- `ANTCarInfoService` (conforms to `CarInfoLoader`) — fetches HTML, parses via `CarHTMLMapper`
-- `CarHTMLMapper` — static type; maps HTML `Document` → `Car`
-- `UserDefaultsCarStore` (conforms to `CarStore` + `FavoritesStore`)
-- SwiftUI Views
-- Composition Root (`PlateFinderApp.body`)
-- `AppIntents` (`FindPlateIntent`, `PlateFinderShortcuts`)
+- **Entities** — `Car`, `SearchHistoryItem`, `PlateFormat`, `CarInfoError`
+- **Domain logic** — `PlateValidator` (pure)
+- **Use Case protocols** — `LoadCarInfo`, `LoadHistory`, `AddToHistory`, `DeleteFromHistory`, `ClearHistory`, `LoadFavorites`, `ToggleFavorite`
+- **Repository protocols** — `HTTPClient`, `CarHTMLMapper`, `CarStore`, `FavoritesStore`
+- **Presentation state** — per-screen `ViewState` enums (`SearchViewState`, `HistoryViewState`)
+- **ViewModels** — `SearchViewModel`, `HistoryViewModel` (each `@Observable @MainActor final class`, single `private(set) var state`)
+- **Routers** — `IntentRouter` (`@Observable`), `AppRouter` (`@Observable`, owns `NavigationPath`)
 
-### 3. `PlateFinderTests` — macOS Unit Testing Bundle
+### 2. `PlateFinder` — iOS App Target (Data Layer + Presentation Layer + Composition Root)
 
-Linked against the macOS domain framework. All tests run on Mac — no simulator.
+Hosts all concrete adapters and the SwiftUI tree.
 
-**Uses:** Swift Testing (`import Testing`)
+**Allowed imports:** anything
+**Rule:** No type in this target may be referenced by `PlateFinderDomain`. The dependency arrow points app → domain only.
+
+Contains:
+- **Data Layer** (`Infrastructure/`):
+  - `URLSessionHTTPClient` — conforms to `HTTPClient`
+  - `ANTCarInfoService` — conforms to `LoadCarInfo`; fetches HTML via `HTTPClient`, maps via `ANTCarHTMLMapper`
+  - `ANTCarHTMLMapper` — conforms to `CarHTMLMapper`; SwiftSoup-based, DTO → `Car`
+  - `UserDefaultsCarStore` — conforms to `CarStore` + `FavoritesStore`
+  - `UserDefaultsHistoryUseCases` — conforms to `LoadHistory` / `AddToHistory` / `DeleteFromHistory` / `ClearHistory`, delegating to `CarStore`
+  - `UserDefaultsFavoritesUseCases` — conforms to `LoadFavorites` / `ToggleFavorite`, delegating to `FavoritesStore`
+  - `Car+Codable`, `SearchHistoryItem+Codable` — infrastructure-only extensions
+  - `CarInfoError+LocalizedError` — UI-facing string mapping
+- **Presentation Layer** (`View/`): pure SwiftUI views, `NavigationStack`-based routing, exhaustive `switch` over `ViewState`
+- **Composition Root** (`PlateFinderApp.swift`): constructs every concrete type, injects them into ViewModels/Routers, publishes shared dependencies via `.environment(...)`
+- **AppIntents** (`Intents/`): `FindPlateIntent`, `PlateFinderShortcuts`; route through `IntentRouter` (not via singleton)
+- **App constants** (`Globals.swift`): `AppConstants` (base ANT URL, UI constants) and `NetworkConfig` (default encoding). App-target only — never imported from Domain
+- **Localization** (`Resources/LanguageManager.swift`): the `String.localized` extension that wraps `NSLocalizedString`. App-target only. (`.lproj/` bundles live alongside.) The legacy `LanguageManager: ObservableObject` documented in `README_Localization.md` is **not** present in code; if reintroduced, it must be a `@Observable` `final class` injected via `.environment(...)`, never an `@EnvironmentObject`
+
+### 3. Test Bundles
+
+| Bundle | Links against | Tests |
+|---|---|---|
+| `PlateFinderTests` | `PlateFinderDomain` framework | Use Case implementations (with stubs), ViewModels, `PlateValidator` |
+| `PlateFinderInfraTests` | `PlateFinder` app target | `URLSessionHTTPClient`, `ANTCarInfoService`, `ANTCarHTMLMapper`, `UserDefaultsCarStore` (URLProtocol stubs, in-memory `UserDefaults`) |
+| `PlateFinderAPIEndToEndTests` | `PlateFinder` app target | Hits the live ANT endpoint; verifies the full pipeline |
+
+All bundles use Swift Testing (`import Testing`); none use XCTest.
 
 ---
 
 ## Dependency Direction
 
 ```
-iOS App Target  ──────────────────────────────────────────────────────────┐
-│                                                                          │
-│  Composition Root wires:                                                 │
-│    URLSessionHTTPClient   ──► HTMLClient (protocol)                      │
-│    ANTCarInfoService      ──► CarInfoLoader (protocol)                   │
-│    UserDefaultsCarStore   ──► CarStore + FavoritesStore (protocols)      │
-│                                                                          │
-│  SwiftUI Views bind to:                                                  │
-│    PlateFinderViewModel   ◄── @Observable (domain framework)             │
-│                                                                          │
-└──────────────────────────────────┬───────────────────────────────────────┘
-                                   │ depends on (protocols only)
-                    ┌──────────────▼──────────────┐
-                    │  PlateFinder (macOS Framework)│
-                    │                              │
-                    │  Car                         │
-                    │  PlateFormat                 │
-                    │  SearchHistoryItem           │
-                    │  CarInfoError                │
-                    │  PlateValidator              │
-                    │                              │
-                    │  HTMLClient        (protocol)│
-                    │  CarInfoLoader     (protocol)│
-                    │  CarStore          (protocol)│
-                    │  FavoritesStore    (protocol)│
-                    │                              │
-                    │  PlateFinderViewModel        │
-                    │   (@Observable)              │
-                    └──────────────────────────────┘
+PlateFinder (iOS App Target)
+│
+│  Composition Root wires concrete adapters:
+│    URLSessionHTTPClient            ──► HTTPClient
+│    ANTCarHTMLMapper                ──► CarHTMLMapper
+│    ANTCarInfoService               ──► LoadCarInfo
+│    UserDefaultsCarStore            ──► CarStore + FavoritesStore
+│    UserDefaultsHistoryUseCases     ──► LoadHistory / AddToHistory / …
+│    UserDefaultsFavoritesUseCases   ──► LoadFavorites / ToggleFavorite
+│
+│  SwiftUI views switch over:
+│    SearchViewModel.state : SearchViewState
+│    HistoryViewModel.state : HistoryViewState
+│
+└─────────────────────────────────────┐
+                                      │ depends on (protocols + entities only)
+                                      ▼
+                  PlateFinderDomain (macOS Framework)
+                  ┌──────────────────────────────────┐
+                  │  Entities                        │
+                  │    Car, SearchHistoryItem,       │
+                  │    PlateFormat, CarInfoError     │
+                  │                                  │
+                  │  Domain logic                    │
+                  │    PlateValidator                │
+                  │                                  │
+                  │  Use Case protocols              │
+                  │    LoadCarInfo                   │
+                  │    LoadHistory / AddToHistory /  │
+                  │    DeleteFromHistory / Clear…    │
+                  │    LoadFavorites / ToggleFav…    │
+                  │                                  │
+                  │  Repository protocols            │
+                  │    HTTPClient, CarHTMLMapper,    │
+                  │    CarStore, FavoritesStore      │
+                  │                                  │
+                  │  Presentation state              │
+                  │    SearchViewState               │
+                  │    HistoryViewState              │
+                  │                                  │
+                  │  ViewModels (@Observable)        │
+                  │    SearchViewModel               │
+                  │    HistoryViewModel              │
+                  │                                  │
+                  │  Routers (@Observable)           │
+                  │    IntentRouter, AppRouter       │
+                  └──────────────────────────────────┘
 ```
 
-**Rule:** Arrows never point from the domain framework toward the app target. The app target is the only module that knows about both layers.
+Arrows never point from the domain framework toward the app target.
 
 ---
 
 ## Protocol Contracts
 
-All methods use `async throws` (iOS 17+ / Swift 5.5+).
+All methods are `async throws` (iOS 17+). All `Sendable` where they cross actor boundaries.
 
-### `HTMLClient`
-
-Abstracts HTTP fetching. The domain framework depends on this; `URLSession` is never mentioned inside the framework.
+### Repository protocols (Data Layer implements these)
 
 ```swift
-protocol HTMLClient {
-    func fetchHTML(from url: URL) async throws -> String
+protocol HTTPClient: Sendable {
+    func get(from url: URL) async throws -> (Data, HTTPURLResponse)
 }
-```
 
-Errors surfaced to callers: `CarInfoError.networkError`, `CarInfoError.serverError`
-
----
-
-### `CarInfoLoader`
-
-Single use-case protocol. One method, one responsibility.
-
-```swift
-protocol CarInfoLoader {
-    func loadCarInfo(for plateNumber: String) async throws -> Car
+protocol CarHTMLMapper: Sendable {
+    func map(_ html: String) throws -> Car
 }
-```
 
-Success: returns a fully populated `Car`.  
-Failure: throws `CarInfoError` (.networkError, .serverError, .noDataFound, .parsingError, .invalidPlateFormat)
-
----
-
-### `CarStore`
-
-Abstracts search-history persistence. Implementations (UserDefaults, CoreData, in-memory spy) are invisible to the domain.
-
-```swift
-protocol CarStore {
+protocol CarStore: Sendable {
     func retrieve() async throws -> [SearchHistoryItem]
     func insert(_ item: SearchHistoryItem) async throws
     func delete(_ item: SearchHistoryItem) async throws
     func deleteAll() async throws
 }
-```
 
----
-
-### `FavoritesStore`
-
-Abstracts favorite-plates persistence. Kept separate from `CarStore` (Interface Segregation).
-
-```swift
-protocol FavoritesStore {
+protocol FavoritesStore: Sendable {
     func retrieveFavorites() async throws -> [String]
     func insertFavorite(_ plateNumber: String) async throws
     func deleteFavorite(_ plateNumber: String) async throws
 }
 ```
+
+### Use Case protocols (ViewModels depend on these only)
+
+Each is a single-method protocol — Interface Segregation by intent.
+
+```swift
+protocol LoadCarInfo: Sendable {
+    func execute(plate: String) async throws -> Car
+}
+
+protocol LoadHistory: Sendable {
+    func execute() async throws -> [SearchHistoryItem]
+}
+
+protocol AddToHistory: Sendable {
+    func execute(_ item: SearchHistoryItem) async throws
+}
+
+protocol DeleteFromHistory: Sendable {
+    func execute(_ item: SearchHistoryItem) async throws
+}
+
+protocol ClearHistory: Sendable {
+    func execute() async throws
+}
+
+protocol LoadFavorites: Sendable {
+    func execute() async throws -> [String]
+}
+
+protocol ToggleFavorite: Sendable {
+    func execute(plate: String) async throws -> [String]   // returns the new favorites list
+}
+```
+
+ViewModels receive these as `any LoadCarInfo`, `any LoadHistory`, etc. — never `CarStore`/`FavoritesStore` directly.
+
+### Routers (Domain)
+
+```swift
+@Observable @MainActor
+public final class IntentRouter {
+    public private(set) var pendingPlate: String?
+    public init() {}
+    public func requestSearch(plate: String) { pendingPlate = plate }
+    public func consume() { pendingPlate = nil }
+}
+
+@Observable @MainActor
+public final class AppRouter {
+    public var path: NavigationPath
+    public init(path: NavigationPath = .init()) { self.path = path }
+}
+```
+
+`AppIntents` calls `IntentRouter.requestSearch(plate:)` via the instance injected at the Composition Root. Views observe `pendingPlate`, dispatch the search, then call `consume()`. Replaces the legacy `IntentHandler.shared` singleton + `@Published` pattern.
+
+---
+
+## Presentation State (Domain)
+
+```swift
+enum SearchViewState: Equatable {
+    case idle
+    case loading
+    case success(Car)
+    case error(String)
+}
+
+enum HistoryViewState: Equatable {
+    case loading
+    case loaded(history: [SearchHistoryItem], favorites: [String])
+    case error(String)
+}
+```
+
+ViewModels expose `public private(set) var state: …`. Views render via exhaustive `switch viewModel.state`.
+
+### Reference Pattern
+
+```swift
+@Observable @MainActor
+final class SearchViewModel {
+    public private(set) var state: SearchViewState = .idle
+    private let loadCarInfo: any LoadCarInfo
+    private let addToHistory: any AddToHistory
+
+    public init(loadCarInfo: any LoadCarInfo, addToHistory: any AddToHistory) {
+        self.loadCarInfo = loadCarInfo
+        self.addToHistory = addToHistory
+    }
+
+    public func search(plate: String) async {
+        state = .loading
+        do {
+            let car = try await loadCarInfo.execute(plate: plate)
+            // History write is non-fatal and unsurfaced: a successful lookup must reach the user
+            // even if persistence fails. Re-evaluate if history reliability ever becomes load-bearing.
+            try? await addToHistory.execute(SearchHistoryItem(plateNumber: plate, searchDate: Date(), car: car))
+            state = .success(car)
+        } catch let e as CarInfoError {
+            state = .error(e.userMessage)
+        } catch {
+            state = .error(error.localizedDescription)
+        }
+    }
+
+    public func reset() { state = .idle }
+}
+
+struct SearchView: View {
+    @Bindable var viewModel: SearchViewModel
+    @State private var plate = ""
+
+    var body: some View {
+        switch viewModel.state {
+        case .idle:               PlateInputView(plate: $plate, onSubmit: { Task { await viewModel.search(plate: plate) } })
+        case .loading:            ProgressView()
+        case .success(let car):   CarDetailView(car: car, onReset: viewModel.reset)
+        case .error(let message): ErrorView(message: message, onRetry: viewModel.reset)
+        }
+    }
+}
+```
+
+---
+
+## External Endpoints
+
+The single external system is Ecuador's ANT vehicle registry portal.
+
+| Aspect | Value | Where it lives |
+|---|---|---|
+| Base URL | `https://consultaweb.ant.gob.ec/PortalWEB/paginas/clientes/clp_grid_citaciones.jsp` | `AppConstants.baseURL` in `Globals.swift` (app target) |
+| Query params | `ps_tipo_identificacion=PLA`, `ps_identificacion=<plate>`, `ps_placa=` | Built inside `ANTCarInfoService` |
+| Response encoding | ISO Latin 1 | `NetworkConfig.defaultEncoding` |
+| Response shape | HTML page with a result table | Parsed by `ANTCarHTMLMapper` |
+
+The `CarHTMLMapper` implementation decodes the response body with `.isoLatin1` at the boundary; downstream layers see UTF-8 `String` only. The base URL must never be referenced from `PlateFinderDomain` — Domain receives a constructed `URL` via constructor injection at the Composition Root.
 
 ---
 
@@ -145,7 +287,7 @@ protocol FavoritesStore {
 
 ### `Car`
 
-Pure value type. No `Codable` conformance in the domain — that is an infrastructure concern.
+Pure value type. `Equatable`. No `Codable` in the domain — that extension lives in `Infrastructure/`.
 
 | Property | Type | Source (HTML table cell) |
 |---|---|---|
@@ -165,19 +307,19 @@ Pure value type. No `Codable` conformance in the domain — that is an infrastru
 ### `SearchHistoryItem`
 
 ```swift
-struct SearchHistoryItem {
+struct SearchHistoryItem: Equatable, Sendable {
     let plateNumber: String
     let searchDate: Date
     let car: Car?          // nil if the search failed
 }
 ```
 
-`Codable` conformance lives in infrastructure (for UserDefaults serialization), not in the domain model.
+`Codable` lives in `Infrastructure/SearchHistoryItem+Codable.swift`.
 
 ### `PlateFormat`
 
 ```swift
-enum PlateFormat: Equatable {
+enum PlateFormat: Equatable, Sendable {
     case empty
     case partiallyValid
     case invalid
@@ -190,7 +332,7 @@ enum PlateFormat: Equatable {
 ### `CarInfoError`
 
 ```swift
-enum CarInfoError: Error {
+enum CarInfoError: Error, Equatable, Sendable {
     case networkError(Error)
     case noDataFound
     case invalidPlateFormat
@@ -199,19 +341,23 @@ enum CarInfoError: Error {
 }
 ```
 
-`LocalizedError` conformance (user-facing strings) stays in the app target — it is a UI concern.
+`LocalizedError` conformance lives in the app target.
 
 ---
 
-## What Changes from the Current Code
+## Known violations of this map (refactor backlog)
 
-| Current (pre-TDD) | TDD target |
+| Violation in current code | Target state |
 |---|---|
-| `CarInfoService` hardcoded in ViewModel | Inject `CarInfoLoader` protocol |
-| `URLSession.shared` in `AntScrapper` | `URLSessionHTTPClient` behind `HTMLClient` |
-| `isTesting: Bool` flag | Removed — use injected spy in tests |
-| `ObservableObject` + `@Published` in ViewModel | `@Observable` (`import Observation`) |
-| `Car: Codable` in domain | `Car` is plain struct; `Codable` in infrastructure DTO |
-| `UserDataService.shared` singleton | Injected `CarStore` + `FavoritesStore` protocols |
-| Localized strings in `CarInfoError` | Move to app target (`LocalizedError` extension) |
-| `SwiftUI` imported in ViewModel | Removed — ViewModel has zero UI framework imports |
+| `URLSessionHTTPClient.swift` in `PlateFinderDomain/` | Move to `PlateFinder/Infrastructure/` |
+| `RemoteCarInfoLoader.swift` in `PlateFinderDomain/` | Move + rename to `PlateFinder/Infrastructure/ANTCarInfoService.swift` |
+| `ANTHTMLParser` conforms to `HTMLParsing` | Rename protocol to `CarHTMLMapper`, type to `ANTCarHTMLMapper` |
+| `PlateFinderViewModel` takes `CarInfoLoader` + `CarStore` + `FavoritesStore` repos | Split into `SearchViewModel` + `HistoryViewModel`, each taking single-method Use Case protocols |
+| `PlateFinderViewModel` has 6 public mutable `var`s | Collapse into `private(set) var state: ViewState` per screen |
+| Views mutate `viewModel.result = nil`, `viewModel.error = nil`, `viewModel.plateText = ""` | Add intent methods (`viewModel.reset()`); views call them |
+| `IntentHandler.shared` singleton + `ObservableObject` | `@Observable IntentRouter`, injected via `.environment(...)` |
+| `PlateSearchView` reads `IntentHandler.shared.$plateToSearch` via `.onReceive` | View observes injected `IntentRouter.pendingPlate`; calls `consume()` after dispatching |
+| `PlateFinderApp` injects via `.environmentObject(IntentHandler.shared)` | Composition Root constructs `IntentRouter()` and passes it via `.environment(_:)` |
+| `HistoryAndFavoritesView` uses `UIAlertController` + `UIApplication.shared` | SwiftUI `.alert(...)` |
+| `PlateFinderInfraTests` bundle does not exist | Add it; move `URLSessionHTTPClientTests` + `RemoteCarInfoLoaderTests` there |
+| `HTMLParsing` protocol referenced by `RemoteCarInfoLoader` | Rename to `CarHTMLMapper` (see row above) and relocate to Domain |
