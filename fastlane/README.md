@@ -39,29 +39,29 @@ Fetch and increment build number
 
 Manage certificates and profiles
 
-### ios build
+### ios unit_tests
 
 ```sh
-[bundle exec] fastlane ios build
+[bundle exec] fastlane ios unit_tests
 ```
 
+Run domain unit tests on macOS (no simulator required)
 
-
-### ios install_ipa
+### ios development_build
 
 ```sh
-[bundle exec] fastlane ios install_ipa
+[bundle exec] fastlane ios development_build
 ```
 
+Build the App
 
-
-### ios ci
+### ios build_install_ipa
 
 ```sh
-[bundle exec] fastlane ios ci
+[bundle exec] fastlane ios build_install_ipa
 ```
 
-CI entry point for pull requests
+Build and install last .ipa
 
 ### ios beta
 
