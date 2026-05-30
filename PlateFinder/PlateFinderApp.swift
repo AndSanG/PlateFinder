@@ -16,6 +16,7 @@ struct PlateFinderApp: App {
         )
         let router = IntentRouter()
         AppIntentIntentRouterBridge.shared.router = router
+        PlateFinderShortcuts.updateAppShortcutParameters()
 
         _searchViewModel = State(initialValue: SearchViewModel(
             loadCarInfo: carInfoService,
