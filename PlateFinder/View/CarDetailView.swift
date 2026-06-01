@@ -27,8 +27,9 @@ struct CarDetailView: View {
                 } label: {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                         .font(.title2)
-                        .foregroundColor(isFavorite ? .yellow : .gray)
+                        .foregroundStyle(isFavorite ? .yellow : .gray)
                 }
+                .accessibilityLabel(isFavorite ? "remove_from_favorites".localized : "add_to_favorites".localized)
             }
             .padding(16)
 

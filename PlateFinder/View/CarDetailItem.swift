@@ -18,6 +18,7 @@ struct CarDetailItem: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 32, height: 32)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(subtitle)
                     .font(.headline)
@@ -27,8 +28,9 @@ struct CarDetailItem: View {
             }
         }
         .padding(10)
-        .cornerRadius(8)
+        .clipShape(.rect(cornerRadius: 8))
         .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .accessibilityLabel("\(title): \(subtitle)")
     }
 }
 

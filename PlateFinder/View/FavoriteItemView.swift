@@ -13,31 +13,31 @@ struct FavoriteItemView: View {
     let onDelete: () -> Void
     
     var body: some View {
-        HStack(spacing: 12) {
-            // Star icon
-            Image(systemName: "star.fill")
-                .foregroundColor(.yellow)
-                .font(.title3)
-            
-            // Plate number
-            Text(plateNumber)
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            Spacer()
-            
-            // Action chevron
-            Image(systemName: "chevron.right")
-                .foregroundColor(.secondary)
-                .font(.caption)
+        Button(action: onTap) {
+            HStack(spacing: 12) {
+                Image(systemName: "star.fill")
+                    .foregroundStyle(.yellow)
+                    .font(.title3)
+                    .accessibilityHidden(true)
+
+                Text(plateNumber)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+                    .accessibilityHidden(true)
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(Color(.systemGray6))
+            .clipShape(.rect(cornerRadius: 10))
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
-        .onTapGesture {
-            onTap()
-        }
+        .buttonStyle(.plain)
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button("delete".localized, role: .destructive) {
                 onDelete()
