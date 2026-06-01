@@ -5,6 +5,7 @@ struct PlateSearchView: View {
     @Environment(IntentRouter.self) private var intentRouter
     @State private var plate = ""
     @State private var showInfoBanner = true
+    @State private var showDictation = false
 
     var body: some View {
         Group {
@@ -23,7 +24,8 @@ struct PlateSearchView: View {
                 VStack(spacing: 20) {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 50))
-                        .foregroundColor(.orange)
+                        .foregroundStyle(.orange)
+                        .accessibilityHidden(true)
                     Text(message)
                         .font(.headline)
                         .multilineTextAlignment(.center)
@@ -79,6 +81,12 @@ struct PlateSearchView: View {
         }
     }
 
+    private var numberToolbarButtons: some View {
+        ForEach(["1","2","3","4","5","6","7","8","9","0"], id: \.self) { digit in
+            KeyboardDigitButton(digit: digit, onTap: { plate += digit })
+        }
+    }
+
     private var plateInput: some View {
         VStack(spacing: 20) {
             Text("enter_plate".localized)
@@ -87,17 +95,18 @@ struct PlateSearchView: View {
             HStack {
                 if let icon = vehicleIcon {
                     Image(systemName: icon)
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                         .font(.title3)
                         .padding(.leading)
                         .transition(.scale.combined(with: .opacity))
+                        .accessibilityHidden(true)
                 }
 
                 TextField(AppConstants.defaultPlateExample, text: $plate)
                     .padding(.leading, vehicleIcon != nil ? 0 : nil)
                     .keyboardType(.asciiCapable)
-                    .autocapitalization(.allCharacters)
-                    .disableAutocorrection(true)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled(true)
                     .onChange(of: plate) { old, new in
                         if !new.isEmpty && PlateValidator.validate(new) == .invalid {
                             plate = old
@@ -108,15 +117,16 @@ struct PlateSearchView: View {
                 if !plate.isEmpty {
                     Button { plate = "" } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                             .font(.title3)
                     }
+                    .accessibilityLabel("clear_text".localized)
                     .padding(.trailing)
                 }
             }
             .padding(.vertical)
             .background(Color(.systemGray6))
-            .cornerRadius(10)
+            .clipShape(.rect(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(isComplete ? Color.blue : Color.gray, lineWidth: 2)
@@ -136,28 +146,62 @@ struct PlateSearchView: View {
 
             Spacer()
 
-            Button {
-                Task { await viewModel.search(plate: plate) }
-            } label: {
-                Text("consult".localized)
-                    .font(.headline)
-                    .foregroundColor(.black)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(isComplete ? Color.blue : Color.gray)
-                    .cornerRadius(AppConstants.cornerRadius)
+            HStack(spacing: 12) {
+                Button {
+                    Task { await viewModel.search(plate: plate) }
+                } label: {
+                    Text("consult".localized)
+                        .font(.headline)
+                        .foregroundColor(.black)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(isComplete ? Color.blue : Color.gray)
+                        .cornerRadius(AppConstants.cornerRadius)
+                }
+                .disabled(!isComplete)
+
+                Button {
+                    showDictation = true
+                } label: {
+                    Image(systemName: "mic.fill")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: 54)
+                        .background(Color.blue)
+                        .cornerRadius(AppConstants.cornerRadius)
+                }
             }
             .padding(.horizontal)
-            .disabled(!isComplete)
         }
         .padding(.vertical)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
-                ForEach(["1","2","3","4","5","6","7","8","9","0"], id: \.self) { digit in
-                    Button(digit) { plate += digit }
-                        .frame(maxWidth: .infinity)
-                }
+                numberToolbarButtons
             }
         }
+        .sheet(isPresented: $showDictation) {
+            DictationView { detectedPlate in
+                plate = detectedPlate
+                showDictation = false
+            }
+        }
+    }
+}
+
+private struct KeyboardDigitButton: View {
+    let digit: String
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(digit) { onTap() }
+            .font(.system(size: 16, weight: .semibold))
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .background(Color(red: 0.4, green: 0.4, blue: 0.4))
+            .clipShape(.rect(cornerRadius: 8))
+            .padding(.horizontal, 2)
+            .buttonStyle(.plain)
     }
 }
