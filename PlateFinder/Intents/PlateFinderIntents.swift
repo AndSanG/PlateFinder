@@ -1,7 +1,7 @@
 import AppIntents
 import SwiftUI
 
-struct PlateEntity: AppEntity {
+struct PlateEntity: AppEntity, Sendable {
     let id: String
     let plateNumber: String
 
@@ -13,49 +13,62 @@ struct PlateEntity: AppEntity {
         TypeDisplayRepresentation(name: "License Plate")
     }
 
-    static var defaultQuery = PlateEntityQuery()
+    nonisolated(unsafe) static var defaultQuery = PlateEntityQuery()
 }
 
-struct PlateEntityQuery: EntityQuery {
-    func entities(for identifiers: [PlateEntity.ID]) async throws -> [PlateEntity] {
-        identifiers.map { PlateEntity(id: $0, plateNumber: $0) }
+struct PlateEntityQuery: EntityQuery, EntityStringQuery {
+    func entities(for identifiers: [PlateEntity.ID]) -> [PlateEntity] {
+        identifiers.map { id in
+            PlateEntity(id: id, plateNumber: id)
+        }
     }
 
-    func suggestedEntities() async throws -> [PlateEntity] {
-        [
-            PlateEntity(id: "ABC1234", plateNumber: "ABC1234"),
-            PlateEntity(id: "XYZ5678", plateNumber: "XYZ5678")
-        ]
+    func suggestedEntities() -> [PlateEntity] {
+        // Load recent searches from UserDefaults
+        guard let data = UserDefaults.standard.data(forKey: "search_history"),
+              let items = try? JSONDecoder().decode([SearchHistoryItem].self, from: data) else {
+            return []
+        }
+
+        // Return most recent 10 unique plates
+        var seen = Set<String>()
+        return items.prefix(10).compactMap { item in
+            let plate = item.plateNumber
+            guard !seen.contains(plate) else { return nil }
+            seen.insert(plate)
+            return PlateEntity(id: plate, plateNumber: plate)
+        }
     }
 
-    func entities(matching string: String) async throws -> [PlateEntity] {
-        let cleaned = string.uppercased().replacingOccurrences(of: " ", with: "")
-        let format = PlateValidator.validate(cleaned)
-        guard format != .invalid && format != .empty else { return [] }
+    func entities(matching string: String) -> [PlateEntity] {
+        let cleaned = string.uppercased()
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .joined()
+        guard !cleaned.isEmpty else { return [] }
         return [PlateEntity(id: cleaned, plateNumber: cleaned)]
     }
 }
 
 struct FindPlateIntent: AppIntent {
-    static var title: LocalizedStringResource = "Find Plate"
-    static var description = IntentDescription("Search for a license plate")
-    static var openAppWhenRun: Bool = true
+    nonisolated(unsafe) static var title: LocalizedStringResource = "Find Plate"
+    nonisolated(unsafe) static var description = IntentDescription("Search for a license plate")
+    nonisolated(unsafe) static var openAppWhenRun: Bool = true
 
-    @Parameter(title: "Plate Number")
+    @Parameter(title: "Plate Number", description: "Any license plate to search for")
     var plateNumber: PlateEntity
 
-    @MainActor
     func perform() async throws -> some IntentResult {
-        let plateText = plateNumber.plateNumber.uppercased()
-        let format = PlateValidator.validate(plateText)
-        guard format == .car || format == .bike || format == .special else {
-            throw $plateNumber.needsValueError("Please provide a valid license plate number in format ABC1234")
+        let plateText = plateNumber.plateNumber
+            .uppercased()
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .joined()
+        if !plateText.isEmpty {
+            UserDefaults.standard.set(plateText, forKey: "pendingIntentPlate")
+            await MainActor.run {
+                AppIntentIntentRouterBridge.shared.requestSearch(plate: plateText)
+            }
         }
-        // UserDefaults survives across process boundaries; the app reads it on activation.
-        // The in-process bridge is kept as a fast path for when the app is already running.
-        UserDefaults.standard.set(plateText, forKey: "pendingIntentPlate")
-        AppIntentIntentRouterBridge.shared.requestSearch(plate: plateText)
-        return .result(dialog: "Searching for license plate \(plateText) in PlateFinder")
+        return .result()
     }
 }
 
@@ -64,12 +77,10 @@ enum PlateFinderShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: FindPlateIntent(),
             phrases: [
-                "Find plate \(\.$plateNumber) in \(.applicationName)",
-                "Search plate \(\.$plateNumber) in \(.applicationName)",
-                "Look up plate \(\.$plateNumber) in \(.applicationName)",
-                "Find license plate \(\.$plateNumber) in \(.applicationName)",
                 "Search for \(\.$plateNumber) in \(.applicationName)",
-                "Look up \(\.$plateNumber) in \(.applicationName)"
+                "Look up \(\.$plateNumber) in \(.applicationName)",
+                "Find \(\.$plateNumber) in \(.applicationName)",
+                "Check \(\.$plateNumber) in \(.applicationName)"
             ],
             shortTitle: "Find Plate",
             systemImageName: "magnifyingglass.circle"
@@ -77,9 +88,8 @@ enum PlateFinderShortcuts: AppShortcutsProvider {
     }
 }
 
-// Bridge: AppIntents run in their own process and cannot directly access the SwiftUI
-// environment. This wrapper holds a weak reference to the IntentRouter that the
-// composition root registers at launch.
+// Bridge: used as a fast path when the app is already running in-process.
+// perform() no longer calls this — UserDefaults is the reliable cross-process channel.
 @MainActor
 final class AppIntentIntentRouterBridge {
     static let shared = AppIntentIntentRouterBridge()

@@ -6,6 +6,7 @@ struct PlateFinderApp: App {
     @State private var historyViewModel: HistoryViewModel
     @State private var intentRouter: IntentRouter
     @State private var appRouter: AppRouter
+    @Environment(\.scenePhase) private var scenePhase
 
     init() {
         let store = UserDefaultsCarStore()
@@ -54,11 +55,13 @@ struct ContentView: View {
         TabView(selection: $router.selectedTab) {
             NavigationStack {
                 PlateSearchView()
+                    .environment(\.defaultMinListRowHeight, 60)
             }
             .tabItem { Label("search".localized, systemImage: "magnifyingglass") }
             .tag(AppRouter.Tab.search)
 
             HistoryAndFavoritesView()
+                .environment(\.defaultMinListRowHeight, 60)
                 .tabItem { Label("history".localized, systemImage: "clock") }
                 .tag(AppRouter.Tab.history)
         }
