@@ -1,6 +1,6 @@
 import Foundation
 
-final class UserDefaultsCarStore: CarStore, FavoritesStore {
+final class UserDefaultsCarStore: CarStore, FavoritesStore, @unchecked Sendable {
     private let defaults: UserDefaults
     private let historyKey = "search_history"
     private let favoritesKey = "favorites"
