@@ -7,19 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AB10BCEF12345001 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345001 /* SearchViewModelTests.swift */; };
-		AB10BCEF12345002 /* HistoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345002 /* HistoryViewModelTests.swift */; };
-		AB10BCEF12345020 /* URLSessionHTTPClient.swift in Sources (E2E) */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345020 /* URLSessionHTTPClient.swift */; };
-		AB10BCEF12345021 /* ANTCarInfoService.swift in Sources (E2E) */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345021 /* ANTCarInfoService.swift */; };
-		AB10BCEF12345030 /* ANTCarInfoServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345011 /* ANTCarInfoServiceTests.swift */; };
-		AB10BCEF12345031 /* URLSessionHTTPClientTests.swift in Sources (Infra) */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345012 /* URLSessionHTTPClientTests.swift */; };
-		AB10BCEF12345032 /* URLSessionHTTPClient.swift in Sources (Infra) */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345020 /* URLSessionHTTPClient.swift */; };
-		AB10BCEF12345033 /* ANTCarInfoService.swift in Sources (Infra) */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345021 /* ANTCarInfoService.swift */; };
-		AB10BCEF12345040 /* Cocoa.framework in Frameworks (Infra) */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
-		AB10BCEF12345041 /* PlateFinderDomain.framework in Frameworks (Infra) */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */; };
-		AB60BCEF12345001 /* Car.swift in Sources (Infra) */ = {isa = PBXBuildFile; fileRef = 69E691EF2F90D9CF7107517C /* Car.swift */; };
-		AB60BCEF12345002 /* CarInfoError.swift in Sources (Infra) */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
-		AB60BCEF12345003 /* CarInfoLoader.swift in Sources (Infra) */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		218A788860414E4A6505D998 /* SearchHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */; };
 		23C15EE82E14C00700F01B82 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 23C15EE72E14C00700F01B82 /* SwiftSoup */; };
 		29CA7BF8F10F6CE718713ACF /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
@@ -46,6 +33,16 @@
 		AA20BC3D4E5F617283940003 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00BC3D4E5F617283940003 /* SearchViewModel.swift */; };
 		AA20BC3D4E5F617283940004 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00BC3D4E5F617283940004 /* HistoryViewModel.swift */; };
 		AA20BC3D4E5F617283940005 /* Routers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00BC3D4E5F617283940005 /* Routers.swift */; };
+		AB10BCEF12345001 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345001 /* SearchViewModelTests.swift */; };
+		AB10BCEF12345002 /* HistoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345002 /* HistoryViewModelTests.swift */; };
+		AB10BCEF12345030 /* ANTCarInfoServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345011 /* ANTCarInfoServiceTests.swift */; };
+		AB10BCEF12345031 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345012 /* URLSessionHTTPClientTests.swift */; };
+		AB10BCEF12345032 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345020 /* URLSessionHTTPClient.swift */; };
+		AB10BCEF12345033 /* ANTCarInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB00BCEF12345021 /* ANTCarInfoService.swift */; };
+		AB10BCEF12345040 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
+		AB60BCEF12345001 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E691EF2F90D9CF7107517C /* Car.swift */; };
+		AB60BCEF12345002 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
+		AB60BCEF12345003 /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		B378E8ED83BA17F72620C660 /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		B485F9228644EEAAB7FF4E4A /* PlateFinderDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */; };
 		C93CF9C7F5D2D40CD916C218 /* PlateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */; };
@@ -75,13 +72,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AB00BCEF12345001 /* SearchViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
-		AB00BCEF12345002 /* HistoryViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryViewModelTests.swift; sourceTree = "<group>"; };
-		AB00BCEF12345010 /* PlateFinderInfraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderInfraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB00BCEF12345011 /* ANTCarInfoServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANTCarInfoServiceTests.swift; sourceTree = "<group>"; };
-		AB00BCEF12345012 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
-		AB00BCEF12345020 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
-		AB00BCEF12345021 /* ANTCarInfoService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANTCarInfoService.swift; sourceTree = "<group>"; };
 		1E58F043EBF5A2C9B69B4C57 /* PlateValidator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateValidator.swift; sourceTree = "<group>"; };
 		23C15EC42E14A8FD00F01B82 /* PlateFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlateFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoError.swift; sourceTree = "<group>"; };
@@ -96,6 +86,13 @@
 		AA00BC3D4E5F617283940003 /* SearchViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		AA00BC3D4E5F617283940004 /* HistoryViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		AA00BC3D4E5F617283940005 /* Routers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Routers.swift; sourceTree = "<group>"; };
+		AB00BCEF12345001 /* SearchViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
+		AB00BCEF12345002 /* HistoryViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryViewModelTests.swift; sourceTree = "<group>"; };
+		AB00BCEF12345010 /* PlateFinderInfraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderInfraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB00BCEF12345011 /* ANTCarInfoServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANTCarInfoServiceTests.swift; sourceTree = "<group>"; };
+		AB00BCEF12345012 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
+		AB00BCEF12345020 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
+		AB00BCEF12345021 /* ANTCarInfoService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANTCarInfoService.swift; sourceTree = "<group>"; };
 		B0EF256A00E5E125789091E5 /* PlateFinderAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B37BBE69FA07658B10A4E493 /* CarStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarStore.swift; sourceTree = "<group>"; };
 		C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchHistoryItem.swift; sourceTree = "<group>"; };
@@ -140,19 +137,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AB20BCEF12345002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB10BCEF12345040 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDB01769A73BFD4C4493A5E8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AB20BCEF12345002 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AB10BCEF12345040 /* Cocoa.framework in Frameworks (Infra) */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,16 +226,6 @@
 			path = PlateFinderAPIEndToEndTests;
 			sourceTree = "<group>";
 		};
-		C240684EEB6C266CACC670A1 /* PlateFinderTests */ = {
-			isa = PBXGroup;
-			children = (
-				82E00424C07752F5978E0312 /* PlateValidatorTests.swift */,
-				AB00BCEF12345001 /* SearchViewModelTests.swift */,
-				AB00BCEF12345002 /* HistoryViewModelTests.swift */,
-			);
-			path = PlateFinderTests;
-			sourceTree = "<group>";
-		};
 		AB20BCEF12345004 /* PlateFinderInfraTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +243,16 @@
 			);
 			name = Infrastructure;
 			path = PlateFinder/Infrastructure;
+			sourceTree = "<group>";
+		};
+		C240684EEB6C266CACC670A1 /* PlateFinderTests */ = {
+			isa = PBXGroup;
+			children = (
+				82E00424C07752F5978E0312 /* PlateValidatorTests.swift */,
+				AB00BCEF12345001 /* SearchViewModelTests.swift */,
+				AB00BCEF12345002 /* HistoryViewModelTests.swift */,
+			);
+			path = PlateFinderTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -490,20 +487,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AB20BCEF12345001 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AB60BCEF12345001 /* Car.swift in Sources (Infra) */,
-				AB60BCEF12345002 /* CarInfoError.swift in Sources (Infra) */,
-				AB60BCEF12345003 /* CarInfoLoader.swift in Sources (Infra) */,
-				AB10BCEF12345032 /* URLSessionHTTPClient.swift in Sources (Infra) */,
-				AB10BCEF12345033 /* ANTCarInfoService.swift in Sources (Infra) */,
-				AB10BCEF12345030 /* ANTCarInfoServiceTests.swift in Sources */,
-				AB10BCEF12345031 /* URLSessionHTTPClientTests.swift in Sources (Infra) */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A7D5EA9E2D240A3511531E97 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -521,6 +504,20 @@
 				AA10BC3D4E5F617283940003 /* SearchViewModel.swift in Sources */,
 				AA10BC3D4E5F617283940004 /* HistoryViewModel.swift in Sources */,
 				AA10BC3D4E5F617283940005 /* Routers.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB20BCEF12345001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB60BCEF12345001 /* Car.swift in Sources */,
+				AB60BCEF12345002 /* CarInfoError.swift in Sources */,
+				AB60BCEF12345003 /* CarInfoLoader.swift in Sources */,
+				AB10BCEF12345032 /* URLSessionHTTPClient.swift in Sources */,
+				AB10BCEF12345033 /* ANTCarInfoService.swift in Sources */,
+				AB10BCEF12345030 /* ANTCarInfoServiceTests.swift in Sources */,
+				AB10BCEF12345031 /* URLSessionHTTPClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,7 +727,9 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "PlateFinder needs speech recognition to transcribe your voice when searching for license plates.";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -768,7 +767,9 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "PlateFinder needs speech recognition to transcribe your voice when searching for license plates.";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
