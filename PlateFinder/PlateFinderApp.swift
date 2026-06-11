@@ -52,18 +52,23 @@ struct ContentView: View {
 
     var body: some View {
         @Bindable var router = appRouter
-        TabView(selection: $router.selectedTab) {
-            NavigationStack {
-                PlateSearchView()
-                    .environment(\.defaultMinListRowHeight, 60)
-            }
-            .tabItem { Label("search".localized, systemImage: "magnifyingglass") }
-            .tag(AppRouter.Tab.search)
-
+        NavigationStack {
+            PlateSearchView()
+                .environment(\.defaultMinListRowHeight, 60)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            appRouter.isHistoryPresented = true
+                        } label: {
+                            Label("history".localized, systemImage: "clock.arrow.circlepath")
+                        }
+                    }
+                }
+        }
+        .sheet(isPresented: $router.isHistoryPresented) {
             HistoryAndFavoritesView()
                 .environment(\.defaultMinListRowHeight, 60)
-                .tabItem { Label("history".localized, systemImage: "clock") }
-                .tag(AppRouter.Tab.history)
+                .presentationDetents([.medium, .large])
         }
         .onChange(of: scenePhase) { _, phase in
             guard phase == .active,
@@ -71,6 +76,11 @@ struct ContentView: View {
             else { return }
             UserDefaults.standard.removeObject(forKey: "pendingIntentPlate")
             intentRouter.requestSearch(plate: plate)
+        }
+        .onChange(of: intentRouter.pendingPlate) { _, pending in
+            // An incoming Siri/App Intent search must be visible immediately,
+            // even if the history sheet is covering the search screen.
+            if pending != nil { appRouter.isHistoryPresented = false }
         }
     }
 }

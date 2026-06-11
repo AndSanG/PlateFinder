@@ -20,8 +20,7 @@ public final class IntentRouter {
 @Observable
 @MainActor
 public final class AppRouter {
-    public enum Tab { case search, history }
-    public var selectedTab: Tab = .search
+    public var isHistoryPresented = false
 
     public init() {}
 }

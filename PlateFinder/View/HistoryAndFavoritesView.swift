@@ -3,7 +3,7 @@ import SwiftUI
 struct HistoryAndFavoritesView: View {
     @Environment(HistoryViewModel.self) private var viewModel
     @Environment(SearchViewModel.self) private var searchViewModel
-    @Environment(AppRouter.self) private var appRouter
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedHistoryTab: HistoryTab = .history
     @State private var showClearHistoryAlert = false
 
@@ -80,7 +80,7 @@ struct HistoryAndFavoritesView: View {
                             } else {
                                 Task { await searchViewModel.search(plate: item.plateNumber) }
                             }
-                            appRouter.selectedTab = .search
+                            dismiss()
                         },
                         onDelete: { Task { await viewModel.delete(item) } }
                     )
@@ -103,7 +103,7 @@ struct HistoryAndFavoritesView: View {
                         plateNumber: plateNumber,
                         onTap: {
                             Task { await searchViewModel.search(plate: plateNumber) }
-                            appRouter.selectedTab = .search
+                            dismiss()
                         },
                         onDelete: { Task { await viewModel.toggleFavorite(plateNumber) } }
                     )

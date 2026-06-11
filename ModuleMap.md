@@ -20,7 +20,7 @@ Contains:
 - **Repository protocols** — `HTTPClient`, `CarHTMLMapper`, `CarStore`, `FavoritesStore`
 - **Presentation state** — per-screen `ViewState` enums (`SearchViewState`, `HistoryViewState`)
 - **ViewModels** — `SearchViewModel`, `HistoryViewModel` (each `@Observable @MainActor final class`, single `private(set) var state`)
-- **Routers** — `IntentRouter` (`@Observable`), `AppRouter` (`@Observable`, owns `Tab` selection)
+- **Routers** — `IntentRouter` (`@Observable`), `AppRouter` (`@Observable`, owns history-sheet presentation)
 
 ### 2. `PlateFinder` — iOS App Target (Data Layer + Presentation Layer + Composition Root)
 
@@ -191,8 +191,7 @@ public final class IntentRouter {
 
 @Observable @MainActor
 public final class AppRouter {
-    public enum Tab { case search, history }
-    public var selectedTab: Tab = .search
+    public var isHistoryPresented = false
     public init() {}
 }
 ```

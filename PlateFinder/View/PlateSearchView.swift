@@ -3,6 +3,7 @@ import SwiftUI
 struct PlateSearchView: View {
     @Environment(SearchViewModel.self) private var viewModel
     @Environment(IntentRouter.self) private var intentRouter
+    @Environment(\.scenePhase) private var scenePhase
     @State private var plate = ""
     @State private var speechRecognizer = SpeechRecognizer()
     @FocusState private var plateFieldIsFocused: Bool
@@ -82,25 +83,44 @@ struct PlateSearchView: View {
     }
 
     private var plateInput: some View {
-        VStack(spacing: 20) {
-            Text("enter_plate".localized)
-                .font(.title)
+        VStack(spacing: 0) {
+            // Hero area — fills remaining space above the input card
+            Spacer()
+            VStack(spacing: 14) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 52, weight: .light))
+                    .foregroundStyle(.secondary)
+                Text("enter_plate".localized)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+            }
+            Spacer()
 
-            HStack {
-                if let icon = vehicleIcon {
-                    Image(systemName: icon)
-                        .foregroundStyle(.blue)
-                        .font(.title3)
-                        .padding(.leading)
-                        .transition(.scale.combined(with: .opacity))
-                        .accessibilityHidden(true)
-                }
+            // Inline error from speech recognition
+            if let dictationError = speechRecognizer.error {
+                DictationErrorLabel(message: dictationError)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
+            }
 
-                TextField(
-                    speechRecognizer.isListening ? "listening".localized : AppConstants.defaultPlateExample,
-                    text: $plate
-                )
-                    .padding(.leading, vehicleIcon != nil ? 0 : nil)
+            // Unified input card
+            VStack(spacing: 0) {
+                // Text field row
+                HStack(spacing: 10) {
+                    if let icon = vehicleIcon {
+                        Image(systemName: icon)
+                            .foregroundStyle(.blue)
+                            .transition(.scale.combined(with: .opacity))
+                            .accessibilityHidden(true)
+                    }
+
+                    TextField(
+                        speechRecognizer.isListening ? "listening".localized : AppConstants.defaultPlateExample,
+                        text: $plate
+                    )
                     .focused($plateFieldIsFocused)
                     .keyboardType(.asciiCapable)
                     .textInputAutocapitalization(.characters)
@@ -110,63 +130,87 @@ struct PlateSearchView: View {
                             plate = old
                         }
                     }
-                    .multilineTextAlignment(.center)
 
-                if !plate.isEmpty {
-                    Button { plate = "" } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.gray)
-                            .font(.title3)
+                    if !plate.isEmpty {
+                        Button { plate = "" } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
+                        .accessibilityLabel("clear_text".localized)
                     }
-                    .accessibilityLabel("clear_text".localized)
-                }
 
-                DictationMicButton(speechRecognizer: speechRecognizer) { transcript in
-                    plate = transcript
+                    DictationMicButton(speechRecognizer: speechRecognizer) { transcript in
+                        plate = transcript
+                    }
                 }
-                .padding(.trailing)
+                .padding(.horizontal, 16)
+                .padding(.top, 14)
+                .padding(.bottom, 10)
+
+                Divider()
+                    .padding(.horizontal, 12)
+
+                // Action row: format hint on left, submit on right
+                HStack {
+                    if let icon = vehicleIcon {
+                        Image(systemName: icon)
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                        Text(plate)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("plate_format_info".localized)
+                            .font(.caption2)
+                            .foregroundStyle(Color(.tertiaryLabel))
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
+
+                    Button {
+                        speechRecognizer.stopListening()
+                        Task { await viewModel.search(plate: plate) }
+                    } label: {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .font(.system(size: 32))
+                            .foregroundStyle(isComplete ? Color.blue : Color(.systemGray3))
+                    }
+                    .disabled(!isComplete)
+                    .sensoryFeedback(.impact, trigger: isComplete)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
             }
-            .padding(.vertical)
-            .background(Color(.systemGray6))
-            .clipShape(.rect(cornerRadius: 10))
+            .background(Color(.secondarySystemBackground))
+            .clipShape(.rect(cornerRadius: 20))
             .overlay(
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 20)
                     .stroke(
-                        speechRecognizer.isListening ? Color.red : (isComplete ? Color.blue : Color.gray),
-                        lineWidth: 2
+                        speechRecognizer.isListening ? Color.red.opacity(0.7) : Color(.systemGray4),
+                        lineWidth: 1
                     )
             )
+            .shadow(color: .black.opacity(0.08), radius: 12, y: 4)
             .animation(.default, value: speechRecognizer.isListening)
-            .padding(.horizontal)
-
-            if let dictationError = speechRecognizer.error {
-                DictationErrorLabel(message: dictationError)
-                    .padding(.horizontal)
-            }
-
-            Spacer()
-
-            Button {
-                speechRecognizer.stopListening()
-                Task { await viewModel.search(plate: plate) }
-            } label: {
-                Text("consult".localized)
-                    .font(.headline)
-                    .foregroundColor(.black)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(isComplete ? Color.blue : Color.gray)
-                    .cornerRadius(AppConstants.cornerRadius)
-            }
-            .disabled(!isComplete)
-            .padding(.horizontal)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
         }
-        .padding(.vertical)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if plateFieldIsFocused {
                 DigitKeyRow { digit in plate += digit }
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { plateFieldIsFocused = false }
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            // Focus requests are dropped until the scene is active and the
+            // window is key; .active is the signal that the keyboard can
+            // be presented. `initial: true` covers re-appearing while the
+            // scene is already active (tab switch, returning from a search).
+            guard phase == .active else { return }
+            plateFieldIsFocused = true
         }
         .animation(.easeOut(duration: 0.2), value: plateFieldIsFocused)
     }
