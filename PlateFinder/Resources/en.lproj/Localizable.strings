@@ -23,6 +23,11 @@
 "start_dictation" = "Dictate plate number";
 "stop_dictation" = "Stop dictation";
 "listening" = "Listening…";
+"speech_permission_denied" = "Speech recognition is not allowed. Enable it in Settings.";
+"mic_permission_denied" = "Microphone access is not allowed. Enable it in Settings.";
+"speech_unavailable" = "Speech recognition is not available right now.";
+"speech_audio_error" = "Could not access the microphone.";
+"speech_recognition_error" = "Could not recognize speech. Try again.";
 
 // MARK: - Info Banner
 "important" = "Important";

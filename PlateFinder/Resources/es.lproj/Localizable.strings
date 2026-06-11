@@ -23,6 +23,11 @@
 "start_dictation" = "Dictar número de placa";
 "stop_dictation" = "Detener dictado";
 "listening" = "Escuchando…";
+"speech_permission_denied" = "El reconocimiento de voz no está permitido. Actívalo en Configuración.";
+"mic_permission_denied" = "El acceso al micrófono no está permitido. Actívalo en Configuración.";
+"speech_unavailable" = "El reconocimiento de voz no está disponible en este momento.";
+"speech_audio_error" = "No se pudo acceder al micrófono.";
+"speech_recognition_error" = "No se pudo reconocer la voz. Inténtalo de nuevo.";
 
 // MARK: - Info Banner
 "important" = "Importante";
