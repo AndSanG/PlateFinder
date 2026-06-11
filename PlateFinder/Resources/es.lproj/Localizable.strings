@@ -42,6 +42,7 @@
 // MARK: - History & Favorites
 "no_search_history" = "Sin historial de búsquedas";
 "recent_searches_will_appear_here" = "Tus búsquedas recientes aparecerán aquí";
+"more_searches" = "Más búsquedas";
 "no_favorite_plates" = "Sin placas favoritas";
 "mark_plates_as_favorites_for_quick_access" = "Marca placas como favoritas para acceso rápido";
 "clear" = "Limpiar";

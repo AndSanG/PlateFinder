@@ -52,35 +52,24 @@ struct ContentView: View {
 
     var body: some View {
         @Bindable var router = appRouter
-        NavigationStack {
-            PlateSearchView()
-                .environment(\.defaultMinListRowHeight, 60)
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            appRouter.isHistoryPresented = true
-                        } label: {
-                            Label("history".localized, systemImage: "clock.arrow.circlepath")
-                        }
-                    }
-                }
-        }
-        .sheet(isPresented: $router.isHistoryPresented) {
-            HistoryAndFavoritesView()
-                .environment(\.defaultMinListRowHeight, 60)
-                .presentationDetents([.medium, .large])
-        }
-        .onChange(of: scenePhase) { _, phase in
-            guard phase == .active,
-                  let plate = UserDefaults.standard.string(forKey: "pendingIntentPlate")
-            else { return }
-            UserDefaults.standard.removeObject(forKey: "pendingIntentPlate")
-            intentRouter.requestSearch(plate: plate)
-        }
-        .onChange(of: intentRouter.pendingPlate) { _, pending in
-            // An incoming Siri/App Intent search must be visible immediately,
-            // even if the history sheet is covering the search screen.
-            if pending != nil { appRouter.isHistoryPresented = false }
-        }
+        PlateSearchView()
+            .environment(\.defaultMinListRowHeight, 60)
+            .sheet(isPresented: $router.isHistoryPresented) {
+                HistoryAndFavoritesView()
+                    .environment(\.defaultMinListRowHeight, 60)
+                    .presentationDetents([.medium, .large])
+            }
+            .onChange(of: scenePhase) { _, phase in
+                guard phase == .active,
+                      let plate = UserDefaults.standard.string(forKey: "pendingIntentPlate")
+                else { return }
+                UserDefaults.standard.removeObject(forKey: "pendingIntentPlate")
+                intentRouter.requestSearch(plate: plate)
+            }
+            .onChange(of: intentRouter.pendingPlate) { _, pending in
+                // An incoming Siri/App Intent search must be visible immediately,
+                // even if the history sheet is covering the search screen.
+                if pending != nil { appRouter.isHistoryPresented = false }
+            }
     }
 }

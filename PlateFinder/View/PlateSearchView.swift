@@ -2,6 +2,8 @@ import SwiftUI
 
 struct PlateSearchView: View {
     @Environment(SearchViewModel.self) private var viewModel
+    @Environment(HistoryViewModel.self) private var historyViewModel
+    @Environment(AppRouter.self) private var appRouter
     @Environment(IntentRouter.self) private var intentRouter
     @Environment(\.scenePhase) private var scenePhase
     @State private var plate = ""
@@ -9,62 +11,26 @@ struct PlateSearchView: View {
     @FocusState private var plateFieldIsFocused: Bool
 
     var body: some View {
-        Group {
-            switch viewModel.state {
-            case .idle:
-                plateInput
-            case .loading:
-                LoadingView()
-            case .success(let car):
-                VStack {
-                    CarDetailView(car: car)
-                    Spacer()
-                    returnButton
-                }
-            case .error(let message):
-                VStack(spacing: 20) {
-                    Image(systemName: "exclamationmark.triangle")
-                        .font(.system(size: 50))
-                        .foregroundStyle(.orange)
-                        .accessibilityHidden(true)
-                    Text(message)
-                        .font(.headline)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                    Spacer()
-                    returnButton
-                }
+        // Every state lives inside the conversation: searches are sent bubbles,
+        // results/errors arrive as reply bubbles above the always-present input.
+        searchScreen
+            .task {
+                guard let pending = intentRouter.pendingPlate else { return }
+                plate = pending
+                await viewModel.search(plate: pending)
+                intentRouter.consume()
             }
-        }
-        .navigationTitle("search_title".localized)
-        .navigationBarTitleDisplayMode(.inline)
-        .task {
-            guard let pending = intentRouter.pendingPlate else { return }
-            plate = pending
-            await viewModel.search(plate: pending)
-            intentRouter.consume()
-        }
-        .onChange(of: intentRouter.pendingPlate) { _, pending in
-            guard let pending else { return }
-            plate = pending
-            Task { await viewModel.search(plate: pending) }
-            intentRouter.consume()
-        }
-    }
-
-    private var returnButton: some View {
-        Button {
-            viewModel.reset()
-            plate = ""
-        } label: {
-            Text("return".localized)
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(RoundedRectangle(cornerRadius: 15).stroke(.blue, lineWidth: 1))
-        }
-        .padding(.horizontal)
+            .onChange(of: intentRouter.pendingPlate) { _, pending in
+                guard let pending else { return }
+                plate = pending
+                Task { await viewModel.search(plate: pending) }
+                intentRouter.consume()
+            }
+            .onChange(of: viewModel.state) { _, state in
+                // Chat-style: a delivered result clears the input; on error the
+                // text stays so the user can correct a typo.
+                if case .success = state { plate = "" }
+            }
     }
 
     private var plateFormat: PlateFormat { PlateValidator.validate(plate) }
@@ -82,22 +48,16 @@ struct PlateSearchView: View {
         }
     }
 
-    private var plateInput: some View {
+    private var isLoading: Bool {
+        if case .loading = viewModel.state { return true }
+        return false
+    }
+
+    private var searchScreen: some View {
         VStack(spacing: 0) {
-            // Hero area — fills remaining space above the input card
-            Spacer()
-            VStack(spacing: 14) {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 52, weight: .light))
-                    .foregroundStyle(.secondary)
-                Text("enter_plate".localized)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-            }
-            Spacer()
+            // Conversation area — plates read like a chat: the newest sits at
+            // the bottom next to the input and older ones scroll up out of view.
+            conversationArea
 
             // Inline error from speech recognition
             if let dictationError = speechRecognizer.error {
@@ -170,13 +130,19 @@ struct PlateSearchView: View {
 
                     Button {
                         speechRecognizer.stopListening()
+                        plateFieldIsFocused = false
                         Task { await viewModel.search(plate: plate) }
                     } label: {
-                        Image(systemName: "arrow.up.circle.fill")
-                            .font(.system(size: 32))
-                            .foregroundStyle(isComplete ? Color.blue : Color(.systemGray3))
+                        if isLoading {
+                            ProgressView()
+                                .frame(width: 32, height: 32)
+                        } else {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .font(.system(size: 32))
+                                .foregroundStyle(isComplete ? Color.blue : Color(.systemGray3))
+                        }
                     }
-                    .disabled(!isComplete)
+                    .disabled(!isComplete || isLoading)
                     .sensoryFeedback(.impact, trigger: isComplete)
                 }
                 .padding(.horizontal, 16)
@@ -195,7 +161,11 @@ struct PlateSearchView: View {
             .animation(.default, value: speechRecognizer.isListening)
             .padding(.horizontal, 16)
             .padding(.bottom, 8)
+            .disabled(isLoading)
         }
+        // Re-runs after every search-state change so a completed search shows
+        // up immediately as the newest bubble in the conversation.
+        .task(id: viewModel.state) { await historyViewModel.loadData() }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if plateFieldIsFocused {
                 DigitKeyRow { digit in plate += digit }
@@ -213,6 +183,222 @@ struct PlateSearchView: View {
             plateFieldIsFocused = true
         }
         .animation(.easeOut(duration: 0.2), value: plateFieldIsFocused)
+    }
+
+    // MARK: - Conversation area
+
+    private var historyItems: [SearchHistoryItem] {
+        if case .loaded(let history, _) = historyViewModel.state { return history }
+        return []
+    }
+
+    @ViewBuilder
+    private var conversationArea: some View {
+        if historyItems.isEmpty, case .idle = viewModel.state {
+            VStack(spacing: 14) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 52, weight: .light))
+                    .foregroundStyle(.secondary)
+                Text("enter_plate".localized)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+            }
+            .frame(maxHeight: .infinity)
+        } else {
+            ScrollView {
+                LazyVStack(alignment: .trailing, spacing: 8) {
+                    if !historyItems.isEmpty {
+                        // Pinned at the very top, like "load earlier messages"
+                        Button {
+                            appRouter.isHistoryPresented = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text("more_searches".localized)
+                                Image(systemName: "chevron.right")
+                                    .font(.caption2)
+                            }
+                            .font(.subheadline)
+                            .foregroundStyle(.blue)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 8)
+
+                        // Oldest first so the most recent plate lands at the bottom.
+                        // Each item is a chat pair: sent plate + its reply.
+                        ForEach(Array(historyItems.reversed()), id: \.plateNumber) { item in
+                            VStack(alignment: .trailing, spacing: 8) {
+                                plateBubble(item)
+                                if let car = item.car {
+                                    CarReplyBubble(car: car)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            }
+                        }
+                    }
+
+                    transientReply
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                .padding(.bottom, 12)
+                .animation(.easeInOut(duration: 0.2), value: viewModel.state)
+            }
+            .defaultScrollAnchor(.bottom)
+            .scrollIndicators(.hidden)
+        }
+    }
+
+    /// Transient tail of the conversation: typing-indicator skeleton while
+    /// the server answers, an inline bubble on failure. A success normally
+    /// arrives as the newest history pair; the bubble here is only a
+    /// fallback for results that never reached the history store.
+    @ViewBuilder
+    private var transientReply: some View {
+        switch viewModel.state {
+        case .idle:
+            EmptyView()
+        case .loading:
+            ReplySkeletonBubble()
+                .padding(.top, 4)
+                .transition(.opacity)
+        case .success(let car):
+            if historyItems.first?.plateNumber != car.plate {
+                CarReplyBubble(car: car)
+                    .padding(.top, 4)
+                    .transition(.opacity)
+            }
+        case .error(let message):
+            errorBubble(message)
+                .padding(.top, 4)
+                .transition(.opacity)
+        }
+    }
+
+    private func errorBubble(_ message: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+                .accessibilityHidden(true)
+            Text(message)
+                .font(.subheadline)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(Color.orange.opacity(0.12))
+        .clipShape(.rect(cornerRadius: 16))
+    }
+
+    /// Sent-message bubble. Tapping re-sends the plate: a fresh server
+    /// search, so the pair moves to the bottom with up-to-date data.
+    /// (The cached detail stays one tap away on the reply bubble.)
+    private func plateBubble(_ item: SearchHistoryItem) -> some View {
+        Button {
+            plate = item.plateNumber
+            plateFieldIsFocused = false
+            Task { await viewModel.search(plate: item.plateNumber) }
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "clock.arrow.circlepath")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(item.plateNumber)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    if let car = item.car {
+                        Text(car.manufacturer + " " + car.model)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(.rect(cornerRadius: 16))
+        }
+        .buttonStyle(.plain)
+    }
+
+}
+
+/// Typing-indicator-style bubble: shimmer placeholders sized like the
+/// title reply that will replace it.
+private struct ReplySkeletonBubble: View {
+    @State private var shimmerOffset: CGFloat = -150
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            RoundedRectangle(cornerRadius: 4)
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: 150, height: 14)
+            RoundedRectangle(cornerRadius: 4)
+                .fill(Color.gray.opacity(0.2))
+                .frame(width: 90, height: 10)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(Color(.secondarySystemBackground))
+        .overlay(
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [.clear, .white.opacity(0.35), .clear]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .offset(x: shimmerOffset)
+        )
+        .clipShape(.rect(cornerRadius: 16))
+        .onAppear {
+            withAnimation(.linear(duration: 1.2).repeatForever(autoreverses: false)) {
+                shimmerOffset = 250
+            }
+        }
+        .accessibilityLabel("consulting_ant_database".localized)
+    }
+}
+
+/// Search result rendered as the "reply" bubble of the conversation:
+/// just the car title; tapping it opens the full detail in a sheet.
+private struct CarReplyBubble: View {
+    let car: Car
+    @State private var showDetail = false
+
+    var body: some View {
+        Button {
+            showDetail = true
+        } label: {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(car.manufacturer + " " + car.model)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text(car.plate)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(Color(.tertiaryLabel))
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(.rect(cornerRadius: 16))
+        }
+        .buttonStyle(.plain)
+        .sheet(isPresented: $showDetail) {
+            CarDetailView(car: car)
+                .padding(.top, 16)
+                .presentationDetents([.medium, .large])
+        }
     }
 }
 
