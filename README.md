@@ -35,6 +35,17 @@ Open `PlateFinder.xcodeproj` in Xcode and run on a simulator or device.
 
 For beta distribution via TestFlight, the project uses Fastlane. See the `fastlane/` directory for available lanes.
 
+### Editing outside Xcode
+
+If your editor shows phantom `Cannot find type 'X' in scope` errors that don't appear in Xcode, this section is the fix. Editors that use SourceKit-LSP (VS Code, Antigravity, etc.) need a `buildServer.json` to understand the Xcode project — without it, every cross-file type reference is flagged as an error even though the project builds fine. Generate it with [xcode-build-server](https://github.com/SolaWing/xcode-build-server):
+
+```bash
+brew install xcode-build-server
+xcode-build-server config -project PlateFinder.xcodeproj -scheme PlateFinder
+```
+
+Then restart the editor's language server. The file is gitignored because it contains machine-specific paths; regenerate it after wiping DerivedData or renaming the scheme. Diagnostics are driven by Xcode's index, so build in Xcode once if they look stale.
+
 ## CI/CD
 
 The project follows GitHub Flow. All changes go through a feature branch and a PR into `master`.
