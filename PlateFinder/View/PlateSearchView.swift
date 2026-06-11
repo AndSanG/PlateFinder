@@ -301,25 +301,13 @@ struct PlateSearchView: View {
             plateFieldIsFocused = false
             Task { await viewModel.search(plate: item.plateNumber) }
         } label: {
-            HStack(spacing: 12) {
-                Image(systemName: "clock.arrow.circlepath")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(item.plateNumber)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    if let car = item.car {
-                        Text(car.manufacturer + " " + car.model)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(.rect(cornerRadius: 16))
+            Text(item.plateNumber)
+                .font(.headline)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(Color.blue)
+                .clipShape(.rect(cornerRadius: 16))
         }
         .buttonStyle(.plain)
     }
@@ -376,7 +364,7 @@ private struct CarReplyBubble: View {
         } label: {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(car.manufacturer + " " + car.model)
+                    Text(car.manufacturer + " " + car.model + " " + car.year)
                         .font(.headline)
                         .foregroundStyle(.primary)
                     Text(car.plate)
