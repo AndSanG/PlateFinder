@@ -10,8 +10,7 @@ final class SpeechRecognizer {
     private(set) var transcribedText = ""
     private(set) var error: String?
 
-    private let speechRecognizer =
-        SFSpeechRecognizer(locale: .current) ?? SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
+    private let speechRecognizer = SpeechRecognizer.makeRecognizer()
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
@@ -114,6 +113,20 @@ final class SpeechRecognizer {
         recognitionTask?.cancel()
         recognitionTask = nil
         recognitionRequest = nil
+    }
+
+    /// Recognizer for the language the app UI is actually displaying
+    /// (the bundle's resolved localization, not the system locale),
+    /// preferring the user's region variant when Speech supports it.
+    private static func makeRecognizer() -> SFSpeechRecognizer? {
+        let appLanguage = String(Bundle.main.preferredLocalizations.first?.prefix(2) ?? "en")
+        let matching = SFSpeechRecognizer.supportedLocales()
+            .filter { $0.language.languageCode?.identifier == appLanguage }
+            .sorted { $0.identifier < $1.identifier }
+        let locale = matching.first { $0.region == Locale.current.region }
+            ?? matching.first
+            ?? Locale(identifier: "en-US")
+        return SFSpeechRecognizer(locale: locale)
     }
 
     private func requestPermissions() async -> Bool {
