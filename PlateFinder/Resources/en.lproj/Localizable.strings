@@ -17,6 +17,12 @@
 "consult" = "Submit";
 "return" = "Return";
 "search_title" = "Search";
+"clear_text" = "Clear text";
+
+// MARK: - Dictation
+"start_dictation" = "Dictate plate number";
+"stop_dictation" = "Stop dictation";
+"listening" = "Listening…";
 
 // MARK: - Info Banner
 "important" = "Important";

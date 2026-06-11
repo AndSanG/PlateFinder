@@ -4,8 +4,8 @@ struct PlateSearchView: View {
     @Environment(SearchViewModel.self) private var viewModel
     @Environment(IntentRouter.self) private var intentRouter
     @State private var plate = ""
-    @State private var showInfoBanner = true
-    @State private var showDictation = false
+    @State private var speechRecognizer = SpeechRecognizer()
+    @FocusState private var plateFieldIsFocused: Bool
 
     var body: some View {
         Group {
@@ -81,12 +81,6 @@ struct PlateSearchView: View {
         }
     }
 
-    private var numberToolbarButtons: some View {
-        ForEach(["1","2","3","4","5","6","7","8","9","0"], id: \.self) { digit in
-            KeyboardDigitButton(digit: digit, onTap: { plate += digit })
-        }
-    }
-
     private var plateInput: some View {
         VStack(spacing: 20) {
             Text("enter_plate".localized)
@@ -102,8 +96,12 @@ struct PlateSearchView: View {
                         .accessibilityHidden(true)
                 }
 
-                TextField(AppConstants.defaultPlateExample, text: $plate)
+                TextField(
+                    speechRecognizer.isListening ? "listening".localized : AppConstants.defaultPlateExample,
+                    text: $plate
+                )
                     .padding(.leading, vehicleIcon != nil ? 0 : nil)
+                    .focused($plateFieldIsFocused)
                     .keyboardType(.asciiCapable)
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled(true)
@@ -121,87 +119,104 @@ struct PlateSearchView: View {
                             .font(.title3)
                     }
                     .accessibilityLabel("clear_text".localized)
-                    .padding(.trailing)
                 }
+
+                DictationMicButton(speechRecognizer: speechRecognizer) { transcript in
+                    plate = transcript
+                }
+                .padding(.trailing)
             }
             .padding(.vertical)
             .background(Color(.systemGray6))
             .clipShape(.rect(cornerRadius: 10))
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(isComplete ? Color.blue : Color.gray, lineWidth: 2)
+                    .stroke(
+                        speechRecognizer.isListening ? Color.red : (isComplete ? Color.blue : Color.gray),
+                        lineWidth: 2
+                    )
             )
+            .animation(.default, value: speechRecognizer.isListening)
             .padding(.horizontal)
 
-            Spacer()
-
-            if showInfoBanner {
-                InfoBannerView(
-                    title: "important".localized,
-                    message: "plate_format_info".localized,
-                    isShowing: $showInfoBanner
-                )
-                .frame(height: 100)
+            if let dictationError = speechRecognizer.error {
+                DictationErrorLabel(message: dictationError)
+                    .padding(.horizontal)
             }
 
             Spacer()
 
-            HStack(spacing: 12) {
-                Button {
-                    Task { await viewModel.search(plate: plate) }
-                } label: {
-                    Text("consult".localized)
-                        .font(.headline)
-                        .foregroundColor(.black)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(isComplete ? Color.blue : Color.gray)
-                        .cornerRadius(AppConstants.cornerRadius)
-                }
-                .disabled(!isComplete)
-
-                Button {
-                    showDictation = true
-                } label: {
-                    Image(systemName: "mic.fill")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: 54)
-                        .background(Color.blue)
-                        .cornerRadius(AppConstants.cornerRadius)
-                }
+            Button {
+                speechRecognizer.stopListening()
+                Task { await viewModel.search(plate: plate) }
+            } label: {
+                Text("consult".localized)
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(isComplete ? Color.blue : Color.gray)
+                    .cornerRadius(AppConstants.cornerRadius)
             }
+            .disabled(!isComplete)
             .padding(.horizontal)
         }
         .padding(.vertical)
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                numberToolbarButtons
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if plateFieldIsFocused {
+                DigitKeyRow { digit in plate += digit }
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .sheet(isPresented: $showDictation) {
-            DictationView { detectedPlate in
-                plate = detectedPlate
-                showDictation = false
-            }
-        }
+        .animation(.easeOut(duration: 0.2), value: plateFieldIsFocused)
     }
 }
 
-private struct KeyboardDigitButton: View {
-    let digit: String
-    let onTap: () -> Void
+/// Digit row pinned above the keyboard, styled after the system
+/// keyboard's number row. Lives in the regular view hierarchy instead
+/// of the keyboard toolbar so taps register without bar-item latency.
+private struct DigitKeyRow: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let onTap: (String) -> Void
+
+    private static let digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
     var body: some View {
-        Button(digit) { onTap() }
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
-            .frame(height: 44)
-            .background(Color(red: 0.4, green: 0.4, blue: 0.4))
-            .clipShape(.rect(cornerRadius: 8))
-            .padding(.horizontal, 2)
-            .buttonStyle(.plain)
+        HStack(spacing: 6) {
+            ForEach(Self.digits, id: \.self) { digit in
+                Button {
+                    onTap(digit)
+                } label: {
+                    Text(digit)
+                        .font(.system(size: 23))
+                        .foregroundStyle(.primary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 46)
+                        .background(keyColor)
+                        .clipShape(.rect(cornerRadius: 8))
+                        .shadow(color: .black.opacity(0.35), radius: 0, y: 1)
+                }
+                .buttonStyle(DigitKeyButtonStyle())
+            }
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 8)
+        .background(rowColor)
+    }
+
+    private var keyColor: Color {
+        colorScheme == .dark ? Color(white: 0.42) : .white
+    }
+
+    private var rowColor: Color {
+        colorScheme == .dark ? Color(white: 0.16) : Color(red: 0.82, green: 0.84, blue: 0.86)
+    }
+}
+
+/// Dims the key while pressed, like the system keyboard.
+private struct DigitKeyButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? 0.4 : 1)
     }
 }

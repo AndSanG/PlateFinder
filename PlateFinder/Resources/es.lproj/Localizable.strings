@@ -17,6 +17,12 @@
 "consult" = "Consultar";
 "return" = "Regresar";
 "search_title" = "Busqueda";
+"clear_text" = "Borrar texto";
+
+// MARK: - Dictation
+"start_dictation" = "Dictar número de placa";
+"stop_dictation" = "Detener dictado";
+"listening" = "Escuchando…";
 
 // MARK: - Info Banner
 "important" = "Importante";
