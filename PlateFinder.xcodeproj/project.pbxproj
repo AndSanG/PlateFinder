@@ -722,13 +722,13 @@
 				INFOPLIST_KEY_CFBundleDevelopmentRegion = es;
 				INFOPLIST_KEY_CFBundleLocalizations = "en es";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "PlateFinder needs speech recognition to transcribe your voice when searching for license plates.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "PlateFinder needs speech recognition to transcribe your voice when searching for license plates.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -762,13 +762,13 @@
 				INFOPLIST_KEY_CFBundleDevelopmentRegion = es;
 				INFOPLIST_KEY_CFBundleLocalizations = "en es";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "PlateFinder needs speech recognition to transcribe your voice when searching for license plates.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "PlateFinder needs speech recognition to transcribe your voice when searching for license plates.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

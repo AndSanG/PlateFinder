@@ -6,7 +6,6 @@
 */
 
 // MARK: - Navigation & Tabs
-"search" = "Search";
 "history" = "History";
 "favorites" = "Favorites";
 "settings" = "Settings";
@@ -15,8 +14,6 @@
 // MARK: - Plate Search
 "enter_plate" = "Enter Plate Number";
 "consult" = "Submit";
-"return" = "Return";
-"search_title" = "Search";
 "clear_text" = "Clear text";
 
 // MARK: - Dictation
@@ -34,10 +31,7 @@
 "plate_format_info" = "Format: ABC1234, CD1234 or AA000A";
 
 // MARK: - Loading
-"searching_information" = "Searching information...";
 "consulting_ant_database" = "Consulting ANT database";
-"loading" = "Loading...";
-"processing_data" = "Processing data...";
 
 // MARK: - History & Favorites
 "no_search_history" = "No search history";
@@ -51,7 +45,6 @@
 "cancel" = "Cancel";
 
 // MARK: - Car Details
-"year" = "Year";
 "color" = "Color";
 "usage" = "Usage";
 "registration" = "Registration";
@@ -77,15 +70,7 @@
 "try_again_later" = "Try again in a few minutes.";
 
 // MARK: - Preview Content
-"sample_content" = "Sample Content";
-"toggle_loading" = "Toggle Loading";
 "toggle_banner" = "Toggle Banner";
-"loading_indicators" = "Loading Indicators";
-"spinner" = "Spinner";
-"three_dots" = "Three Dots";
-"pulsing_dot" = "Pulsing Dot";
-"loading_button" = "Loading Button";
-"dots_loading" = "Dots Loading";
 
 // MARK: - Usage Types
 "public_use" = "Public Use";

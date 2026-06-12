@@ -6,7 +6,6 @@
 */
 
 // MARK: - Navigation & Tabs
-"search" = "Buscar";
 "history" = "Historial";
 "favorites" = "Favoritos";
 "settings" = "Configuración";
@@ -15,8 +14,6 @@
 // MARK: - Plate Search
 "enter_plate" = "Ingrese la placa";
 "consult" = "Consultar";
-"return" = "Regresar";
-"search_title" = "Busqueda";
 "clear_text" = "Borrar texto";
 
 // MARK: - Dictation
@@ -34,10 +31,7 @@
 "plate_format_info" = "Formato: ABC1234, CD1234 o AA000A";
 
 // MARK: - Loading
-"searching_information" = "Buscando información...";
 "consulting_ant_database" = "Consultando base de datos de la ANT";
-"loading" = "Cargando...";
-"processing_data" = "Procesando datos...";
 
 // MARK: - History & Favorites
 "no_search_history" = "Sin historial de búsquedas";
@@ -51,7 +45,6 @@
 "cancel" = "Cancelar";
 
 // MARK: - Car Details
-"year" = "Año";
 "color" = "Color";
 "usage" = "Uso";
 "registration" = "Matrícula";
@@ -77,15 +70,7 @@
 "try_again_later" = "Intente nuevamente en unos minutos.";
 
 // MARK: - Preview Content
-"sample_content" = "Contenido de Ejemplo";
-"toggle_loading" = "Alternar Carga";
 "toggle_banner" = "Alternar Banner";
-"loading_indicators" = "Indicadores de Carga";
-"spinner" = "Giratorio";
-"three_dots" = "Tres Puntos";
-"pulsing_dot" = "Punto Pulsante";
-"loading_button" = "Botón de Carga";
-"dots_loading" = "Carga de Puntos";
 
 // MARK: - Usage Types
 "public_use" = "Uso Público";
