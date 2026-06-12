@@ -76,7 +76,7 @@ struct HistoryAndFavoritesView: View {
                         item: item,
                         onTap: {
                             if let car = item.car {
-                                searchViewModel.show(car)
+                                Task { await searchViewModel.show(car) }
                             } else {
                                 Task { await searchViewModel.search(plate: item.plateNumber) }
                             }

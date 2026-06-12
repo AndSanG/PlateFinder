@@ -79,13 +79,24 @@ import Foundation
         #expect(addToHistory.callCount == 0)
     }
 
-    @Test func show_setsSuccessStateWithCar() {
+    @Test func show_setsSuccessStateWithCar() async {
         let car = makeCar()
         let (sut, _, _) = makeSUT()
 
-        sut.show(car)
+        await sut.show(car)
 
         #expect(sut.state == .success(car))
+    }
+
+    @Test func show_promotesCarToHistory() async {
+        let car = makeCar()
+        let (sut, _, addToHistory) = makeSUT()
+
+        await sut.show(car)
+
+        #expect(addToHistory.callCount == 1)
+        #expect(addToHistory.insertedItems.first?.plateNumber == car.plate)
+        #expect(addToHistory.insertedItems.first?.car == car)
     }
 
     @Test func reset_setsIdleState() async {

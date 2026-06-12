@@ -29,7 +29,10 @@ public final class SearchViewModel {
         }
     }
 
-    public func show(_ car: Car) {
+    public func show(_ car: Car) async {
+        // Re-surfacing a cached result re-promotes it to the newest history
+        // entry, so the conversation renders its request/response pair last.
+        try? await addToHistory.execute(SearchHistoryItem(plateNumber: car.plate, searchDate: Date(), car: car))
         state = .success(car)
     }
 
