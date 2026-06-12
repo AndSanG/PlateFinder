@@ -8,6 +8,7 @@ struct PlateSearchView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var plate = ""
     @State private var speechRecognizer = SpeechRecognizer()
+    @State private var scrollPosition = ScrollPosition(edge: .bottom)
     @FocusState private var plateFieldIsFocused: Bool
 
     var body: some View {
@@ -30,6 +31,12 @@ struct PlateSearchView: View {
                 // Chat-style: a delivered result clears the input; on error the
                 // text stays so the user can correct a typo.
                 if case .success = state { plate = "" }
+                // Reveal the newest bubbles even if the user had scrolled up
+                // (e.g. to reach the "more searches" link). Once at the bottom,
+                // the anchor keeps tracking the content that arrives next.
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    scrollPosition.scrollTo(edge: .bottom)
+                }
             }
     }
 
@@ -57,7 +64,13 @@ struct PlateSearchView: View {
         VStack(spacing: 0) {
             // Conversation area — plates read like a chat: the newest sits at
             // the bottom next to the input and older ones scroll up out of view.
+            // Keyboard dismissal is a simultaneous gesture scoped to this area:
+            // it never steals taps from bubble buttons (collapse/favorite) and
+            // never fires on the input card, where it would fight the field's
+            // own focus.
             conversationArea
+                .contentShape(Rectangle())
+                .simultaneousGesture(TapGesture().onEnded { plateFieldIsFocused = false })
 
             // Inline error from speech recognition
             if let dictationError = speechRecognizer.error {
@@ -172,8 +185,6 @@ struct PlateSearchView: View {
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .contentShape(Rectangle())
-        .onTapGesture { plateFieldIsFocused = false }
         .onChange(of: scenePhase, initial: true) { _, phase in
             // Focus requests are dropped until the scene is active and the
             // window is key; .active is the signal that the keyboard can
@@ -209,7 +220,12 @@ struct PlateSearchView: View {
             .frame(maxHeight: .infinity)
         } else {
             ScrollView {
-                LazyVStack(alignment: .trailing, spacing: 8) {
+                // Plain VStack on purpose: LazyVStack only estimates content
+                // height, and combined with defaultScrollAnchor(.bottom) the
+                // viewport can anchor against a stale height when history
+                // loads async, leaving the chat blank. History caps at 50
+                // items, so eager layout is cheap.
+                VStack(alignment: .trailing, spacing: 8) {
                     if !historyItems.isEmpty {
                         // Pinned at the very top, like "load earlier messages"
                         Button {
@@ -226,9 +242,10 @@ struct PlateSearchView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.bottom, 8)
 
-                        // Oldest first so the most recent plate lands at the bottom.
-                        // Each item is a chat pair: sent plate + its reply.
-                        ForEach(Array(historyItems.reversed()), id: \.plateNumber) { item in
+                        // Last 5 pairs only — the full story lives behind the
+                        // "more searches" sheet. Oldest first so the most
+                        // recent plate lands at the bottom next to the input.
+                        ForEach(Array(historyItems.prefix(5).reversed()), id: \.plateNumber) { item in
                             VStack(alignment: .trailing, spacing: 8) {
                                 plateBubble(item)
                                 if let car = item.car {
@@ -244,11 +261,13 @@ struct PlateSearchView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
-                .padding(.bottom, 12)
+                .padding(.bottom, 28)
                 .animation(.easeInOut(duration: 0.2), value: viewModel.state)
             }
             .defaultScrollAnchor(.bottom)
+            .scrollPosition($scrollPosition)
             .scrollIndicators(.hidden)
+            .scrollDismissesKeyboard(.interactively)
         }
     }
 
@@ -368,60 +387,79 @@ private struct CarReplyBubble: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 12) {
-                Button {
-                    isExpanded.toggle()
-                } label: {
-                    HStack(spacing: 12) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(car.manufacturer + " " + car.model + " " + car.year)
-                                .font(.headline)
-                                .foregroundStyle(.primary)
-                            Text(car.plate)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundStyle(Color(.tertiaryLabel))
-                            .rotationEffect(.degrees(isExpanded ? 90 : 0))
-                            .accessibilityHidden(true)
-                    }
+        // The whole bubble is the expand/collapse button — any tap on it
+        // (title or detail) toggles, like opening a chat attachment. The
+        // star overlay sits on top and keeps its own hit area.
+        Button {
+            // Explicit transaction so the bubble, its overlays (star badge,
+            // chevron) and the scroll re-anchor all animate together; an
+            // implicit .animation(value:) would only cover this subtree.
+            withAnimation(.easeInOut(duration: 0.25)) {
+                isExpanded.toggle()
+            }
+        } label: {
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(car.manufacturer + " " + car.model + " " + car.year)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text(car.plate)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
-                .buttonStyle(.plain)
+                // Room for the chevron pinned at the bubble's corner
+                .padding(.trailing, 20)
 
                 if isExpanded {
-                    Button {
-                        Task { await historyViewModel.toggleFavorite(car.plate) }
-                    } label: {
-                        Image(systemName: isFavorite ? "star.fill" : "star")
-                            .font(.title3)
-                            .foregroundStyle(isFavorite ? .yellow : .gray)
+                    VStack(alignment: .leading, spacing: 4) {
+                        detailLine("color".localized, car.colorName)
+                        detailLine("usage".localized, car.segment.capitalized + " de " + car.service.lowercased())
+                        detailLine("registration".localized, car.registrationYear)
+                        detailLine("registration_validity".localized, car.registrationDate + " → " + car.expirationDate)
+                        if !car.tintExpirationDate.isEmpty {
+                            detailLine("tint_validity".localized, car.tintExpirationDate)
+                        }
                     }
-                    .accessibilityLabel(isFavorite ? "remove_from_favorites".localized : "add_to_favorites".localized)
                     .transition(.opacity)
                 }
             }
-
-            if isExpanded {
-                VStack(alignment: .leading, spacing: 4) {
-                    detailLine("color".localized, car.colorName)
-                    detailLine("usage".localized, car.segment.capitalized + " de " + car.service.lowercased())
-                    detailLine("registration".localized, car.registrationYear)
-                    detailLine("registration_validity".localized, car.registrationDate + " → " + car.expirationDate)
-                    if !car.tintExpirationDate.isEmpty {
-                        detailLine("tint_validity".localized, car.tintExpirationDate)
-                    }
-                }
-                .transition(.opacity)
-            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(.rect(cornerRadius: 16))
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(Color(.secondarySystemBackground))
-        .clipShape(.rect(cornerRadius: 16))
-        .animation(.easeInOut(duration: 0.25), value: isExpanded)
+        .buttonStyle(.plain)
+        // Chevron stays pinned to the bubble's upper-right corner in both states
+        .overlay(alignment: .topTrailing) {
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(Color(.tertiaryLabel))
+                .rotationEffect(.degrees(isExpanded ? 90 : 0))
+                .padding(10)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        }
+        // Favorite star as a reaction badge on the bottom edge, 16px in from
+        // the left border. It dips at most ~9pt into the bubble — less than
+        // the 10pt vertical padding — so it can never cover the text.
+        .overlay(alignment: .bottomLeading) {
+            Button {
+                Task { await historyViewModel.toggleFavorite(car.plate) }
+            } label: {
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .font(.caption2)
+                    .foregroundStyle(isFavorite ? .yellow : .gray)
+                    .padding(5)
+                    .background(Circle().fill(Color(.secondarySystemBackground)))
+                    .overlay(Circle().stroke(Color(.systemBackground), lineWidth: 2))
+            }
+            .offset(x: 16, y: 12)
+            .accessibilityLabel(isFavorite ? "remove_from_favorites".localized : "add_to_favorites".localized)
+        }
+        // Hugging content caps its wrapping at 75% of the conversation width
+        .containerRelativeFrame(.horizontal, alignment: .leading) { length, _ in
+            length * 0.75
+        }
     }
 
     /// One compact rich-text line: secondary label, bold value, wraps
