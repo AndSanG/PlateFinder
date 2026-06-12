@@ -83,6 +83,46 @@ struct PlateSearchView: View {
             conversationArea
                 .contentShape(Rectangle())
                 .simultaneousGesture(TapGesture().onEnded { plateFieldIsFocused = false })
+                // History entry point floats over the chat, always reachable
+                // regardless of scroll position or conversation state.
+                .overlay(alignment: .topTrailing) {
+                    Button {
+                        appRouter.isHistoryPresented = true
+                    } label: {
+                        Image(systemName: "clock.arrow.circlepath")
+                            .font(.title3)
+                            .foregroundStyle(.blue)
+                            .padding(10)
+                            .background(.ultraThinMaterial, in: Circle())
+                            .shadow(color: .black.opacity(0.12), radius: 4, y: 2)
+                    }
+                    .padding(.trailing, 16)
+                    .padding(.top, 8)
+                    .accessibilityLabel("more_searches".localized)
+                }
+                // Clear-chat floats centered at the top, always visible while
+                // there are bubbles to clear.
+                .overlay(alignment: .top) {
+                    if !historyItems.isEmpty {
+                        Button {
+                            showClearChatAlert = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "eraser")
+                                    .font(.caption2)
+                                    .accessibilityHidden(true)
+                                Text("clear_chat".localized)
+                            }
+                            .font(.subheadline)
+                            .foregroundStyle(.red)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(.ultraThinMaterial, in: Capsule())
+                            .shadow(color: .black.opacity(0.12), radius: 4, y: 2)
+                        }
+                        .padding(.top, 8)
+                    }
+                }
 
             // Inline error from speech recognition
             if let dictationError = speechRecognizer.error {
@@ -236,24 +276,10 @@ struct PlateSearchView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 40)
 
-                // After a soft clear the bubbles are gone but the history
-                // isn't — keep its entry point on the clean slate.
-                if !storedHistory.isEmpty {
-                    Button {
-                        appRouter.isHistoryPresented = true
-                    } label: {
-                        HStack(spacing: 4) {
-                            Text("more_searches".localized)
-                            Image(systemName: "chevron.right")
-                                .font(.caption2)
-                        }
-                        .font(.subheadline)
-                        .foregroundStyle(.blue)
-                    }
-                    .padding(.top, 8)
-                }
             }
-            .frame(maxHeight: .infinity)
+            // Fill both axes so overlays anchored to this area (history
+            // button, clear pill) align with the real screen edges.
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
             ScrollView {
                 // Plain VStack on purpose: LazyVStack only estimates content
@@ -263,36 +289,6 @@ struct PlateSearchView: View {
                 // items, so eager layout is cheap.
                 VStack(alignment: .trailing, spacing: 8) {
                     if !historyItems.isEmpty {
-                        // Pinned at the very top, like "load earlier messages"
-                        HStack(spacing: 24) {
-                            Button {
-                                appRouter.isHistoryPresented = true
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Text("more_searches".localized)
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption2)
-                                }
-                                .font(.subheadline)
-                                .foregroundStyle(.blue)
-                            }
-
-                            Button {
-                                showClearChatAlert = true
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "eraser")
-                                        .font(.caption2)
-                                        .accessibilityHidden(true)
-                                    Text("clear_chat".localized)
-                                }
-                                .font(.subheadline)
-                                .foregroundStyle(.red)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.bottom, 8)
-
                         // Last 5 pairs only — the full story lives behind the
                         // "more searches" sheet. Oldest first so the most
                         // recent plate lands at the bottom next to the input.
