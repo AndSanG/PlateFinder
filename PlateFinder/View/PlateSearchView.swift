@@ -353,40 +353,86 @@ private struct ReplySkeletonBubble: View {
 }
 
 /// Search result rendered as the "reply" bubble of the conversation:
-/// just the car title; tapping it opens the full detail in a sheet.
+/// collapsed it shows just the car title; tapping expands the full
+/// detail inline, like opening an attachment in a chat.
 private struct CarReplyBubble: View {
     let car: Car
-    @State private var showDetail = false
+    @Environment(HistoryViewModel.self) private var historyViewModel
+    @State private var isExpanded = false
+
+    private var isFavorite: Bool {
+        if case .loaded(_, let favs) = historyViewModel.state {
+            return favs.contains(car.plate)
+        }
+        return false
+    }
 
     var body: some View {
-        Button {
-            showDetail = true
-        } label: {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(car.manufacturer + " " + car.model + " " + car.year)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
-                    Text(car.plate)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                Button {
+                    isExpanded.toggle()
+                } label: {
+                    HStack(spacing: 12) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(car.manufacturer + " " + car.model + " " + car.year)
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            Text(car.plate)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(Color(.tertiaryLabel))
+                            .rotationEffect(.degrees(isExpanded ? 90 : 0))
+                            .accessibilityHidden(true)
+                    }
                 }
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(Color(.tertiaryLabel))
-                    .accessibilityHidden(true)
+                .buttonStyle(.plain)
+
+                if isExpanded {
+                    Button {
+                        Task { await historyViewModel.toggleFavorite(car.plate) }
+                    } label: {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .font(.title3)
+                            .foregroundStyle(isFavorite ? .yellow : .gray)
+                    }
+                    .accessibilityLabel(isFavorite ? "remove_from_favorites".localized : "add_to_favorites".localized)
+                    .transition(.opacity)
+                }
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(.rect(cornerRadius: 16))
+
+            if isExpanded {
+                VStack(alignment: .leading, spacing: 4) {
+                    detailLine("color".localized, car.colorName)
+                    detailLine("usage".localized, car.segment.capitalized + " de " + car.service.lowercased())
+                    detailLine("registration".localized, car.registrationYear)
+                    detailLine("registration_validity".localized, car.registrationDate + " → " + car.expirationDate)
+                    if !car.tintExpirationDate.isEmpty {
+                        detailLine("tint_validity".localized, car.tintExpirationDate)
+                    }
+                }
+                .transition(.opacity)
+            }
         }
-        .buttonStyle(.plain)
-        .sheet(isPresented: $showDetail) {
-            CarDetailView(car: car)
-                .padding(.top, 16)
-                .presentationDetents([.medium, .large])
-        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(.rect(cornerRadius: 16))
+        .animation(.easeInOut(duration: 0.25), value: isExpanded)
+    }
+
+    /// One compact rich-text line: secondary label, bold value, wraps
+    /// like a chat message instead of using icon rows.
+    private func detailLine(_ label: String, _ value: String) -> some View {
+        (Text(label + ": ")
+            .foregroundStyle(.secondary)
+        + Text(value)
+            .bold())
+            .font(.subheadline)
+            .accessibilityLabel("\(label): \(value)")
     }
 }
 
