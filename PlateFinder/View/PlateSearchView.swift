@@ -9,6 +9,7 @@ struct PlateSearchView: View {
     @State private var plate = ""
     @State private var speechRecognizer = SpeechRecognizer()
     @State private var scrollPosition = ScrollPosition(edge: .bottom)
+    @State private var showClearChatAlert = false
     @FocusState private var plateFieldIsFocused: Bool
 
     var body: some View {
@@ -26,6 +27,17 @@ struct PlateSearchView: View {
                 plate = pending
                 Task { await viewModel.search(plate: pending) }
                 intentRouter.consume()
+            }
+            .alert("clear_chat".localized, isPresented: $showClearChatAlert) {
+                Button("clear".localized, role: .destructive) {
+                    viewModel.reset()
+                    // Land on a calm clean slate: no keyboard covering it
+                    plateFieldIsFocused = false
+                    Task { await historyViewModel.clearChat() }
+                }
+                Button("cancel".localized, role: .cancel) { }
+            } message: {
+                Text("clear_chat_confirmation".localized)
             }
             .onChange(of: viewModel.state) { _, state in
                 // Chat-style: a delivered result clears the input; on error the
@@ -198,9 +210,16 @@ struct PlateSearchView: View {
 
     // MARK: - Conversation area
 
-    private var historyItems: [SearchHistoryItem] {
+    /// Everything the store knows, regardless of the soft-clear cutoff.
+    private var storedHistory: [SearchHistoryItem] {
         if case .loaded(let history, _) = historyViewModel.state { return history }
         return []
+    }
+
+    /// What the conversation shows: only searches newer than the cutoff.
+    private var historyItems: [SearchHistoryItem] {
+        guard let cutoff = historyViewModel.chatCutoff else { return storedHistory }
+        return storedHistory.filter { $0.searchDate > cutoff }
     }
 
     @ViewBuilder
@@ -216,6 +235,23 @@ struct PlateSearchView: View {
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 40)
+
+                // After a soft clear the bubbles are gone but the history
+                // isn't — keep its entry point on the clean slate.
+                if !storedHistory.isEmpty {
+                    Button {
+                        appRouter.isHistoryPresented = true
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text("more_searches".localized)
+                            Image(systemName: "chevron.right")
+                                .font(.caption2)
+                        }
+                        .font(.subheadline)
+                        .foregroundStyle(.blue)
+                    }
+                    .padding(.top, 8)
+                }
             }
             .frame(maxHeight: .infinity)
         } else {
@@ -228,16 +264,31 @@ struct PlateSearchView: View {
                 VStack(alignment: .trailing, spacing: 8) {
                     if !historyItems.isEmpty {
                         // Pinned at the very top, like "load earlier messages"
-                        Button {
-                            appRouter.isHistoryPresented = true
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text("more_searches".localized)
-                                Image(systemName: "chevron.right")
-                                    .font(.caption2)
+                        HStack(spacing: 24) {
+                            Button {
+                                appRouter.isHistoryPresented = true
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Text("more_searches".localized)
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption2)
+                                }
+                                .font(.subheadline)
+                                .foregroundStyle(.blue)
                             }
-                            .font(.subheadline)
-                            .foregroundStyle(.blue)
+
+                            Button {
+                                showClearChatAlert = true
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "eraser")
+                                        .font(.caption2)
+                                        .accessibilityHidden(true)
+                                    Text("clear_chat".localized)
+                                }
+                                .font(.subheadline)
+                                .foregroundStyle(.red)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.bottom, 8)

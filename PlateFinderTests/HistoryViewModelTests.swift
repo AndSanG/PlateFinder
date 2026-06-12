@@ -96,6 +96,28 @@ import Foundation
         }
     }
 
+    @Test func loadData_loadsChatCutoff() async {
+        let cutoff = Date(timeIntervalSince1970: 1000)
+        let loadChatCutoff = LoadChatCutoffSpy()
+        loadChatCutoff.stubbedCutoff = cutoff
+        let (sut, _, _, _, _, _) = makeSUT(loadChatCutoff: loadChatCutoff)
+
+        await sut.loadData()
+
+        #expect(sut.chatCutoff == cutoff)
+    }
+
+    @Test func clearChat_persistsAndSetsCutoff() async {
+        let saveChatCutoff = SaveChatCutoffSpy()
+        let (sut, _, _, _, _, _) = makeSUT(saveChatCutoff: saveChatCutoff)
+        #expect(sut.chatCutoff == nil)
+
+        await sut.clearChat()
+
+        #expect(saveChatCutoff.savedDates.count == 1)
+        #expect(sut.chatCutoff == saveChatCutoff.savedDates.first)
+    }
+
     @Test func doesNotLeakAfterLoadData() async {
         let loadHistory = LoadHistorySpy()
         loadHistory.stubbedItems = [makeHistoryItem("ABC1234")]
@@ -104,7 +126,9 @@ import Foundation
             loadFavorites: LoadFavoritesSpy(),
             deleteFromHistory: DeleteFromHistorySpy(),
             clearHistory: ClearHistorySpy(),
-            toggleFavorite: ToggleFavoriteSpy()
+            toggleFavorite: ToggleFavoriteSpy(),
+            loadChatCutoff: LoadChatCutoffSpy(),
+            saveChatCutoff: SaveChatCutoffSpy()
         )
         weak var weakSUT = sut
 
@@ -116,7 +140,10 @@ import Foundation
 
     // MARK: - Helpers
 
-    private func makeSUT() -> (
+    private func makeSUT(
+        loadChatCutoff: LoadChatCutoffSpy = LoadChatCutoffSpy(),
+        saveChatCutoff: SaveChatCutoffSpy = SaveChatCutoffSpy()
+    ) -> (
         HistoryViewModel,
         LoadHistorySpy,
         LoadFavoritesSpy,
@@ -134,7 +161,9 @@ import Foundation
             loadFavorites: loadFavorites,
             deleteFromHistory: deleteFromHistory,
             clearHistory: clearHistory,
-            toggleFavorite: toggleFavorite
+            toggleFavorite: toggleFavorite,
+            loadChatCutoff: loadChatCutoff,
+            saveChatCutoff: saveChatCutoff
         )
         return (sut, loadHistory, loadFavorites, deleteFromHistory, clearHistory, toggleFavorite)
     }
@@ -189,5 +218,19 @@ private final class ToggleFavoriteSpy: ToggleFavorite {
     func execute(plate: String) async throws -> [String] {
         callCount += 1
         return stubbedResult
+    }
+}
+
+private final class LoadChatCutoffSpy: LoadChatCutoff {
+    var stubbedCutoff: Date?
+
+    func execute() async throws -> Date? { stubbedCutoff }
+}
+
+private final class SaveChatCutoffSpy: SaveChatCutoff {
+    private(set) var savedDates: [Date] = []
+
+    func execute(_ date: Date) async throws {
+        savedDates.append(date)
     }
 }

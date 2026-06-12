@@ -5,35 +5,54 @@ import Observation
 @MainActor
 public final class HistoryViewModel {
     public private(set) var state: HistoryViewState = .loading
+    /// Searches at or before this instant are hidden from the conversation
+    /// (soft clear); they remain in the store and the history list.
+    public private(set) var chatCutoff: Date?
 
     private let loadHistory: any LoadHistory
     private let loadFavorites: any LoadFavorites
     private let deleteFromHistory: any DeleteFromHistory
     private let clearHistory: any ClearHistory
     private let toggleFav: any ToggleFavorite
+    private let loadChatCutoff: any LoadChatCutoff
+    private let saveChatCutoff: any SaveChatCutoff
 
     public init(
         loadHistory: any LoadHistory,
         loadFavorites: any LoadFavorites,
         deleteFromHistory: any DeleteFromHistory,
         clearHistory: any ClearHistory,
-        toggleFavorite: any ToggleFavorite
+        toggleFavorite: any ToggleFavorite,
+        loadChatCutoff: any LoadChatCutoff,
+        saveChatCutoff: any SaveChatCutoff
     ) {
         self.loadHistory = loadHistory
         self.loadFavorites = loadFavorites
         self.deleteFromHistory = deleteFromHistory
         self.clearHistory = clearHistory
         self.toggleFav = toggleFavorite
+        self.loadChatCutoff = loadChatCutoff
+        self.saveChatCutoff = saveChatCutoff
     }
 
     public func loadData() async {
         do {
             let history = try await loadHistory.execute()
             let favorites = try await loadFavorites.execute()
+            // The cutoff is cosmetic; failing to read it must not block the list.
+            chatCutoff = (try? await loadChatCutoff.execute()) ?? nil
             state = .loaded(history: history, favorites: favorites)
         } catch {
             state = .error(error.localizedDescription)
         }
+    }
+
+    public func clearChat() async {
+        let cutoff = Date()
+        // Persistence is best-effort: the chat still clears for this session
+        // even if the write fails.
+        try? await saveChatCutoff.execute(cutoff)
+        chatCutoff = cutoff
     }
 
     public func delete(_ item: SearchHistoryItem) async {

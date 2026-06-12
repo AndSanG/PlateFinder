@@ -37,6 +37,8 @@
 "no_search_history" = "No search history";
 "recent_searches_will_appear_here" = "Your recent searches will appear here";
 "more_searches" = "More searches";
+"clear_chat" = "Clear chat";
+"clear_chat_confirmation" = "The conversation will be cleared. Your search history stays available under More searches.";
 "no_favorite_plates" = "No favorite plates";
 "mark_plates_as_favorites_for_quick_access" = "Mark plates as favorites for quick access";
 "clear" = "Clear";

@@ -23,3 +23,13 @@ public protocol LoadFavorites: Sendable {
 public protocol ToggleFavorite: Sendable {
     func execute(plate: String) async throws -> [String]
 }
+
+/// Timestamp dividing the conversation: the chat shows only searches newer
+/// than the cutoff, while the full history stays in the store ("soft clear").
+public protocol LoadChatCutoff: Sendable {
+    func execute() async throws -> Date?
+}
+
+public protocol SaveChatCutoff: Sendable {
+    func execute(_ date: Date) async throws
+}

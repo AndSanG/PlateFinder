@@ -23,12 +23,15 @@ struct PlateFinderApp: App {
             loadCarInfo: carInfoService,
             addToHistory: HistoryAdder(store: store)
         ))
+        let cutoffStore = UserDefaultsChatCutoffStore()
         _historyViewModel = State(initialValue: HistoryViewModel(
             loadHistory: HistoryLoader(store: store),
             loadFavorites: FavoritesLoader(store: store),
             deleteFromHistory: HistoryDeleter(store: store),
             clearHistory: HistoryClearer(store: store),
-            toggleFavorite: FavoritesToggler(store: store)
+            toggleFavorite: FavoritesToggler(store: store),
+            loadChatCutoff: ChatCutoffLoader(store: cutoffStore),
+            saveChatCutoff: ChatCutoffSaver(store: cutoffStore)
         ))
         _intentRouter = State(initialValue: router)
         _appRouter = State(initialValue: AppRouter())
