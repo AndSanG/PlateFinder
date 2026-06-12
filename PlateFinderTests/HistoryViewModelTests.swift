@@ -118,6 +118,55 @@ import Foundation
         #expect(sut.chatCutoff == saveChatCutoff.savedDates.first)
     }
 
+    @Test func recordSessionEnd_persistsDate() async {
+        let saveLastSessionEnd = SaveLastSessionEndSpy()
+        let (sut, _, _, _, _, _) = makeSUT(saveLastSessionEnd: saveLastSessionEnd)
+
+        await sut.recordSessionEnd()
+
+        #expect(saveLastSessionEnd.savedDates.count == 1)
+    }
+
+    @Test func clearChatIfExpired_clearsWhenTimeoutExceeded() async {
+        let loadLastSessionEnd = LoadLastSessionEndSpy()
+        loadLastSessionEnd.stubbedDate = Date(timeIntervalSince1970: 0)
+        let (sut, _, _, _, _, _) = makeSUT(
+            loadLastSessionEnd: loadLastSessionEnd,
+            sessionTimeout: 60
+        )
+
+        let cleared = await sut.clearChatIfExpired(now: Date(timeIntervalSince1970: 61))
+
+        #expect(cleared)
+        #expect(sut.chatCutoff != nil)
+    }
+
+    @Test func clearChatIfExpired_doesNothingWithinTimeout() async {
+        let loadLastSessionEnd = LoadLastSessionEndSpy()
+        loadLastSessionEnd.stubbedDate = Date(timeIntervalSince1970: 0)
+        let saveChatCutoff = SaveChatCutoffSpy()
+        let (sut, _, _, _, _, _) = makeSUT(
+            saveChatCutoff: saveChatCutoff,
+            loadLastSessionEnd: loadLastSessionEnd,
+            sessionTimeout: 60
+        )
+
+        let cleared = await sut.clearChatIfExpired(now: Date(timeIntervalSince1970: 59))
+
+        #expect(!cleared)
+        #expect(sut.chatCutoff == nil)
+        #expect(saveChatCutoff.savedDates.isEmpty)
+    }
+
+    @Test func clearChatIfExpired_doesNothingWithoutRecordedSession() async {
+        let (sut, _, _, _, _, _) = makeSUT(sessionTimeout: 60)
+
+        let cleared = await sut.clearChatIfExpired()
+
+        #expect(!cleared)
+        #expect(sut.chatCutoff == nil)
+    }
+
     @Test func doesNotLeakAfterLoadData() async {
         let loadHistory = LoadHistorySpy()
         loadHistory.stubbedItems = [makeHistoryItem("ABC1234")]
@@ -128,7 +177,9 @@ import Foundation
             clearHistory: ClearHistorySpy(),
             toggleFavorite: ToggleFavoriteSpy(),
             loadChatCutoff: LoadChatCutoffSpy(),
-            saveChatCutoff: SaveChatCutoffSpy()
+            saveChatCutoff: SaveChatCutoffSpy(),
+            loadLastSessionEnd: LoadLastSessionEndSpy(),
+            saveLastSessionEnd: SaveLastSessionEndSpy()
         )
         weak var weakSUT = sut
 
@@ -142,7 +193,10 @@ import Foundation
 
     private func makeSUT(
         loadChatCutoff: LoadChatCutoffSpy = LoadChatCutoffSpy(),
-        saveChatCutoff: SaveChatCutoffSpy = SaveChatCutoffSpy()
+        saveChatCutoff: SaveChatCutoffSpy = SaveChatCutoffSpy(),
+        loadLastSessionEnd: LoadLastSessionEndSpy = LoadLastSessionEndSpy(),
+        saveLastSessionEnd: SaveLastSessionEndSpy = SaveLastSessionEndSpy(),
+        sessionTimeout: TimeInterval = 30 * 60
     ) -> (
         HistoryViewModel,
         LoadHistorySpy,
@@ -163,7 +217,10 @@ import Foundation
             clearHistory: clearHistory,
             toggleFavorite: toggleFavorite,
             loadChatCutoff: loadChatCutoff,
-            saveChatCutoff: saveChatCutoff
+            saveChatCutoff: saveChatCutoff,
+            loadLastSessionEnd: loadLastSessionEnd,
+            saveLastSessionEnd: saveLastSessionEnd,
+            sessionTimeout: sessionTimeout
         )
         return (sut, loadHistory, loadFavorites, deleteFromHistory, clearHistory, toggleFavorite)
     }
@@ -228,6 +285,20 @@ private final class LoadChatCutoffSpy: LoadChatCutoff {
 }
 
 private final class SaveChatCutoffSpy: SaveChatCutoff {
+    private(set) var savedDates: [Date] = []
+
+    func execute(_ date: Date) async throws {
+        savedDates.append(date)
+    }
+}
+
+private final class LoadLastSessionEndSpy: LoadLastSessionEnd {
+    var stubbedDate: Date?
+
+    func execute() async throws -> Date? { stubbedDate }
+}
+
+private final class SaveLastSessionEndSpy: SaveLastSessionEnd {
     private(set) var savedDates: [Date] = []
 
     func execute(_ date: Date) async throws {

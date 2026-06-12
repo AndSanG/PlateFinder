@@ -33,3 +33,13 @@ public protocol LoadChatCutoff: Sendable {
 public protocol SaveChatCutoff: Sendable {
     func execute(_ date: Date) async throws
 }
+
+/// Instant the user last left the app; used to auto-clear the chat
+/// ("new chat") when they return after a long absence.
+public protocol LoadLastSessionEnd: Sendable {
+    func execute() async throws -> Date?
+}
+
+public protocol SaveLastSessionEnd: Sendable {
+    func execute(_ date: Date) async throws
+}

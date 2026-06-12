@@ -16,6 +16,9 @@ public final class HistoryViewModel {
     private let toggleFav: any ToggleFavorite
     private let loadChatCutoff: any LoadChatCutoff
     private let saveChatCutoff: any SaveChatCutoff
+    private let loadLastSessionEnd: any LoadLastSessionEnd
+    private let saveLastSessionEnd: any SaveLastSessionEnd
+    private let sessionTimeout: TimeInterval
 
     public init(
         loadHistory: any LoadHistory,
@@ -24,7 +27,10 @@ public final class HistoryViewModel {
         clearHistory: any ClearHistory,
         toggleFavorite: any ToggleFavorite,
         loadChatCutoff: any LoadChatCutoff,
-        saveChatCutoff: any SaveChatCutoff
+        saveChatCutoff: any SaveChatCutoff,
+        loadLastSessionEnd: any LoadLastSessionEnd,
+        saveLastSessionEnd: any SaveLastSessionEnd,
+        sessionTimeout: TimeInterval = 30 * 60
     ) {
         self.loadHistory = loadHistory
         self.loadFavorites = loadFavorites
@@ -33,6 +39,9 @@ public final class HistoryViewModel {
         self.toggleFav = toggleFavorite
         self.loadChatCutoff = loadChatCutoff
         self.saveChatCutoff = saveChatCutoff
+        self.loadLastSessionEnd = loadLastSessionEnd
+        self.saveLastSessionEnd = saveLastSessionEnd
+        self.sessionTimeout = sessionTimeout
     }
 
     public func loadData() async {
@@ -53,6 +62,22 @@ public final class HistoryViewModel {
         // even if the write fails.
         try? await saveChatCutoff.execute(cutoff)
         chatCutoff = cutoff
+    }
+
+    public func recordSessionEnd() async {
+        try? await saveLastSessionEnd.execute(Date())
+    }
+
+    /// Auto "new chat" after a long absence, like messaging apps: soft-clears
+    /// when the user returns past the session timeout. Returns whether it
+    /// cleared, so callers can also reset transient screen state.
+    @discardableResult
+    public func clearChatIfExpired(now: Date = Date()) async -> Bool {
+        guard let lastSeen = (try? await loadLastSessionEnd.execute()) ?? nil,
+              now.timeIntervalSince(lastSeen) > sessionTimeout
+        else { return false }
+        await clearChat()
+        return true
     }
 
     public func delete(_ item: SearchHistoryItem) async {
