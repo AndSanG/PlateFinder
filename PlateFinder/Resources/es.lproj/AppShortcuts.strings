@@ -1,0 +1,6 @@
+/* AppShortcuts.strings (Spanish) */
+
+"Search for ${plateNumber} in ${applicationName}" = "Busca ${plateNumber} en ${applicationName}";
+"Look up ${plateNumber} in ${applicationName}" = "Consulta ${plateNumber} en ${applicationName}";
+"Find ${plateNumber} in ${applicationName}" = "Encuentra ${plateNumber} en ${applicationName}";
+"Check ${plateNumber} in ${applicationName}" = "Verifica ${plateNumber} en ${applicationName}";
