@@ -19,14 +19,14 @@ struct PlateFinderApp: App {
         let router = IntentRouter()
         AppIntentIntentRouterBridge.shared.router = router
         PlateFinderShortcuts.updateAppShortcutParameters()
+        CarPlayDependencyBridge.shared.intentRouter = router
 
         let searchVM = SearchViewModel(
             loadCarInfo: carInfoService,
             addToHistory: HistoryAdder(store: store)
         )
         let sessionStore = UserDefaultsChatSessionStore()
-        _searchViewModel = State(initialValue: searchVM)
-        _historyViewModel = State(initialValue: HistoryViewModel(
+        let historyVM = HistoryViewModel(
             loadHistory: HistoryLoader(store: store),
             loadFavorites: FavoritesLoader(store: store),
             deleteFromHistory: HistoryDeleter(store: store),
@@ -36,7 +36,11 @@ struct PlateFinderApp: App {
             saveChatCutoff: ChatCutoffSaver(store: sessionStore),
             loadLastSessionEnd: LastSessionEndLoader(store: sessionStore),
             saveLastSessionEnd: LastSessionEndSaver(store: sessionStore)
-        ))
+        )
+        CarPlayDependencyBridge.shared.searchViewModel = searchVM
+        CarPlayDependencyBridge.shared.historyViewModel = historyVM
+        _searchViewModel = State(initialValue: searchVM)
+        _historyViewModel = State(initialValue: historyVM)
         _intentRouter = State(initialValue: router)
         _appRouter = State(initialValue: AppRouter())
         _intentCoordinator = State(initialValue: IntentSearchCoordinator(

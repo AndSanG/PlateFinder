@@ -54,6 +54,10 @@
 "tint_validity" = "Tint Validity";
 "no_information" = "No information";
 
+// MARK: - CarPlay
+"carplay_no_history" = "No recent searches";
+"ok" = "OK";
+
 // MARK: - Actions
 "delete" = "Delete";
 "remove" = "Remove";
