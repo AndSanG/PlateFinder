@@ -48,6 +48,11 @@
 		B378E8ED83BA17F72620C660 /* CarInfoLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */; };
 		B485F9228644EEAAB7FF4E4A /* PlateFinderDomain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */; };
 		C93CF9C7F5D2D40CD916C218 /* PlateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2D0AC7026C3AFE3077E654 /* PlateFormat.swift */; };
+		CA10BC3D4E5F617283940001 /* CarPlayScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940001 /* CarPlayScreen.swift */; };
+		CA10BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift */; };
+		CA10BC3D4E5F617283940003 /* CarPlayScreenBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940003 /* CarPlayScreenBuilderTests.swift */; };
+		CA20BC3D4E5F617283940001 /* CarPlayScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940001 /* CarPlayScreen.swift */; };
+		CA20BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift */; };
 		CC6246FB00B19A57A768508B /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552DDD235EFA696983CED76C /* FavoritesStore.swift */; };
 		CF85500E0B90BB5A6910FDF0 /* CarInfoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53E2E8780A5636A5F1FBBB43 /* CarInfoError.swift */; };
 		D75103A5740F503F599FA995 /* CarStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B37BBE69FA07658B10A4E493 /* CarStore.swift */; };
@@ -55,11 +60,6 @@
 		EDE519AC1FA3C5FDBCC5D2BF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BF773639142EC656FC5515 /* Cocoa.framework */; };
 		EF59234A81824158B8640188 /* IntentSearchCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D951C7F4EB8D4F1D8AEC3F49 /* IntentSearchCoordinatorTests.swift */; };
 		F946CEA906D0625192B50CBB /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E691EF2F90D9CF7107517C /* Car.swift */; };
-		CA10BC3D4E5F617283940001 /* CarPlayScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940001 /* CarPlayScreen.swift */; };
-		CA10BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift */; };
-		CA10BC3D4E5F617283940003 /* CarPlayScreenBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940003 /* CarPlayScreenBuilderTests.swift */; };
-		CA20BC3D4E5F617283940001 /* CarPlayScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940001 /* CarPlayScreen.swift */; };
-		CA20BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA01BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,22 +105,35 @@
 		B0EF256A00E5E125789091E5 /* PlateFinderAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlateFinderAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B37BBE69FA07658B10A4E493 /* CarStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarStore.swift; sourceTree = "<group>"; };
 		C0E3D80475A3E12FFAB9CFB0 /* SearchHistoryItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchHistoryItem.swift; sourceTree = "<group>"; };
+		CA01BC3D4E5F617283940001 /* CarPlayScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarPlayScreen.swift; sourceTree = "<group>"; };
+		CA01BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarPlayScreenBuilder.swift; sourceTree = "<group>"; };
+		CA01BC3D4E5F617283940003 /* CarPlayScreenBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarPlayScreenBuilderTests.swift; sourceTree = "<group>"; };
 		CFEB7C29BE65AEC62A5EDA22 /* PlateFinderDomain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlateFinderDomain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D15B20904727F75CEDFDFA1D /* PlateFinderAPIEndToEndTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlateFinderAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		D951C7F4EB8D4F1D8AEC3F49 /* IntentSearchCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntentSearchCoordinatorTests.swift; sourceTree = "<group>"; };
 		F4E4B6C64E51C4FC300B7052 /* CarInfoLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarInfoLoader.swift; sourceTree = "<group>"; };
-		CA01BC3D4E5F617283940001 /* CarPlayScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarPlayScreen.swift; sourceTree = "<group>"; };
-		CA01BC3D4E5F617283940002 /* CarPlayScreenBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarPlayScreenBuilder.swift; sourceTree = "<group>"; };
-		CA01BC3D4E5F617283940003 /* CarPlayScreenBuilderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarPlayScreenBuilderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		23C15EC62E14A8FD00F01B82 /* PlateFinder */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CA30BC3D4E5F617283940001 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
+			);
 			path = PlateFinder;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CA30BC3D4E5F617283940001 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 23C15EC32E14A8FD00F01B82 /* PlateFinder */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 
 /* Begin PBXFrameworksBuildPhase section */
 		23C15EC12E14A8FD00F01B82 /* Frameworks */ = {
@@ -745,8 +758,8 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YLLF7E9854;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDevelopmentRegion = es;
 				INFOPLIST_FILE = PlateFinder/Info.plist;
+				INFOPLIST_KEY_CFBundleDevelopmentRegion = es;
 				INFOPLIST_KEY_CFBundleLocalizations = "en es";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
@@ -785,8 +798,8 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YLLF7E9854;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDevelopmentRegion = es;
 				INFOPLIST_FILE = PlateFinder/Info.plist;
+				INFOPLIST_KEY_CFBundleDevelopmentRegion = es;
 				INFOPLIST_KEY_CFBundleLocalizations = "en es";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "PlateFinder needs microphone access to search for license plates using voice dictation.";
