@@ -6,6 +6,7 @@ struct PlateFinderApp: App {
     @State private var historyViewModel: HistoryViewModel
     @State private var intentRouter: IntentRouter
     @State private var appRouter: AppRouter
+    @State private var intentCoordinator: IntentSearchCoordinator
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -19,11 +20,12 @@ struct PlateFinderApp: App {
         AppIntentIntentRouterBridge.shared.router = router
         PlateFinderShortcuts.updateAppShortcutParameters()
 
-        _searchViewModel = State(initialValue: SearchViewModel(
+        let searchVM = SearchViewModel(
             loadCarInfo: carInfoService,
             addToHistory: HistoryAdder(store: store)
-        ))
+        )
         let sessionStore = UserDefaultsChatSessionStore()
+        _searchViewModel = State(initialValue: searchVM)
         _historyViewModel = State(initialValue: HistoryViewModel(
             loadHistory: HistoryLoader(store: store),
             loadFavorites: FavoritesLoader(store: store),
@@ -37,6 +39,10 @@ struct PlateFinderApp: App {
         ))
         _intentRouter = State(initialValue: router)
         _appRouter = State(initialValue: AppRouter())
+        _intentCoordinator = State(initialValue: IntentSearchCoordinator(
+            intentRouter: router,
+            searchViewModel: searchVM
+        ))
     }
 
     var body: some Scene {
@@ -46,15 +52,16 @@ struct PlateFinderApp: App {
                 .environment(historyViewModel)
                 .environment(intentRouter)
                 .environment(appRouter)
+                .environment(intentCoordinator)
         }
     }
 }
 
 struct ContentView: View {
     @Environment(AppRouter.self) private var appRouter
-    @Environment(IntentRouter.self) private var intentRouter
     @Environment(SearchViewModel.self) private var searchViewModel
     @Environment(HistoryViewModel.self) private var historyViewModel
+    @Environment(IntentSearchCoordinator.self) private var intentCoordinator
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -66,31 +73,27 @@ struct ContentView: View {
                     .environment(\.defaultMinListRowHeight, 60)
                     .presentationDetents([.medium, .large])
             }
+            // Start the observation loop that dispatches Siri / App Intent searches.
+            .task { intentCoordinator.start() }
             // Cold launch: returning after a long absence starts a new chat.
             .task { await startNewChatIfExpired() }
             .onChange(of: scenePhase) { _, phase in
                 switch phase {
                 case .active:
                     Task { await startNewChatIfExpired() }
-                    guard let plate = UserDefaults.standard.string(forKey: "pendingIntentPlate")
-                    else { return }
-                    UserDefaults.standard.removeObject(forKey: "pendingIntentPlate")
-                    intentRouter.requestSearch(plate: plate)
                 case .background:
                     Task { await historyViewModel.recordSessionEnd() }
                 default:
                     break
                 }
             }
-            .onChange(of: intentRouter.pendingPlate) { _, pending in
+            .onChange(of: intentCoordinator.lastRequest) { _, request in
                 // An incoming Siri/App Intent search must be visible immediately,
                 // even if the history sheet is covering the search screen.
-                if pending != nil { appRouter.isHistoryPresented = false }
+                if request != nil { appRouter.isHistoryPresented = false }
             }
     }
 
-    /// Auto "new chat": when the user comes back after the session timeout,
-    /// soft-clear the conversation and drop any lingering result bubble.
     private func startNewChatIfExpired() async {
         if await historyViewModel.clearChatIfExpired() {
             searchViewModel.reset()

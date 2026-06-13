@@ -4,7 +4,7 @@ struct PlateSearchView: View {
     @Environment(SearchViewModel.self) private var viewModel
     @Environment(HistoryViewModel.self) private var historyViewModel
     @Environment(AppRouter.self) private var appRouter
-    @Environment(IntentRouter.self) private var intentRouter
+    @Environment(IntentSearchCoordinator.self) private var intentCoordinator
     @Environment(\.scenePhase) private var scenePhase
     @State private var plate = ""
     @State private var speechRecognizer = SpeechRecognizer()
@@ -16,17 +16,9 @@ struct PlateSearchView: View {
         // Every state lives inside the conversation: searches are sent bubbles,
         // results/errors arrive as reply bubbles above the always-present input.
         searchScreen
-            .task {
-                guard let pending = intentRouter.pendingPlate else { return }
-                plate = pending
-                await viewModel.search(plate: pending)
-                intentRouter.consume()
-            }
-            .onChange(of: intentRouter.pendingPlate) { _, pending in
-                guard let pending else { return }
-                plate = pending
-                Task { await viewModel.search(plate: pending) }
-                intentRouter.consume()
+            .onChange(of: intentCoordinator.lastRequest) { _, request in
+                guard let request else { return }
+                plate = request.plate
             }
             .alert("clear_chat".localized, isPresented: $showClearChatAlert) {
                 Button("clear".localized, role: .destructive) {
@@ -349,7 +341,7 @@ struct PlateSearchView: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(.orange)
                 .accessibilityHidden(true)
-            Text(message)
+            Text(message.localized)
                 .font(.subheadline)
         }
         .padding(.horizontal, 14)

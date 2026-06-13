@@ -5,4 +5,8 @@ public enum PlateFormat: Equatable, Sendable {
     case bike       // AA123A
     case car        // AAA1234
     case special    // CD1234
+
+    public var isComplete: Bool {
+        self == .car || self == .bike || self == .special
+    }
 }

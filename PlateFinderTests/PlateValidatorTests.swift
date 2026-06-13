@@ -31,4 +31,14 @@ import Testing
     func validate_returnsSpecialForCompleteSpecialPlate(plate: String) {
         #expect(PlateValidator.validate(plate) == .special)
     }
+
+    @Test(arguments: [PlateFormat.car, PlateFormat.bike, PlateFormat.special])
+    func isComplete_trueForCompleteFormats(format: PlateFormat) {
+        #expect(format.isComplete)
+    }
+
+    @Test(arguments: [PlateFormat.empty, PlateFormat.partiallyValid, PlateFormat.invalid])
+    func isComplete_falseForIncompleteFormats(format: PlateFormat) {
+        #expect(!format.isComplete)
+    }
 }

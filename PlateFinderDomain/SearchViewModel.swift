@@ -15,6 +15,10 @@ public final class SearchViewModel {
     }
 
     public func search(plate: String) async {
+        guard PlateValidator.validate(plate).isComplete else {
+            state = .error(CarInfoError.invalidPlateFormat.userMessage)
+            return
+        }
         state = .loading
         do {
             let car = try await loadCarInfo.execute(plate: plate)

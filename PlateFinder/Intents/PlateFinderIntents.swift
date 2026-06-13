@@ -57,18 +57,26 @@ struct FindPlateIntent: AppIntent {
     @Parameter(title: "Plate Number", description: "Any license plate to search for")
     var plateNumber: PlateEntity
 
-    func perform() async throws -> some IntentResult {
+    func perform() async throws -> some IntentResult & ProvidesDialog {
         let plateText = plateNumber.plateNumber
             .uppercased()
             .components(separatedBy: CharacterSet.alphanumerics.inverted)
             .joined()
-        if !plateText.isEmpty {
-            UserDefaults.standard.set(plateText, forKey: "pendingIntentPlate")
-            await MainActor.run {
-                AppIntentIntentRouterBridge.shared.requestSearch(plate: plateText)
-            }
+
+        guard !plateText.isEmpty else {
+            return .result(dialog: IntentDialog(stringLiteral: NSLocalizedString("siri_invalid_plate", comment: "")))
         }
-        return .result()
+
+        await MainActor.run {
+            AppIntentIntentRouterBridge.shared.requestSearch(plate: plateText)
+        }
+
+        let isValid = PlateValidator.validate(plateText).isComplete
+        if isValid {
+            return .result(dialog: IntentDialog(stringLiteral: NSLocalizedString("siri_searching_plate", comment: "")))
+        } else {
+            return .result(dialog: IntentDialog(stringLiteral: NSLocalizedString("siri_invalid_plate", comment: "")))
+        }
     }
 }
 

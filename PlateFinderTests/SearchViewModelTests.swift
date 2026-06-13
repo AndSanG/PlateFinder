@@ -19,6 +19,28 @@ import Foundation
         #expect(weakSUT == nil, "Potential memory leak — SearchViewModel")
     }
 
+    @Test(arguments: ["", "A", "AB", "ABC", "ABC1", "ABC12", "ABC123", "1ABC", "ABCD1234", "!@#"])
+    func search_withInvalidOrIncompletePlate_setsInvalidFormatErrorWithoutCallingLoader(plate: String) async {
+        let (sut, loader, addToHistory) = makeSUT()
+
+        await sut.search(plate: plate)
+
+        #expect(sut.state == .error(CarInfoError.invalidPlateFormat.userMessage))
+        #expect(loader.callCount == 0)
+        #expect(addToHistory.callCount == 0)
+    }
+
+    @Test(arguments: ["ABC1234", "AB123A", "CD1234"])
+    func search_withValidPlate_callsLoader(plate: String) async {
+        let (sut, loader, _) = makeSUT()
+        loader.stubbedResult = .success(makeCar(plate: plate))
+
+        await sut.search(plate: plate)
+
+        #expect(loader.callCount == 1)
+        #expect(loader.loadedPlates == [plate])
+    }
+
     @Test func search_setsLoadingStateDuringFetch() async {
         let loader = LoadCarInfoSpy()
         let sut = SearchViewModel(loadCarInfo: loader, addToHistory: AddToHistorySpy())

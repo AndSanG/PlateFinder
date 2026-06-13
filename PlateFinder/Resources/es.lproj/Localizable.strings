@@ -58,6 +58,10 @@
 "delete" = "Eliminar";
 "remove" = "Eliminar";
 
+// MARK: - Siri / App Intents
+"siri_searching_plate" = "Buscando en PlateFinder…";
+"siri_invalid_plate" = "El formato de placa no es válido. Use ABC1234, CD1234 o AA000A.";
+
 // MARK: - Errors
 "network_error" = "No se pudo conectar al servidor. Verifique su conexión a internet.";
 "no_data_found" = "No se encontró información para esta placa. Verifique que el número sea correcto.";

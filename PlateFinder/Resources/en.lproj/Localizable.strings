@@ -58,6 +58,10 @@
 "delete" = "Delete";
 "remove" = "Remove";
 
+// MARK: - Siri / App Intents
+"siri_searching_plate" = "Searching in PlateFinder…";
+"siri_invalid_plate" = "That plate format isn't valid. Use ABC1234, CD1234, or AA000A.";
+
 // MARK: - Errors
 "network_error" = "Could not connect to server. Check your internet connection.";
 "no_data_found" = "No information found for this plate. Verify the number is correct.";
