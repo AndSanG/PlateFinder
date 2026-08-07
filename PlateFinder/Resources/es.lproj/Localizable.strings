@@ -6,7 +6,6 @@
 */
 
 // MARK: - Navigation & Tabs
-"search" = "Buscar";
 "history" = "Historial";
 "favorites" = "Favoritos";
 "settings" = "Configuración";
@@ -15,22 +14,31 @@
 // MARK: - Plate Search
 "enter_plate" = "Ingrese la placa";
 "consult" = "Consultar";
-"return" = "Regresar";
-"search_title" = "Busqueda";
+"clear_text" = "Borrar texto";
+
+// MARK: - Dictation
+"start_dictation" = "Dictar número de placa";
+"stop_dictation" = "Detener dictado";
+"listening" = "Escuchando…";
+"speech_permission_denied" = "El reconocimiento de voz no está permitido. Actívalo en Configuración.";
+"mic_permission_denied" = "El acceso al micrófono no está permitido. Actívalo en Configuración.";
+"speech_unavailable" = "El reconocimiento de voz no está disponible en este momento.";
+"speech_audio_error" = "No se pudo acceder al micrófono.";
+"speech_recognition_error" = "No se pudo reconocer la voz. Inténtalo de nuevo.";
 
 // MARK: - Info Banner
 "important" = "Importante";
 "plate_format_info" = "Formato: ABC1234, CD1234 o AA000A";
 
 // MARK: - Loading
-"searching_information" = "Buscando información...";
 "consulting_ant_database" = "Consultando base de datos de la ANT";
-"loading" = "Cargando...";
-"processing_data" = "Procesando datos...";
 
 // MARK: - History & Favorites
 "no_search_history" = "Sin historial de búsquedas";
 "recent_searches_will_appear_here" = "Tus búsquedas recientes aparecerán aquí";
+"more_searches" = "Más búsquedas";
+"clear_chat" = "Limpiar chat";
+"clear_chat_confirmation" = "La conversación se limpiará. Tu historial seguirá disponible en Más búsquedas.";
 "no_favorite_plates" = "Sin placas favoritas";
 "mark_plates_as_favorites_for_quick_access" = "Marca placas como favoritas para acceso rápido";
 "clear" = "Limpiar";
@@ -39,7 +47,6 @@
 "cancel" = "Cancelar";
 
 // MARK: - Car Details
-"year" = "Año";
 "color" = "Color";
 "usage" = "Uso";
 "registration" = "Matrícula";
@@ -47,9 +54,17 @@
 "tint_validity" = "Validez del polarizado";
 "no_information" = "Sin información";
 
+// MARK: - CarPlay
+"carplay_no_history" = "Sin búsquedas recientes";
+"ok" = "OK";
+
 // MARK: - Actions
 "delete" = "Eliminar";
 "remove" = "Eliminar";
+
+// MARK: - Siri / App Intents
+"siri_searching_plate" = "Buscando en PlateFinder…";
+"siri_invalid_plate" = "El formato de placa no es válido. Use ABC1234, CD1234 o AA000A.";
 
 // MARK: - Errors
 "network_error" = "No se pudo conectar al servidor. Verifique su conexión a internet.";
@@ -65,15 +80,7 @@
 "try_again_later" = "Intente nuevamente en unos minutos.";
 
 // MARK: - Preview Content
-"sample_content" = "Contenido de Ejemplo";
-"toggle_loading" = "Alternar Carga";
 "toggle_banner" = "Alternar Banner";
-"loading_indicators" = "Indicadores de Carga";
-"spinner" = "Giratorio";
-"three_dots" = "Tres Puntos";
-"pulsing_dot" = "Punto Pulsante";
-"loading_button" = "Botón de Carga";
-"dots_loading" = "Carga de Puntos";
 
 // MARK: - Usage Types
 "public_use" = "Uso Público";

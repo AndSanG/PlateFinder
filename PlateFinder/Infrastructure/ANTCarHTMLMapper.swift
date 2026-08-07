@@ -1,7 +1,7 @@
 import SwiftSoup
 
-final class ANTHTMLParser: HTMLParsing {
-    func parse(_ html: String) throws -> Car {
+final class ANTCarHTMLMapper: CarHTMLMapper {
+    func map(_ html: String) throws -> Car {
         let document = try SwiftSoup.parse(html)
         guard let table = try document.select("body > table").first() else {
             throw CarInfoError.noDataFound

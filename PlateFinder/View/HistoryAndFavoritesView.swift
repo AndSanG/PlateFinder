@@ -1,9 +1,11 @@
 import SwiftUI
 
 struct HistoryAndFavoritesView: View {
-    var viewModel: PlateFinderViewModel
-    @Binding var selectedTab: ContentView.AppTab
+    @Environment(HistoryViewModel.self) private var viewModel
+    @Environment(SearchViewModel.self) private var searchViewModel
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedHistoryTab: HistoryTab = .history
+    @State private var showClearHistoryAlert = false
 
     enum HistoryTab: String, CaseIterable {
         case history, favorites
@@ -23,37 +25,62 @@ struct HistoryAndFavoritesView: View {
                 .padding(.horizontal)
                 .padding(.top)
 
-                switch selectedHistoryTab {
-                case .history:  historyView
-                case .favorites: favoritesView
+                switch viewModel.state {
+                case .loading:
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                case .loaded(let history, let favorites):
+                    switch selectedHistoryTab {
+                    case .history:  historyList(history, favorites: favorites)
+                    case .favorites: favoritesList(favorites)
+                    }
+                case .error(let message):
+                    Spacer()
+                    Text(message).foregroundColor(.red).padding()
+                    Spacer()
                 }
             }
             .navigationTitle("history_and_favorites".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                if selectedHistoryTab == .history && !viewModel.history.isEmpty {
+                if selectedHistoryTab == .history,
+                   case .loaded(let history, _) = viewModel.state,
+                   !history.isEmpty {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("clear".localized) { showClearHistoryAlert() }
+                        Button("clear".localized) { showClearHistoryAlert = true }
                             .foregroundColor(.red)
                     }
                 }
             }
-            .task { await viewModel.loadHistory(); await viewModel.loadFavorites() }
+            .alert("clear_history".localized, isPresented: $showClearHistoryAlert) {
+                Button("clear".localized, role: .destructive) {
+                    Task { await viewModel.clearAll() }
+                }
+                Button("cancel".localized, role: .cancel) { }
+            } message: {
+                Text("clear_history_confirmation".localized)
+            }
+            .task { await viewModel.loadData() }
         }
     }
 
     @ViewBuilder
-    private var historyView: some View {
-        if viewModel.history.isEmpty {
+    private func historyList(_ history: [SearchHistoryItem], favorites: [String]) -> some View {
+        if history.isEmpty {
             emptyState(icon: "clock", title: "no_search_history".localized, subtitle: "recent_searches_will_appear_here".localized)
         } else {
             List {
-                ForEach(viewModel.history, id: \.plateNumber) { item in
+                ForEach(history, id: \.plateNumber) { item in
                     SearchHistoryItemView(
                         item: item,
                         onTap: {
-                            Task { await viewModel.select(item) }
-                            selectedTab = .search
+                            if let car = item.car {
+                                Task { await searchViewModel.show(car) }
+                            } else {
+                                Task { await searchViewModel.search(plate: item.plateNumber) }
+                            }
+                            dismiss()
                         },
                         onDelete: { Task { await viewModel.delete(item) } }
                     )
@@ -66,18 +93,17 @@ struct HistoryAndFavoritesView: View {
     }
 
     @ViewBuilder
-    private var favoritesView: some View {
-        if viewModel.favorites.isEmpty {
+    private func favoritesList(_ favorites: [String]) -> some View {
+        if favorites.isEmpty {
             emptyState(icon: "star", title: "no_favorite_plates".localized, subtitle: "mark_plates_as_favorites_for_quick_access".localized)
         } else {
             List {
-                ForEach(viewModel.favorites, id: \.self) { plateNumber in
+                ForEach(favorites, id: \.self) { plateNumber in
                     FavoriteItemView(
                         plateNumber: plateNumber,
                         onTap: {
-                            viewModel.plateText = plateNumber
-                            selectedTab = .search
-                            Task { await viewModel.search() }
+                            Task { await searchViewModel.search(plate: plateNumber) }
+                            dismiss()
                         },
                         onDelete: { Task { await viewModel.toggleFavorite(plateNumber) } }
                     )
@@ -99,33 +125,4 @@ struct HistoryAndFavoritesView: View {
         }
         .padding()
     }
-
-    private func showClearHistoryAlert() {
-        let alert = UIAlertController(
-            title: "clear_history".localized,
-            message: "clear_history_confirmation".localized,
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "cancel".localized, style: .cancel))
-        alert.addAction(UIAlertAction(title: "clear".localized, style: .destructive) { _ in
-            Task { await viewModel.deleteAllHistory() }
-        })
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = scene.windows.first {
-            window.rootViewController?.present(alert, animated: true)
-        }
-    }
-}
-
-#Preview {
-    let store = UserDefaultsCarStore(defaults: .init(suiteName: "preview")!)
-    let loader = RemoteCarInfoLoader(
-        url: URL(string: AppConstants.baseURL)!,
-        client: URLSessionHTTPClient(),
-        parser: ANTHTMLParser()
-    )
-    HistoryAndFavoritesView(
-        viewModel: PlateFinderViewModel(loader: loader, store: store, favoritesStore: store),
-        selectedTab: .constant(.history)
-    )
 }

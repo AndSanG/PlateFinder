@@ -27,6 +27,7 @@ fastlane/test_output/
 
 # Claude Code
 .claude/
+.agents/
 
 # SourceKit-LSP / xcode-build-server
 buildServer.json

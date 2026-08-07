@@ -1,4 +1,4 @@
-public enum CarInfoError: Error, Equatable {
+public enum CarInfoError: Error, Equatable, Sendable {
     case networkError(Error)
     case noDataFound
     case invalidPlateFormat
@@ -14,6 +14,16 @@ public enum CarInfoError: Error, Equatable {
              (.parsingError, .parsingError),
              (.serverError, .serverError): return true
         default: return false
+        }
+    }
+
+    public var userMessage: String {
+        switch self {
+        case .networkError:         return "network_error"
+        case .noDataFound:          return "no_data_found"
+        case .invalidPlateFormat:   return "invalid_plate_format"
+        case .parsingError:         return "parsing_error"
+        case .serverError:          return "server_error"
         }
     }
 }

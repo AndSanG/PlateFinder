@@ -1,6 +1,6 @@
 import Foundation
 
-public struct SearchHistoryItem: Equatable {
+public struct SearchHistoryItem: Equatable, Sendable {
     public let plateNumber: String
     public let searchDate: Date
     public let car: Car?

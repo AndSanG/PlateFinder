@@ -13,49 +13,50 @@ struct SearchHistoryItemView: View {
     let onDelete: () -> Void
     
     var body: some View {
-        HStack(spacing: 12) {
-            // Plate number and car info
-            VStack(alignment: .leading, spacing: 4) {
-                Text(item.plateNumber)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                if let car = item.car {
-                    Text("\(car.manufacturer) \(car.model)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                } else {
-                    Text("no_information".localized)
-                        .font(.subheadline)
-                        .foregroundColor(.red)
-                        .italic()
+        Button(action: onTap) {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(item.plateNumber)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.primary)
+
+                    if let car = item.car {
+                        Text("\(car.manufacturer) \(car.model)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("no_information".localized)
+                            .font(.subheadline)
+                            .foregroundStyle(.red)
+                            .italic()
+                    }
+
+                    Text(item.relativeDate)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
-                
-                Text(item.relativeDate)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+
+                Spacer()
+
+                if item.car != nil {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                        .font(.title3)
+                        .accessibilityHidden(true)
+                } else {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                        .font(.title3)
+                        .accessibilityHidden(true)
+                }
             }
-            
-            Spacer()
-            
-            // Status indicator
-            if item.car != nil {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
-                    .font(.title3)
-            } else {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(.orange)
-                    .font(.title3)
-            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(Color(.systemGray6))
+            .clipShape(.rect(cornerRadius: 10))
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
-        .onTapGesture {
-            onTap()
-        }
+        .buttonStyle(.plain)
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button("delete".localized, role: .destructive) {
                 onDelete()

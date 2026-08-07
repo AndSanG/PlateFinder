@@ -1,21 +1,21 @@
 import Foundation
 
-public final class RemoteCarInfoLoader: CarInfoLoader {
+final class ANTCarInfoService: LoadCarInfo {
     private let url: URL
-    private let client: HTTPClient
-    private let parser: HTMLParsing
+    private let client: any HTTPClient
+    private let mapper: any CarHTMLMapper
 
-    public init(url: URL, client: HTTPClient, parser: HTMLParsing) {
+    init(url: URL, client: any HTTPClient, mapper: any CarHTMLMapper) {
         self.url = url
         self.client = client
-        self.parser = parser
+        self.mapper = mapper
     }
 
-    public func loadCarInfo(for plateNumber: String) async throws -> Car {
+    func execute(plate: String) async throws -> Car {
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         components.queryItems = [
             URLQueryItem(name: "ps_tipo_identificacion", value: "PLA"),
-            URLQueryItem(name: "ps_identificacion", value: plateNumber),
+            URLQueryItem(name: "ps_identificacion", value: plate),
             URLQueryItem(name: "ps_placa", value: "")
         ]
         let data: Data
@@ -35,7 +35,7 @@ public final class RemoteCarInfoLoader: CarInfoLoader {
         }
 
         do {
-            return try parser.parse(html)
+            return try mapper.map(html)
         } catch {
             throw CarInfoError.parsingError(error.localizedDescription)
         }

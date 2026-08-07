@@ -22,19 +22,18 @@ struct InfoBannerView: View {
                 Image(systemName: "info.circle.fill")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(.blue) 
+                    .foregroundStyle(.blue)
+                    .accessibilityHidden(true) 
 
                 VStack(alignment: .leading, spacing: 4) {
-                    // Title
                     Text(title)
                         .font(.headline)
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
 
-                    // Message
                     Text(message)
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true) // Allow text to wrap
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
 
                 Spacer()
@@ -44,24 +43,26 @@ struct InfoBannerView: View {
                         isShowing = false
                     }
                 } label: {
-                    Image(systemName: "xmark") // Close icon
-                        .font(.caption) // Smaller font for the close icon
-                        .foregroundColor(.gray)
-                        .padding(8) // Make touch target larger
+                    Image(systemName: "xmark")
+                        .font(.caption)
+                        .foregroundStyle(.gray)
+                        .padding(8)
                 }
-                .offset(x: 8, y: -8) // Adjust position of the close button slightly
+                .accessibilityLabel("dismiss".localized)
+                .offset(x: 8, y: -8)
             }
-            .padding(.vertical, 12) // Vertical padding for the content
-            .padding(.horizontal, 16) // Horizontal padding for the content
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
         }
-        .cornerRadius(12) // Rounded corners for the banner
+        .clipShape(.rect(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.white, lineWidth: 2)
         )
-        .padding(.horizontal) // Padding from the screen edges
-        .opacity(isShowing ? 1 : 0) // Control visibility
-        .animation(.easeOut(duration: 0.3), value: isShowing) // Animate visibility changes
+        .padding(.horizontal)
+        .opacity(isShowing ? 1 : 0)
+        .animation(.easeOut(duration: 0.3), value: isShowing)
+        .accessibilityElement(children: .combine)
     }
 }
 
