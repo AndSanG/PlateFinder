@@ -96,8 +96,14 @@ enum PlateFinderShortcuts: AppShortcutsProvider {
     }
 }
 
-// Bridge: used as a fast path when the app is already running in-process.
-// perform() no longer calls this — UserDefaults is the reliable cross-process channel.
+// Bridge between AppIntents and the injected IntentRouter. AppIntents constructs
+// FindPlateIntent itself, so there is no constructor to inject through; the
+// Composition Root pushes the router in during App.init. See the entry-point
+// exception in architecture.md.
+//
+// `openAppWhenRun` makes perform() run in the app's process, so the router is
+// normally already set. It can still be nil when a cold launch races the intent,
+// hence the buffered plate: it replays as soon as the router lands.
 @MainActor
 final class AppIntentIntentRouterBridge {
     static let shared = AppIntentIntentRouterBridge()

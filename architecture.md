@@ -59,8 +59,19 @@ The `@main App.body` is the **only** place that constructs concrete adapters and
 ## Dependency Injection
 
 - Constructor injection or SwiftUI `@Environment(...)` only
-- **No singletons** — no `static let shared`, no global `UserDefaults.standard` reads outside the Composition Root
+- **No singletons**: no `static let shared`, no global `UserDefaults.standard` reads outside the Composition Root
 - **No `isTesting` flag** in production types — inject test doubles via protocols
+
+### Entry-point bridges (the one exception)
+
+Where the *system* instantiates a type, there is no constructor to inject through and no `@Environment` to read. Two such seams exist, and both are permitted to use `static let shared`:
+
+| Bridge | System entry point |
+|---|---|
+| `AppIntentIntentRouterBridge` | `AppIntents` constructs `FindPlateIntent` itself |
+| `CarPlayDependencyBridge` | `CPTemplateApplicationSceneDelegate` is instantiated by UIKit scene machinery |
+
+A bridge must stay a dumb mailbox: it holds references the Composition Root pushes into it during `App.init`, and contains no business logic, no I/O, and no construction of its own dependencies. Anything beyond that belongs in a ViewModel or Use Case reached through normal injection. Do not add a third bridge without a genuine system entry point to justify it.
 
 ## Concurrency
 
